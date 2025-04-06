@@ -1,0 +1,58 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      routes:
+        # User
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/v1/users/**
+
+        # Store-service
+        - id: store-service
+          uri: lb://store-service
+          predicates:
+            - Path=/v1/stores/**
+
+        # Store-reservation-service
+        - id: store-reservation-service
+          uri: lb://store-reservation-service
+          predicates:
+            - Path=/v1/store-reservations/**
+
+        # Product
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/v1/products/**
+
+        # Product-reservation-service
+        - id: product-reservation-service
+          uri: lb://product-reservation-service
+          predicates:
+            - Path=/v1/product-reservations/**
+
+        # Slack
+        - id: slack-service
+          uri: lb://slack-service
+          predicates:
+            - Path=/v1/slacks/**
+
+      discovery:
+        locator:
+          enabled: true # ??? ?????? ?? ???? ??? ??
+
+      loadbalancer:
+        enable: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
