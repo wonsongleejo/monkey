@@ -1,1 +1,11 @@
-rootProject.name = 'server'
+rootProject.name = 'popupStore'
+
+include('eureka')
+include('gateway')
+include('common-module')
+include('user-service')
+include('store-service')
+include('store-reservation-service')
+include('product-service')
+include('product-reservation-service')
+include('slack-service')
