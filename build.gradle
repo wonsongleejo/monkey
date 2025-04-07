@@ -1,11 +1,10 @@
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.4.4'
-    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.springframework.boot' version '3.4.4' apply false
+    id 'io.spring.dependency-management' version '1.1.7' apply false
 }
-
-group = 'com.monkey'
-version = '0.0.1-SNAPSHOT'
 
 java {
     toolchain {
@@ -13,16 +12,39 @@ java {
     }
 }
 
-repositories {
-    mavenCentral()
+allprojects{
+    group = 'com.monkey'
+    version = '0.0.1-SNAPSHOT'
+
+    repositories {
+        mavenCentral()
+    }
+
+    // 루트 프로젝트에서 테스트 비활성화
+    tasks.withType(Test).configureEach {
+        enabled = false
+    }
+
+    // 루트 프로젝트에서 BootJar 비활성화
+    tasks.withType(BootJar).configureEach {
+        enabled = false
+    }
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-}
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
 
-tasks.named('test') {
-    useJUnitPlatform()
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    }
+
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
+
 }
