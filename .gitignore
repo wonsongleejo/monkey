@@ -1,37 +1,87 @@
-HELP.md
-.gradle
-build/
-!gradle/wrapper/gradle-wrapper.jar
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-bin/
-!**/src/main/**/bin/
-!**/src/test/**/bin/
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+# -------------------- IDEA --------------------
+.idea/
 *.iml
-*.ipr
+*.iws
+
+#  허용할 IntelliJ 설정
+!.idea/codeStyles/
+!.idea/inspectionProfiles/
+
+# IDEA 자동 생성 불필요 파일
+.idea/**/workspace.xml
+.idea/**/tasks.xml
+.idea/**/usage.statistics.xml
+.idea/**/dictionaries
+.idea/**/shelf/
+.idea/**/dataSources*
+.idea/**/sqlDataSources.xml
+.idea/**/dynamic.xml
+.idea/**/dbnavigator.xml
+.idea/httpRequests/
+.idea/caches/
+.idea/**/gradle.xml
+.idea/**/libraries/
+.idea/**/sonarlint/
+.idea/**/sonarIssues.xml
+.idea/**/markdown-navigator*
+.idea/**/aws.xml
+.idea/**/azureSettings.xml
+
+
+# -------------------- LOGS / DB --------------------
+*.log
+log/
+logs/
+*.db
+*.sqlite
+*.h2.db
+*.mv.db
+*.pgdata/
+
+# -------------------- BUILD --------------------
+# build 전체는 무시하되, 필요한 파일은 다시 포함
+**/build/
+!**/build/resources/main/application.yml
+!**/build/resources/test/http/*.http
+!**/build/generated/**/*.java
+!**/build/tmp/compiled_classes/**/resolvedMainClassName
+!**/build/tmp/**/*.bin
+!src/**/build/
+
+# -------------------- GRADLE / MAVEN --------------------
+.gradle/
 out/
-!**/src/main/**/out/
-!**/src/test/**/out/
+target/
+*.class
+*.jar
+*.war
+*.ear
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
+.mvn/
+!gradle-wrapper.jar
+!gradle-wrapper.properties
 
-### VS Code ###
-.vscode/
+# -------------------- SYSTEM --------------------
+# macOS
+.DS_Store
+.AppleDouble
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.apdisk
+*.icloud
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# -------------------- SECRETS --------------------
+application-secret.yml
+*.key
+*.pem
+*.crt
+*.pfx
