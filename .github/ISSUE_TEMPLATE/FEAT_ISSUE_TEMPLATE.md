@@ -1,7 +1,7 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: "[FEAT] 도메인_기능내용"
+title: "feat: 도메인_기능내용"
 labels: feat
 assignees: ''
 
