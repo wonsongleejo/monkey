@@ -2,6 +2,9 @@ dependencies {
     // 트랜잭션 어노테이션 지원
     compileOnly 'org.springframework:spring-tx:5.3.30'
 
+    // Auditing 기능 지원
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
     // QueryDSL
     implementation 'com.querydsl:querydsl-jpa:5.1.0:jakarta'
     annotationProcessor 'com.querydsl:querydsl-apt:5.1.0:jakarta'
