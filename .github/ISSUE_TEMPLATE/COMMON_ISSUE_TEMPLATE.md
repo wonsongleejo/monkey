@@ -1,7 +1,7 @@
 ---
 name: Common request
 about: Suggest an idea for this project
-title: "[] 도메인_기능내용"
+title: "작업타입: 도메인_기능내용"
 labels: 
 assignees: ''
 
