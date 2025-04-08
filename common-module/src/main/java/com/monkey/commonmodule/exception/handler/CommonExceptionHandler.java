@@ -24,8 +24,7 @@ public class CommonExceptionHandler {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ResDTO<Object>> handleUnhandledException(Exception e) {
         log.error("예상치 못한 에러 발생", e);
-        return ResponseEntity.ok(
-                ResDTO.fail(ResponseCode.INTERNAL_SERVER_ERROR)
-        );
+        return ResponseEntity.status(ResponseCode.INTERNAL_SERVER_ERROR.getStatus())
+                .body(ResDTO.fail(ResponseCode.INTERNAL_SERVER_ERROR));
     }
 }
