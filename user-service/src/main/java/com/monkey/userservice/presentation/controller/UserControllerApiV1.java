@@ -83,4 +83,19 @@ public class UserControllerApiV1 {
                 HttpStatus.OK
         );
     }
+
+    //회원 탈퇴
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable(name="userId") Long userId) {
+
+        //soft-delete : 추후 service 제작 시 적용
+        UserEntity userEntity = UserEntity.builder()
+                .isDeleted(true)
+                .build();
+
+        return new ResponseEntity<>(
+                ResDTO.success(),
+                HttpStatus.OK
+        );
+    }
 }

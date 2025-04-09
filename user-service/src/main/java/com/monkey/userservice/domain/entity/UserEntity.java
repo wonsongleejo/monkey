@@ -41,4 +41,9 @@ public class UserEntity {
 
         private final String value;
     }
+
+    // 회원 삭제 (soft-delete)
+    public void setDeleted(boolean deleted) {
+        this.isDeleted = deleted;
+    }
 }
