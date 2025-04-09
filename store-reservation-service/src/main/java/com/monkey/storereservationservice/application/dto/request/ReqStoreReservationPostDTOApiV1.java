@@ -7,8 +7,8 @@ import java.util.UUID;
 
 @Getter
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class ReqStoreReservationPostDTOApiV1 {
 
     @NotNull(message = "예약 시간대 입력은 필수입니다.")
@@ -16,4 +16,11 @@ public class ReqStoreReservationPostDTOApiV1 {
 
     @NotNull(message = "예약 인원 입력은 필수입니다.")
     private Integer person;
+
+    public static ReqStoreReservationPostDTOApiV1 of(UUID timeSlotId, Integer person) {
+        return ReqStoreReservationPostDTOApiV1.builder()
+                .timeSlotId(timeSlotId)
+                .person(person)
+                .build();
+    }
 }
