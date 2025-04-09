@@ -2,16 +2,17 @@ package com.monkey.productservice.domain.entity;
 
 import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Entity
 @Getter
+@Setter
 @Table(name = "p_product")
+@Builder
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
