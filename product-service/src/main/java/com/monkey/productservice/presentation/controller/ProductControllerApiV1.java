@@ -18,12 +18,33 @@ public class ProductControllerApiV1 {
 
     // 상품 등록
     @PostMapping
-    public ResponseEntity<ResDTO<ResProductPostDTOApiV1>> createProduct(
+    public ResponseEntity<ResDTO<ResProductPostDTOApiV1>> postBy(
             @RequestBody @Valid ReqProductPostDTOApiV1 reqDto
             ) {
         ProductEntity productEntity = reqDto.getProduct().toEntity();
 
         ResProductPostDTOApiV1 resDto = ResProductPostDTOApiV1.of(productEntity);
+
+        return ResponseEntity.ok(ResDTO.success(resDto));
+    }
+
+    // 상품 수정
+    @PutMapping("/{producId}")
+    public ResponseEntity<ResDTO<ResProductPutDTOApiV1>> putBy(
+            @PathVariable UUID productId,
+            @RequestBody @Valid ReqProductPutDTOApiV1 reqDto
+    ) {
+        // 임시 데이터 (나중에 productId로 조회한 후 수정하는 로직으로 변경)
+        ProductEntity productEntity = ProductEntity.builder()
+                .productId(productId)
+                .storeId(UUID.randomUUID())
+                .productName("바나나 인형")
+                .price(0)
+                .quantity(0)
+                .build();
+
+        reqDto.getProduct().update(productEntity);
+        ResProductPutDTOApiV1 resDto = ResProductPutDTOApiV1.of(productEntity);
 
         return ResponseEntity.ok(ResDTO.success(resDto));
     }
