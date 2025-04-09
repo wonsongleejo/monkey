@@ -4,6 +4,7 @@ import com.monkey.commonmodule.dto.ResDTO;
 import com.monkey.commonmodule.dto.ResponseCode;
 import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.request.ReqProductPutDTOApiV1;
+import com.monkey.productservice.application.dto.response.ResProductGetByIdDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductGetDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductPutDTOApiV1;
@@ -70,6 +71,21 @@ public class ProductControllerApiV1 {
         }
 
         ResProductGetDTOApiV1 resDto = ResProductGetDTOApiV1.of(productList);
+        return ResponseEntity.ok(ResDTO.success(resDto));
+    }
+
+    // 상품 단건 조회
+    @GetMapping("/{productId}")
+    public ResponseEntity<ResDTO<ResProductGetByIdDTOApiV1>> getById(@PathVariable UUID productId) {
+        ProductEntity product = ProductEntity.builder()
+                .productId(productId)
+                .storeId(UUID.randomUUID())
+                .productName("바나나 인형")
+                .price(12000)
+                .quantity(50)
+                .build();
+
+        ResProductGetByIdDTOApiV1 resDto = ResProductGetByIdDTOApiV1.of(product);
         return ResponseEntity.ok(ResDTO.success(resDto));
     }
 
