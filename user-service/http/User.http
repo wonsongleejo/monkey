@@ -7,3 +7,14 @@ Content-Type: application/json
 GET http://localhost:8081/v1/users/1
 Content-Type: application/json
 
+
+### PUT USER Details
+PUT http://localhost:8081/v1/users/1
+Content-Type: application/json
+
+{
+  "user": {
+    "password": "testMod",
+    "slackId": "slackMod"
+  }
+}
