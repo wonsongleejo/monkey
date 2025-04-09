@@ -1,0 +1,22 @@
+### USER SIGN-UP
+POST http://localhost:8081/v1/auth/sign-up
+Content-Type: application/json
+
+{
+  "user": {
+    "username": "testUser",
+    "password": "testtest",
+    "slackId": "testslack",
+    "role": "USER"
+  }
+}
+
+
+### USER SIGN-IN
+POST http://localhost:8081/v1/auth/sign-in
+Content-Type: application/json
+
+{
+  "username": "testUser",
+  "password": "testtest"
+}
