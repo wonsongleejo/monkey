@@ -28,16 +28,16 @@ public class ReqProductPostDTOApiV1 {
         @NotNull
         private UUID storeId;
 
-        @NotBlank
+        @NotBlank(message = "상품명을 입력해주세요.")
         @Size(max = 100)
         private String productName;
 
-        @NotNull
-        @Min(0)
+        @NotNull(message = "상품 가격을 입력해주세요.")
+        @Min(value = 0, message = "상품 가격은 0원 이상이어야 합니다.")
         private Integer price;
 
-        @NotNull
-        @Min(0)
+        @NotNull(message = "상품 수량을 입력해주세요.")
+        @Min(value = 0, message = "상품 수량은 0 이상이어야 합니다.")
         private Integer quantity;
 
         // DTO → Entity 변환 메서드
