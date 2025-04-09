@@ -18,3 +18,8 @@ Content-Type: application/json
     "slackId": "slackMod"
   }
 }
+
+
+### DELETE USER
+DELETE http://localhost:8081/v1/users/1
+Content-Type: application/json
