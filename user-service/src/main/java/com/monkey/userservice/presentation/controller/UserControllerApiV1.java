@@ -1,16 +1,15 @@
 package com.monkey.userservice.presentation.controller;
 
 import com.monkey.commonmodule.dto.ResDTO;
+import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import com.monkey.userservice.application.dto.response.ResUserGetByIdDTOApiV1;
 import com.monkey.userservice.application.dto.response.ResUserGetDTOApiV1;
+import com.monkey.userservice.application.dto.response.ResUserPutDTOApiV1;
 import com.monkey.userservice.domain.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +57,26 @@ public class UserControllerApiV1 {
                 .build();
 
         ResUserGetByIdDTOApiV1 resDto = ResUserGetByIdDTOApiV1.of(user);
+
+        return new ResponseEntity<>(
+                ResDTO.success(resDto),
+                HttpStatus.OK
+        );
+    }
+
+    //사용자 정보 수정
+    @PutMapping("/{userId}")
+    public ResponseEntity<ResDTO<ResUserPutDTOApiV1>> putBy(
+            @PathVariable(name="userId") Long userId, @RequestBody ReqUserPutDTOApiV1 reqDto
+    ) {
+
+        UserEntity user = UserEntity.builder()
+                .userId(userId)
+                .password(reqDto.getUser().getPassword())
+                .slackId(reqDto.getUser().getSlackId())
+                .build();
+
+        ResUserPutDTOApiV1 resDto = ResUserPutDTOApiV1.of(user);
 
         return new ResponseEntity<>(
                 ResDTO.success(resDto),
