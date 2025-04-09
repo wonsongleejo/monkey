@@ -11,7 +11,7 @@ import lombok.Getter;
 public class ReqUserPutDTOApiV1 {
 
     @NotNull(message = "유저 정보를 입력해주세요.")
-    @Valid //하위 필드의 validation을 하려면 붙여줘야 함
+    @Valid
     private User user;
 
     @Getter
