@@ -1,5 +1,6 @@
 package com.monkey.storeservice.application.dto.request;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -17,28 +18,29 @@ import lombok.Setter;
 @Builder
 public class ReqStorePostDtoApiV1 {
 
-  @NotBlank
+  @NotBlank(message = "팝업스토어 이름을 입력해주세요.")
   private String storeName;
 
-  @NotBlank
+  @NotBlank(message = "팝업스토어 설명을 입력해주세요.")
   private String description;
 
-  @NotNull
+  @NotNull(message = "팝업스토어 상태를 입력해주세요.")
   private OpenStatus openStatus;
 
-  @NotNull
+  @NotNull(message = "팝업스토어 오픈날짜를 입력해주세요.")
   private LocalDate startDate;
 
-  @NotNull
+  @NotNull(message = "팝업스토어 종료날짜를 입력해주세요.")
   private LocalDate endDate;
 
-  @NotNull
+  @NotNull(message = "팝업스토어 시작시간을 입력해주세요.")
   private LocalTime startTime;
 
-  @NotNull
+  @NotNull(message = "팝업스토어 종료시간을 입력해주세요.")
   private LocalTime endTime;
 
-  @NotNull
+  @NotNull(message = "팝업스토어 총 수용 인원을 입력해주세요.")
+  @Min(1)
   private Integer totalPerson;
 
   public enum OpenStatus {
