@@ -1,0 +1,9 @@
+### GET USER
+GET http://localhost:8081/v1/users
+Content-Type: application/json
+
+
+### GET USER Details
+GET http://localhost:8081/v1/users/1
+Content-Type: application/json
+
