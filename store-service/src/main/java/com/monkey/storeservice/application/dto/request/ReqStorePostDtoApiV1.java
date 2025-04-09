@@ -44,8 +44,5 @@ public class ReqStorePostDtoApiV1 {
   public enum OpenStatus {
     OPEN, CLOSE;
 
-    public static OpenStatus from(String value) {
-      return OpenStatus.valueOf(value.toUpperCase());
-    }
   }
 }
