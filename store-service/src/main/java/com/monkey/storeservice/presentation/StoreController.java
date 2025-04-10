@@ -48,28 +48,29 @@ public class StoreController {
 
   }
 
-//  // 팝업스토어 수정
-//  @PutMapping("/{storeId}")
-//  public ResponseEntity<ResDTO<ResStorePutDtoApiV1>> putById(
-//      @PathVariable UUID storeId,
-//      @RequestBody ReqStorePostDtoApiV1 reqStorePostDtoApiV1) {
-//    StoreEntity storeEntity = StoreEntity.builder()
-//        .storeName("오징어게임 팝업")
-//        .description("오징어게임 캐릭터가 있어요")
-//        .startDate(LocalDate.parse("2025-04-10"))
-//        .endDate(LocalDate.parse("2025-04-17"))
-//        .startTime(LocalTime.parse("10:00"))
-//        .endTime(LocalTime.parse("`18:00"))
-//        .openStatus(OpenStatus.OPEN)
-//        .build();
-//
-//    ResStorePutDtoApiV1 response = ResStorePutDtoApiV1.of(storeEntity);
-//
-//    return new ResponseEntity<>(
-//        ResDTO.success(response),
-//        HttpStatus.OK
-//    );
-//  }
+  // 팝업스토어 수정
+  @PutMapping("/{storeId}")
+  public ResponseEntity<ResDTO<ResStorePutDtoApiV1>> putById(
+      @PathVariable UUID storeId,
+      @RequestBody ReqStorePostDtoApiV1 reqStorePostDtoApiV1) {
+    StoreEntity storeEntity = StoreEntity.builder()
+        .storeName("오징어게임 팝업")
+        .description("오징어게임 캐릭터가 있어요")
+        .startDate(LocalDate.parse("2025-04-10"))
+        .endDate(LocalDate.parse("2025-04-17"))
+        .startTime(LocalTime.parse("10:00"))
+        .endTime(LocalTime.parse("18:00"))
+        .openStatus(OpenStatus.OPEN)
+        .totalPerson(100)
+        .build();
+
+    ResStorePutDtoApiV1 response = ResStorePutDtoApiV1.of(storeEntity);
+
+    return new ResponseEntity<>(
+        ResDTO.success(response),
+        HttpStatus.OK
+    );
+  }
 
   // 팝업스토어 조회
   @GetMapping("/{storeId}")
