@@ -88,4 +88,11 @@ public class ProductControllerApiV1 {
         ResProductGetByIdDTOApiV1 resDto = ResProductGetByIdDTOApiV1.of(product);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
+
+    // 상품 삭제
+    @DeleteMapping("/{productId}")
+    public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID productId) {
+        // 실제 삭제 로직은 서비스에서 구현
+        return new ResponseEntity<>(ResDTO.success(null), HttpStatus.OK);
+    }
 }
