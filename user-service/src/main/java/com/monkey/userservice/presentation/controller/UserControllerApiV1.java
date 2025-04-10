@@ -2,6 +2,7 @@ package com.monkey.userservice.presentation.controller;
 
 import com.monkey.commonmodule.dto.ResDTO;
 import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
+import com.monkey.userservice.application.dto.response.ResStoreReservationGetDTOApiV1;
 import com.monkey.userservice.application.dto.response.ResUserGetByIdDTOApiV1;
 import com.monkey.userservice.application.dto.response.ResUserGetDTOApiV1;
 import com.monkey.userservice.application.dto.response.ResUserPutDTOApiV1;
@@ -11,8 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/users")
@@ -95,6 +99,56 @@ public class UserControllerApiV1 {
 
         return new ResponseEntity<>(
                 ResDTO.success(),
+                HttpStatus.OK
+        );
+    }
+
+    //팝업 스토어 예약 내역
+    @GetMapping("/{userId}/store-reservation")
+    public ResponseEntity<ResDTO<ResStoreReservationGetDTOApiV1>> getStoreReservationBy(
+            @PathVariable(name="userId") Long userId
+    ){
+
+        //List<ResStoreReservationGetApiDTOV1> reservations = ProductReservationFeignClient.getStoreReservations();
+        List<ResStoreReservationGetDTOApiV1.StoreReservation> storeReservationList = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            //store 데이터
+            ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.Store store=
+                    ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.Store.builder()
+                            .storeId(UUID.randomUUID())
+                            .build();
+
+            //timeslot 데이터
+            ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot timeSlot =
+                    ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.builder()
+                            .store(store)
+                            .date(LocalDate.now())
+                            .entryTime(LocalTime.of(12+i,0,0))
+                            .exitTime(LocalTime.of(13+i,0,0))
+                            .build();
+            //최상단 데이터 조합
+            ResStoreReservationGetDTOApiV1.StoreReservation reservation =
+                    ResStoreReservationGetDTOApiV1.StoreReservation.builder()
+                            .userId(userId)
+                            .storeReservationId(UUID.randomUUID())
+                            .visitStatus("SCHEDULED")
+                            .timeSlot(timeSlot)
+                            .build();
+
+            storeReservationList.add(reservation);
+        }
+
+        ResStoreReservationGetDTOApiV1 resDto = ResStoreReservationGetDTOApiV1.builder()
+                .storeReservationList(storeReservationList)
+                .build();
+
+        return new ResponseEntity<>(
+                ResDTO.<ResStoreReservationGetDTOApiV1>builder()
+                        .code("000")
+                        .message("성공적으로 처리되었습니다.")
+                        .data(resDto)
+                        .build(),
                 HttpStatus.OK
         );
     }
