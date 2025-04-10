@@ -39,10 +39,10 @@ public class StoreController {
         .endTime(LocalTime.parse("18:00"))
         .openStatus(OpenStatus.CLOSED)
         .build();
-    ResStorePostDtoApiV1 response = ResStorePostDtoApiV1.of(storeEntity.getStoreId());
+    ResStorePostDtoApiV1 resDto = ResStorePostDtoApiV1.of(storeEntity.getStoreId());
 
     return new ResponseEntity<>(
-        ResDTO.success(response),
+        ResDTO.success(resDto),
         HttpStatus.OK
     );
 
@@ -64,10 +64,10 @@ public class StoreController {
         .totalPerson(100)
         .build();
 
-    ResStorePutDtoApiV1 response = ResStorePutDtoApiV1.of(storeEntity);
+    ResStorePutDtoApiV1 resDto = ResStorePutDtoApiV1.of(storeEntity);
 
     return new ResponseEntity<>(
-        ResDTO.success(response),
+        ResDTO.success(resDto),
         HttpStatus.OK
     );
   }
@@ -90,10 +90,10 @@ public class StoreController {
         .build();
 
     // DTO 변환
-    ResStoreGetDtoApiV1 response = ResStoreGetDtoApiV1.of(storeEntity);
+    ResStoreGetDtoApiV1 resDto = ResStoreGetDtoApiV1.of(storeEntity);
 
     return new ResponseEntity<>(
-        ResDTO.success(response),
+        ResDTO.success(resDto),
         HttpStatus.OK
     );
   }
@@ -116,10 +116,10 @@ public class StoreController {
           .build()
       );
     }
-    List<ResStoreGetDtoApiV1> response = ResStoreGetDtoApiV1.of(storeList);
+    List<ResStoreGetDtoApiV1> resDto = ResStoreGetDtoApiV1.of(storeList);
 
     return new ResponseEntity<>(
-        ResDTO.success(response),
+        ResDTO.success(resDto),
         HttpStatus.OK
     );
   }
