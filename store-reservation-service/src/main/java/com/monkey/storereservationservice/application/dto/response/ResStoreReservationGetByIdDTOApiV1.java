@@ -6,20 +6,17 @@ import lombok.Getter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
 @Builder
-public class ResStoreReservationGetDTOApiV1 {
+public class ResStoreReservationGetByIdDTOApiV1 {
 
-    private List<StoreReservation> storeReservationList;
+    private StoreReservation storeReservation;
 
-    public static ResStoreReservationGetDTOApiV1 of() {
-        List<UUID> tmpList = List.of(UUID.randomUUID(), UUID.randomUUID());
-
-        return ResStoreReservationGetDTOApiV1.builder()
-                .storeReservationList(StoreReservation.from(tmpList))
+    public static ResStoreReservationGetByIdDTOApiV1 of() {
+        return ResStoreReservationGetByIdDTOApiV1.builder()
+                .storeReservation(StoreReservation.from())
                 .build();
     }
 
@@ -38,13 +35,6 @@ public class ResStoreReservationGetDTOApiV1 {
                     .timeSlot(TimeSlot.from())
                     .user(User.from())
                     .build();
-        }
-
-        public static List<StoreReservation> from(List<UUID> tmpList) {
-
-            return tmpList.stream()
-                    .map(id -> StoreReservation.from())
-                    .toList();
         }
 
         @Getter
