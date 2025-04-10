@@ -22,32 +22,32 @@ import java.util.UUID;
 public class StoreEntity extends BaseEntity {
 
   @Id
-  @Column(name = "storeId", nullable = false, unique = true)
+  @Column(name = "store_id", nullable = false, unique = true)
   private UUID storeId;
 
-  @Column(name = "storeName", length = 255, nullable = false)
+  @Column(name = "store_name", length = 255, nullable = false)
   private String storeName;
 
   @Column(name = "description", length = 255, nullable = false)
   private String description;
 
   @Enumerated(EnumType.STRING)
-  @Column(name = "openStatus", nullable = false)
+  @Column(name = "open_status", nullable = false)
   private OpenStatus openStatus;
 
-  @Column(name = "startDate", nullable = false)
+  @Column(name = "start_date", nullable = false)
   private LocalDate startDate;
 
-  @Column(name = "endDate", nullable = false)
+  @Column(name = "end_date", nullable = false)
   private LocalDate endDate;
 
-  @Column(name = "startTime", nullable = false)
+  @Column(name = "start_time", nullable = false)
   private LocalTime startTime;
 
-  @Column(name = "endTime", nullable = false)
+  @Column(name = "end_time", nullable = false)
   private LocalTime endTime;
 
-  @Column(name = "totalPerson", nullable = false)
+  @Column(name = "total_person", nullable = false)
   private Integer totalPerson;
 
   public enum OpenStatus {
