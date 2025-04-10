@@ -7,12 +7,12 @@ import java.util.UUID;
 
 @Getter
 @Builder
-public class ResStoreReservationPostDTOApiV1 {
+public class ResStoreReservationPostByIdCancelDTOApiV1 {
 
     private StoreReservation storeReservation;
 
-    public static ResStoreReservationPostDTOApiV1 of() {
-        return ResStoreReservationPostDTOApiV1.builder()
+    public static ResStoreReservationPostByIdCancelDTOApiV1 of() {
+        return ResStoreReservationPostByIdCancelDTOApiV1.builder()
                 .storeReservation(StoreReservation.from())
                 .build();
     }
