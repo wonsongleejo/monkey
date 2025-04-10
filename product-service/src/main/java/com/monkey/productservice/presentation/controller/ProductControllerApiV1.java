@@ -1,7 +1,6 @@
 package com.monkey.productservice.presentation.controller;
 
 import com.monkey.commonmodule.dto.ResDTO;
-import com.monkey.commonmodule.dto.ResponseCode;
 import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.request.ReqProductPutDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductGetByIdDTOApiV1;
@@ -10,6 +9,7 @@ import com.monkey.productservice.application.dto.response.ResProductPostDTOApiV1
 import com.monkey.productservice.application.dto.response.ResProductPutDTOApiV1;
 import com.monkey.productservice.domain.entity.ProductEntity;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +30,7 @@ public class ProductControllerApiV1 {
 
         ResProductPostDTOApiV1 resDto = ResProductPostDTOApiV1.of(productEntity);
 
-        return new ResponseEntity<>(ResDTO.success(resDto), ResponseCode.SUCCESS.getStatus());
+        return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
     // 상품 수정
@@ -51,7 +51,7 @@ public class ProductControllerApiV1 {
         reqDto.getProduct().update(productEntity);
         ResProductPutDTOApiV1 resDto = ResProductPutDTOApiV1.of(productEntity);
 
-        return new ResponseEntity<>(ResDTO.success(resDto), ResponseCode.SUCCESS.getStatus());
+        return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
     // 상품 전체 조회
@@ -71,7 +71,7 @@ public class ProductControllerApiV1 {
         }
 
         ResProductGetDTOApiV1 resDto = ResProductGetDTOApiV1.of(productList);
-        return ResponseEntity.ok(ResDTO.success(resDto));
+        return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
     // 상품 단건 조회
@@ -86,7 +86,6 @@ public class ProductControllerApiV1 {
                 .build();
 
         ResProductGetByIdDTOApiV1 resDto = ResProductGetByIdDTOApiV1.of(product);
-        return ResponseEntity.ok(ResDTO.success(resDto));
+        return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
-
 }
