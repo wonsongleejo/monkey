@@ -1,7 +1,6 @@
 package com.monkey.userservice.presentation.controller;
 
 import com.monkey.commonmodule.dto.ResDTO;
-import com.monkey.userservice.application.dto.response.ResProductReservationClientGetDTOApiV1;
 import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import com.monkey.userservice.application.dto.response.*;
 import com.monkey.userservice.domain.entity.UserEntity;
@@ -107,27 +106,27 @@ public class UserControllerApiV1 {
             @PathVariable(name="userId") Long userId
     ){
 
-        //List<ResStoreReservationClientGetDTOApiV1> reservations = ProductReservationFeignClient.getStoreReservations();
-        List<ResStoreReservationGetDTOApiV1.StoreReservation> storeReservationList = new ArrayList<>();
+        //List<ResStoreReservationGetApiDTOV1> reservations = ProductReservationFeignClient.getStoreReservations();
+        List<ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation> storeReservationList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
             //store 데이터
-            ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.Store store=
-                    ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.Store.builder()
+            ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation.TimeSlot.Store store=
+                    ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation.TimeSlot.Store.builder()
                             .storeId(UUID.randomUUID())
                             .build();
 
             //timeslot 데이터
-            ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot timeSlot =
-                    ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.builder()
+            ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation.TimeSlot timeSlot =
+                    ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation.TimeSlot.builder()
                             .store(store)
                             .date(LocalDate.now())
                             .entryTime(LocalTime.of(12+i,0,0))
                             .exitTime(LocalTime.of(13+i,0,0))
                             .build();
             //최상단 데이터 조합
-            ResStoreReservationGetDTOApiV1.StoreReservation reservation =
-                    ResStoreReservationGetDTOApiV1.StoreReservation.builder()
+            ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation reservation =
+                    ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation.builder()
                             .userId(userId)
                             .storeReservationId(UUID.randomUUID())
                             .visitStatus("SCHEDULED")
@@ -137,15 +136,11 @@ public class UserControllerApiV1 {
             storeReservationList.add(reservation);
         }
 
-        ResStoreReservationGetDTOApiV1 resDto = ResStoreReservationGetDTOApiV1.builder()
-                .storeReservationList(storeReservationList)
-                .build();
-
         return new ResponseEntity<>(
                 ResDTO.<ResStoreReservationGetDTOApiV1>builder()
                         .code("000")
                         .message("성공적으로 처리되었습니다.")
-                        .data(resDto)
+                        .data(ResStoreReservationGetDTOApiV1.of(storeReservationList))
                         .build(),
                 HttpStatus.OK
         );
