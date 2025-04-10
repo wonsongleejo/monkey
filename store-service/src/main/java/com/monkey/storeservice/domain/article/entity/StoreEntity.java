@@ -1,5 +1,6 @@
 package com.monkey.storeservice.domain.article.entity;
 
+import com.monkey.commonmodule.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -18,7 +19,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class StoreEntity {
+public class StoreEntity extends BaseEntity {
 
   @Id
   @Column(name = "storeId", nullable = false, unique = true)
