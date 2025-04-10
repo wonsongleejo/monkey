@@ -1,11 +1,9 @@
 package com.monkey.userservice.presentation.controller;
 
 import com.monkey.commonmodule.dto.ResDTO;
+import com.monkey.userservice.application.dto.response.ResProductReservationClientGetDTOApiV1;
 import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
-import com.monkey.userservice.application.dto.response.ResStoreReservationGetDTOApiV1;
-import com.monkey.userservice.application.dto.response.ResUserGetByIdDTOApiV1;
-import com.monkey.userservice.application.dto.response.ResUserGetDTOApiV1;
-import com.monkey.userservice.application.dto.response.ResUserPutDTOApiV1;
+import com.monkey.userservice.application.dto.response.*;
 import com.monkey.userservice.domain.entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -109,7 +107,7 @@ public class UserControllerApiV1 {
             @PathVariable(name="userId") Long userId
     ){
 
-        //List<ResStoreReservationGetApiDTOV1> reservations = ProductReservationFeignClient.getStoreReservations();
+        //List<ResStoreReservationClientGetDTOApiV1> reservations = ProductReservationFeignClient.getStoreReservations();
         List<ResStoreReservationGetDTOApiV1.StoreReservation> storeReservationList = new ArrayList<>();
 
         for (int i = 0; i < 10; i++) {
@@ -148,6 +146,49 @@ public class UserControllerApiV1 {
                         .code("000")
                         .message("성공적으로 처리되었습니다.")
                         .data(resDto)
+                        .build(),
+                HttpStatus.OK
+        );
+    }
+
+    //한정 상품 예약 내역
+    @GetMapping("/{userId}/product-reservation")
+    public ResponseEntity<ResDTO<ResProductReservationGetDTOApiV1>> getProductReservationsBy(
+            @PathVariable(name="userId") Long userId
+    ){
+        //List<ResProductReservationClientGetDTOApiV1> reservations = ProductReservationFeignClient.getStoreReservations();
+        List<ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation> prodcutReservationList = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.Product product =
+                    ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.Product.builder()
+                    .productId(UUID.randomUUID())
+                    .productName("맛있는 마카롱 " + i)
+                    .build();
+
+            ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.Store store =
+                    ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.Store.builder()
+                    .storeId(UUID.randomUUID())
+                    .storeName("마카롱 맛집 " + i)
+                    .quantity(i + 1)
+                    .receivedStatus("PENDING")
+                    .build();
+
+            ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation reqDto =
+                    ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.builder()
+                    .productReservationId(UUID.randomUUID())
+                    .product(product)
+                    .store(store)
+                    .build();
+
+            prodcutReservationList.add(reqDto);
+        }
+
+        return new ResponseEntity<>(
+                ResDTO.<ResProductReservationGetDTOApiV1>builder()
+                        .code("000")
+                        .message("성공적으로 처리되었습니다.")
+                        .data(ResProductReservationGetDTOApiV1.of(prodcutReservationList))
                         .build(),
                 HttpStatus.OK
         );
