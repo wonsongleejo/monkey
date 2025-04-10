@@ -1,6 +1,6 @@
 package com.monkey.productservice.domain.entity;
 
-import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
+import com.monkey.commonmodule.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +13,7 @@ import java.util.UUID;
 @Setter
 @Table(name = "p_product")
 @Builder
-public class ProductEntity {
+public class ProductEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(nullable = false)
@@ -31,10 +31,11 @@ public class ProductEntity {
     @Column(nullable = false)
     private Integer quantity;
 
-    public ProductEntity(ReqProductPostDTOApiV1.Product productDto) {
-        this.storeId = productDto.getStoreId();
-        this.productName = productDto.getProductName();
-        this.price = productDto.getPrice();
-        this.quantity = productDto.getQuantity();
-    }
+    // 엔티티는 DTO랑 직접적으로 연결되면 안됨. 도메인 계층은 순수해야 함
+//    public ProductEntity(ReqProductPostDTOApiV1.Product productDto) {
+//        this.storeId = productDto.getStoreId();
+//        this.productName = productDto.getProductName();
+//        this.price = productDto.getPrice();
+//        this.quantity = productDto.getQuantity();
+//    }
 }

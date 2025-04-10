@@ -17,7 +17,7 @@ public class ReqProductPutDTOApiV1 {
 
     @Valid
     @NotNull(message = "상품 정보를 입력해주세요.")
-    private ReqProductPutDTOApiV1.Product product;
+    private Product product;
 
     @Getter
     @Builder
@@ -35,6 +35,7 @@ public class ReqProductPutDTOApiV1 {
         @Min(value = 0, message = "상품 수량은 0 이상이어야 합니다.")
         private Integer quantity;
 
+        // DTO 안에서 update 하는 방식 - 내부적으로 처리해서 깔끔
         public void update(ProductEntity productEntity) {
             productEntity.setProductName(productName);
             productEntity.setPrice(price);
