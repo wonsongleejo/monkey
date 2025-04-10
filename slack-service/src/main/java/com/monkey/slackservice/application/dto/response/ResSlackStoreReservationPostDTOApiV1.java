@@ -12,7 +12,7 @@ public class ResSlackStoreReservationPostDTOApiV1 {
 
     public static ResSlackStoreReservationPostDTOApiV1 of(UUID storeReservationId, String status) {
         return ResSlackStoreReservationPostDTOApiV1.builder()
-                .storeReservation(StoreReservation.of(storeReservationId, status))
+                .storeReservation(StoreReservation.from(storeReservationId, status))
                 .build();
     }
 
@@ -22,7 +22,7 @@ public class ResSlackStoreReservationPostDTOApiV1 {
         private UUID storeReservationId;
         private String status;
 
-        public static StoreReservation of(UUID storeReservationId, String status) {
+        public static StoreReservation from(UUID storeReservationId, String status) {
             return StoreReservation.builder()
                     .storeReservationId(storeReservationId)
                     .status(status)
