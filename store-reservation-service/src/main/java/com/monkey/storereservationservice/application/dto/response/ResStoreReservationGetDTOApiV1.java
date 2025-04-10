@@ -41,7 +41,6 @@ public class ResStoreReservationGetDTOApiV1 {
         }
 
         public static List<StoreReservation> from(List<UUID> tmpList) {
-//            List<UUID> tmpList = List.of(UUID.randomUUID(), UUID.randomUUID());
 
             return tmpList.stream()
                     .map(id -> StoreReservation.from())
