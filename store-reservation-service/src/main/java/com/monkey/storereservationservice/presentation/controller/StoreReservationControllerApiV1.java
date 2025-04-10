@@ -2,6 +2,7 @@ package com.monkey.storereservationservice.presentation.controller;
 
 import com.monkey.commonmodule.dto.ResDTO;
 import com.monkey.storereservationservice.application.dto.request.ReqStoreReservationPostDTOApiV1;
+import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetByIdDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPostByIdCancelDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPostDTOApiV1;
@@ -46,6 +47,18 @@ public class StoreReservationControllerApiV1 {
             @RequestParam(required = false) UUID storeId
     ) {
         ResStoreReservationGetDTOApiV1 resDto = ResStoreReservationGetDTOApiV1.of();
+
+        return new ResponseEntity<>(
+                ResDTO.success(resDto),
+                HttpStatus.OK
+        );
+    }
+
+    @GetMapping("/{storeReservationId}")
+    public ResponseEntity<ResDTO<ResStoreReservationGetByIdDTOApiV1>> getDetailBy(
+            @PathVariable UUID storeReservationId
+    ) {
+        ResStoreReservationGetByIdDTOApiV1 resDto = ResStoreReservationGetByIdDTOApiV1.of();
 
         return new ResponseEntity<>(
                 ResDTO.success(resDto),
