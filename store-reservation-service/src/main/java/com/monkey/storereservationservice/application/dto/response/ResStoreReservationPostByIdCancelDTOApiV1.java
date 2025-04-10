@@ -29,7 +29,7 @@ public class ResStoreReservationPostByIdCancelDTOApiV1 {
         public static StoreReservation from() {
             return StoreReservation.builder()
                     .storeReservationId(UUID.randomUUID())
-                    .status(StoreReservationStatus.SCHEDULED)
+                    .status(StoreReservationStatus.CANCELED)
                     .build();
         }
     }
