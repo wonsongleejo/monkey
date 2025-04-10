@@ -4,6 +4,8 @@ import com.monkey.storereservationservice.domain.StoreReservation.entity.StoreRe
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -50,16 +52,16 @@ public class ResStoreReservationGetDTOApiV1 {
         @Builder
         public static class TimeSlot {
             private Store store;
-            private String date;
-            private String startTime;
-            private String endTime;
+            private LocalDate date;
+            private LocalTime entryTime;
+            private LocalTime exitTime;
 
             public static TimeSlot from() {
                 return TimeSlot.builder()
                         .store(Store.from())
-                        .date("0")
-                        .startTime("0")
-                        .endTime("0")
+                        .date(LocalDate.parse("2025-04-19"))
+                        .entryTime(LocalTime.parse("10:00"))
+                        .exitTime(LocalTime.parse("11:00"))
                         .build();
             }
 
