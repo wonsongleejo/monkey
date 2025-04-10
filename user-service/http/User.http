@@ -28,3 +28,8 @@ Content-Type: application/json
 ### GET STORE_RESERVATION
 GET http://localhost:8081/v1/users/1/store-reservation
 Content-Type: application/json
+
+
+### GET PRODUCT_RESERVATION
+GET http://localhost:8081/v1/users/1/product-reservation
+Content-Type: application/json
