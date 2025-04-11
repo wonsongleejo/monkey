@@ -1,6 +1,7 @@
 package com.monkey.productreservationservice.domain.entity;
 
 import com.monkey.commonmodule.entity.BaseEntity;
+import com.monkey.productreservationservice.domain.enums.ProductReservationStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
