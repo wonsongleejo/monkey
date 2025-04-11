@@ -116,6 +116,7 @@ public class StoreController {
           .build()
       );
     }
+    
     List<ResStoreGetDtoApiV1> resDto = ResStoreGetDtoApiV1.of(storeList);
 
     return new ResponseEntity<>(

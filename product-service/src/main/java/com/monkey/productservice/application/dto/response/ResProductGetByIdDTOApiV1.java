@@ -15,7 +15,7 @@ import java.util.UUID;
 public class ResProductGetByIdDTOApiV1 {
     private Product product;
 
-    public static ResProductGetByIdDTOApiV1 of(ProductEntity productEntity) {
+    public static ResProductGetByIdDTOApiV1 of(ProductEntity productEntity) { // ,StoreDTO 추가해서 from 안에 넣기 (FeignClient로 받아옴)
         return ResProductGetByIdDTOApiV1.builder()
                 .product(Product.from(productEntity))
                 .build();
@@ -27,19 +27,33 @@ public class ResProductGetByIdDTOApiV1 {
     @AllArgsConstructor
     public static class Product{
         private UUID productId;
-        private UUID storeId;
+        private Store store; // Store 자체를 리턴하도록 수정
         private String productName;
         private Integer price;
         private Integer quantity;
 
-        public static Product from(ProductEntity productEntity) {
+        public static Product from(ProductEntity productEntity) { // ,StoreDTO 추가해서 from 안에 넣기 (FeignClient로 받아옴)
             return Product.builder()
                     .productId(productEntity.getProductId())
-                    .storeId(productEntity.getStoreId())
+                    .store(Store.from())
                     .productName(productEntity.getProductName())
                     .price(productEntity.getPrice())
                     .quantity(productEntity.getQuantity())
                     .build();
+        }
+
+        @Getter
+        @Builder
+        public static class Store {
+            private UUID storeId;
+            private String storeName;
+
+            public static Store from() { // Store 값 나중에 받아오기
+                return Store.builder()
+                        .storeId(UUID.randomUUID())
+                        .storeName(UUID.randomUUID().toString())
+                        .build();
+            }
         }
     }
 }

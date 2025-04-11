@@ -41,8 +41,14 @@ public class ReqProductPostDTOApiV1 {
         private Integer quantity;
 
         // DTO → Entity 변환 메서드
+        // 엔티티에 생성자 만들어서 이용하면 안됨 -> ProductEntity.builder() 사용하는 방식으로 수정
         public ProductEntity toEntity() {
-            return new ProductEntity(this);
+            return ProductEntity.builder()
+                    .storeId(storeId)
+                    .productName(productName)
+                    .price(price)
+                    .quantity(quantity)
+                    .build();
         }
     }
 }
