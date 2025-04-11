@@ -25,7 +25,7 @@ public class ProductReservationControllerApiV1 {
             ) {
         // storeId, userId -> 임시로 값 받아옴
         UUID storeId = UUID.randomUUID();
-        long userId = 123;
+        long userId = 123L;
 
         ProductReservationEntity productReservationEntity = reqDto.getProductReservation().toEntity(
                 productId, userId, storeId, ProductReservationStatus.PENDING_PICKUP
@@ -35,5 +35,27 @@ public class ProductReservationControllerApiV1 {
 
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
+
+    // 예약 취소
+    @PostMapping("/{productId}/cancel")
+    public ResponseEntity<ResDTO<ResProductReservationPostByIdCancelDTOApiV1>> cancelBy(
+            @PathVariable UUID productId
+    ) {
+        // 임시 데이터
+        ProductReservationEntity productReservationEntity = ProductReservationEntity.builder()
+                .productReservationId(UUID.randomUUID())
+                .productId(productId)
+                .userId(123L)
+                .storeId(UUID.randomUUID())
+                .quantity(1)
+                .status(ProductReservationStatus.CANCELED)
+                .build();
+
+        ResProductReservationPostByIdCancelDTOApiV1 resDto = ResProductReservationPostByIdCancelDTOApiV1.of(productReservationEntity);
+
+        return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
+    }
+
+
 
 }
