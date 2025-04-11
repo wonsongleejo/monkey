@@ -24,7 +24,7 @@ public class ProductReservationEntity extends BaseEntity {
     private UUID productId;
 
     @Column(nullable = false)
-    private UUID userId;
+    private long userId;
 
     @Column(nullable = false)
     private UUID storeId;
