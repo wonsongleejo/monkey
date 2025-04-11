@@ -7,7 +7,6 @@ import lombok.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
-import org.h2.mvstore.db.Store;
 
 @Getter
 @Builder
@@ -15,32 +14,53 @@ import org.h2.mvstore.db.Store;
 @AllArgsConstructor
 public class ResStoreGetDtoApiV1 {
 
-  private UUID storeId;
-  private String storeName;
-  private String description;
-  private StoreEntity.OpenStatus openStatus;
-  private LocalDate startDate;
-  private LocalDate endDate;
-  private LocalTime startTime;
-  private LocalTime endTime;
-  private Integer totalPerson;
+  private Store store;
+  private List<Store> storeList;
 
   public static ResStoreGetDtoApiV1 of(StoreEntity storeEntity) {
     return ResStoreGetDtoApiV1.builder()
-        .storeId(storeEntity.getStoreId())
-        .storeName(storeEntity.getStoreName())
-        .description(storeEntity.getDescription())
-        .openStatus(storeEntity.getOpenStatus())
-        .startDate(storeEntity.getStartDate())
-        .endDate(storeEntity.getEndDate())
-        .startTime(storeEntity.getStartTime())
-        .endTime(storeEntity.getEndTime())
-        .totalPerson(storeEntity.getTotalPerson())
+        .store(Store.from(storeEntity))
         .build();
   }
-  public static List<ResStoreGetDtoApiV1> of(List<StoreEntity> storeList) {
-    return storeList.stream()
-        .map(ResStoreGetDtoApiV1::of)
-        .toList();
+  public static ResStoreGetDtoApiV1 of(List<StoreEntity> storeEntityList) {
+    return ResStoreGetDtoApiV1.builder()
+        .storeList(Store.from(storeEntityList))
+        .build();
+  }
+
+  @Getter
+  @Builder
+  public static class Store {
+
+    private UUID storeId;
+    private String storeName;
+    private String description;
+    private StoreEntity.OpenStatus openStatus;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private LocalTime startTime;
+    private LocalTime endTime;
+    private Integer totalPersonCount;
+
+    public static Store from(StoreEntity storeEntity) {
+      return Store.builder()
+          .storeId(storeEntity.getStoreId())
+          .storeName(storeEntity.getStoreName())
+          .description(storeEntity.getDescription())
+          .openStatus(storeEntity.getOpenStatus())
+          .startDate(storeEntity.getStartDate())
+          .endDate(storeEntity.getEndDate())
+          .startTime(storeEntity.getStartTime())
+          .endTime(storeEntity.getEndTime())
+          .totalPersonCount(storeEntity.getTotalPersonCount())
+          .build();
+    }
+
+    public static List<Store> from(List<StoreEntity> storeEntityList) {
+      return storeEntityList.stream()
+          .map(storeEntity -> Store.from(storeEntity))
+          .toList();
+
+    }
   }
 }
