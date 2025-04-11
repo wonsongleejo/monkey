@@ -1,0 +1,22 @@
+### 예약 생성 테스트
+POST http://localhost:8083/v1/store-reservations
+Content-Type: application/json
+
+{
+  "storeReservation" : {
+    "timeSlotId": "123e4567-e89b-12d3-a456-426614174000",
+    "personCount": 1
+  }
+}
+
+### 예약 취소 테스트
+POST http://localhost:8083/v1/store-reservations/123e4567-e89b-12d3-a456-426614174000/cancel
+Content-Type: application/json
+
+### 예약 전체 목록 조회 테스트
+GET http://localhost:8083/v1/store-reservations
+Content-Type: application/json
+
+### 예약 단건 상세 조회 테스트
+GET http://localhost:8083/v1/store-reservations/123e4567-e89b-12d3-a456-426614174000
+Content-Type: application/json
