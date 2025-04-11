@@ -2,6 +2,7 @@ package com.monkey.productreservationservice.presentation.controller;
 
 import com.monkey.commonmodule.dto.ResDTO;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
+import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetByIdDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostByIdCancelDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
@@ -12,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -80,6 +82,20 @@ public class ProductReservationControllerApiV1 {
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
+    // 예약내역 상세 조회
+    @GetMapping("/{productReservationId}")
+    public ResponseEntity<ResDTO<ResProductReservationGetByIdDTOApiV1>> getById(@PathVariable UUID productReservationId) {
+        ProductReservationEntity productReservation = ProductReservationEntity.builder()
+                .productReservationId(productReservationId)
+                .productId(UUID.randomUUID())
+                .userId(123L)
+                .storeId(UUID.randomUUID())
+                .quantity(1)
+                .status(ProductReservationStatus.PENDING_PICKUP)
+                .build();
 
+        ResProductReservationGetByIdDTOApiV1 resDto = ResProductReservationGetByIdDTOApiV1.of(productReservation);
+        return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
+    }
 
 }
