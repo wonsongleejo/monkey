@@ -1,5 +1,7 @@
 package com.monkey.storeservice.application.dto.request;
 
+import com.monkey.storeservice.domain.article.entity.StoreEntity;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -18,33 +20,51 @@ import lombok.Setter;
 @Builder
 public class ReqStorePostDtoApiV1 {
 
-  @NotBlank(message = "팝업스토어 이름을 입력해주세요.")
-  private String storeName;
+  @Valid
+  @NotNull
+  private Store store;
 
-  @NotBlank(message = "팝업스토어 설명을 입력해주세요.")
-  private String description;
+  @Getter
+  @Builder
+  public static class Store{
 
-  @NotNull(message = "팝업스토어 상태를 입력해주세요.")
-  private OpenStatus openStatus;
+    @NotBlank(message = "팝업스토어 이름을 입력해주세요.")
+    private String storeName;
 
-  @NotNull(message = "팝업스토어 오픈날짜를 입력해주세요.")
-  private LocalDate startDate;
+    @NotBlank(message = "팝업스토어 설명을 입력해주세요.")
+    private String description;
 
-  @NotNull(message = "팝업스토어 종료날짜를 입력해주세요.")
-  private LocalDate endDate;
+    @NotNull(message = "팝업스토어 상태를 입력해주세요.")
+    private StoreEntity.OpenStatus openStatus;
 
-  @NotNull(message = "팝업스토어 시작시간을 입력해주세요.")
-  private LocalTime startTime;
+    @NotNull(message = "팝업스토어 오픈날짜를 입력해주세요.")
+    private LocalDate startDate;
 
-  @NotNull(message = "팝업스토어 종료시간을 입력해주세요.")
-  private LocalTime endTime;
+    @NotNull(message = "팝업스토어 종료날짜를 입력해주세요.")
+    private LocalDate endDate;
 
-  @NotNull(message = "팝업스토어 총 수용 인원을 입력해주세요.")
-  @Min(1)
-  private Integer totalPerson;
+    @NotNull(message = "팝업스토어 시작시간을 입력해주세요.")
+    private LocalTime startTime;
 
-  public enum OpenStatus {
-    OPEN, CLOSE;
+    @NotNull(message = "팝업스토어 종료시간을 입력해주세요.")
+    private LocalTime endTime;
 
+    @NotNull(message = "팝업스토어 총 수용 인원을 입력해주세요.")
+    @Min(1)
+    private Integer totalPersonCount;
+
+    public StoreEntity toEntity() {
+
+      return StoreEntity.builder()
+          .storeName(storeName)
+          .description(description)
+          .openStatus(openStatus)
+          .startDate(startDate)
+          .endDate(endDate)
+          .startTime(startTime)
+          .endTime(endTime)
+          .totalPersonCount(totalPersonCount)
+          .build();
+    }
   }
 }

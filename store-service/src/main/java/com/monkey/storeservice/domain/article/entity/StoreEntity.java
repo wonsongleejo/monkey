@@ -5,6 +5,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.*;
@@ -23,6 +25,7 @@ public class StoreEntity extends BaseEntity {
 
   @Id
   @Column(name = "store_id", nullable = false, unique = true)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private UUID storeId;
 
   @Column(name = "store_name", length = 255, nullable = false)
@@ -47,8 +50,8 @@ public class StoreEntity extends BaseEntity {
   @Column(name = "end_time", nullable = false)
   private LocalTime endTime;
 
-  @Column(name = "total_person", nullable = false)
-  private Integer totalPerson;
+  @Column(name = "total_person_count", nullable = false)
+  private Integer totalPersonCount;
 
   public enum OpenStatus {
     OPEN, CLOSED

@@ -72,7 +72,7 @@ public class StoreController {
 
     //Put요청 Dto에 있는 update메서드로 db업데이트
     reqStorePutDtoApiV1.getStore().update(storeEntity);
-
+    
     ResStorePutDtoApiV1 resDto = ResStorePutDtoApiV1.of(storeEntity);
 
     return new ResponseEntity<>(
@@ -126,6 +126,7 @@ public class StoreController {
           .build()
       );
     }
+    
     ResStoreGetDtoApiV1 resDto = ResStoreGetDtoApiV1.of(storeList);
 
     return new ResponseEntity<>(
