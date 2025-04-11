@@ -1,6 +1,7 @@
 package com.monkey.productreservationservice.domain.entity;
 
 import com.monkey.commonmodule.entity.BaseEntity;
+import com.monkey.productreservationservice.domain.enums.ProductReservationStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,7 +24,7 @@ public class ProductReservationEntity extends BaseEntity {
     private UUID productId;
 
     @Column(nullable = false)
-    private UUID userId;
+    private long userId;
 
     @Column(nullable = false)
     private UUID storeId;
