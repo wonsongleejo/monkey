@@ -21,7 +21,7 @@ public class ResStorePutDtoApiV1 {
   private LocalDate endDate;
   private LocalTime startTime;
   private LocalTime endTime;
-  private Integer totalPerson;
+  private Integer totalPersonCount;
 
   public static ResStorePutDtoApiV1 of(StoreEntity storeEntity) {
     return ResStorePutDtoApiV1.builder()
@@ -32,7 +32,7 @@ public class ResStorePutDtoApiV1 {
         .endDate(storeEntity.getEndDate())
         .startTime(storeEntity.getStartTime())
         .endTime(storeEntity.getEndTime())
-        .totalPerson(storeEntity.getTotalPerson())
+        .totalPersonCount(storeEntity.getTotalPersonCount())
         .build();
   }
 }
