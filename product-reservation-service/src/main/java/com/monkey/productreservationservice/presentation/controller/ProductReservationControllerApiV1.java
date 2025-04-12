@@ -2,6 +2,7 @@ package com.monkey.productreservationservice.presentation.controller;
 
 import com.monkey.commonmodule.dto.ResDTO;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
+import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostByIdCancelDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
@@ -11,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -52,7 +55,28 @@ public class ProductReservationControllerApiV1 {
                 .build();
 
         ResProductReservationPostByIdCancelDTOApiV1 resDto = ResProductReservationPostByIdCancelDTOApiV1.of(productReservationEntity);
+        return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
+    }
 
+    // 예약내역 전체 조회
+    @GetMapping
+    public ResponseEntity<ResDTO<ResProductReservationGetDTOApiV1>> getBy() {
+        List<ProductReservationEntity> productEntityList = new ArrayList<>();
+
+        // 임시 조회용 데이터
+        for (int i = 0; i < 5; i++) {
+            productEntityList.add(ProductReservationEntity.builder()
+                    .productReservationId(UUID.randomUUID())
+                    .productId(UUID.randomUUID())
+                    .userId(123)
+                    .storeId(UUID.randomUUID())
+                    .quantity(10 + i)
+                    .status(ProductReservationStatus.PENDING_PICKUP)
+                    .build()
+            );
+        }
+
+        ResProductReservationGetDTOApiV1 resDto = ResProductReservationGetDTOApiV1.of(productEntityList);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
