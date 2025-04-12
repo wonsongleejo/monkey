@@ -145,4 +145,33 @@ public class ProductControllerApiV1Test {
                 );
     }
 
+    // 상품 단건 조회
+    @Test
+    public void testProductGetByIdSuccess() throws Exception {
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.get("/v1/products/{productId}", UUID.randomUUID())
+                )
+                .andExpectAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("code").value("000")
+                )
+                .andDo(
+                        document("상품 단건 조회 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("PRODUCTS v1")
+                                        .summary("상품 단건 조회")
+                                        .description("""
+                                                ## 상품 단건 조회 엔드포인트 입니다.
+                                                """)
+                                        .pathParameters(
+                                                parameterWithName("productId").type(SimpleType.STRING).description("상품 ID")
+                                        )
+                                        .build()
+                                )
+                        )
+                );
+    }
+
 }
