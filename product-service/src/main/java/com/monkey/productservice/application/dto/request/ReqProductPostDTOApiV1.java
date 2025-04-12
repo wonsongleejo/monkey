@@ -14,7 +14,9 @@ import lombok.NoArgsConstructor;
 import java.util.UUID;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class ReqProductPostDTOApiV1 {
 
     @Valid
