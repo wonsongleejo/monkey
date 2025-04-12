@@ -1,0 +1,4 @@
+# Eureka를 실행하지 않고 테스트하기 위해 추가
+eureka:
+  client:
+    enabled: false
