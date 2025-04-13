@@ -44,8 +44,9 @@ public class ProductControllerApiV1 {
                 .productId(productId)
                 .storeId(UUID.randomUUID())
                 .productName("바나나 인형")
-                .price(0)
-                .quantity(0)
+                .price(40000)
+                .quantity(3)
+                .purchaseLimitPerUser(2)
                 .build();
 
         reqDto.getProduct().update(productEntity);
@@ -66,10 +67,10 @@ public class ProductControllerApiV1 {
                     .productName("상품 " + i)
                     .price(10000 + i * 1000)
                     .quantity(10 + i)
+                    .purchaseLimitPerUser(1 + i)
                     .build()
             );
         }
-
         ResProductGetDTOApiV1 resDto = ResProductGetDTOApiV1.of(productList);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
@@ -83,6 +84,7 @@ public class ProductControllerApiV1 {
                 .productName("바나나 인형")
                 .price(12000)
                 .quantity(50)
+                .purchaseLimitPerUser(3)
                 .build();
 
         ResProductGetByIdDTOApiV1 resDto = ResProductGetByIdDTOApiV1.of(product);
