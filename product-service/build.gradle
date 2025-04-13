@@ -1,5 +1,15 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot'
+    id 'io.spring.dependency-management'
+}
+
 ext {
     set('springCloudVersion', "2024.0.1")
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -14,7 +24,6 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     implementation 'org.postgresql:postgresql:42.7.1'
-
 }
 
 dependencyManagement {
