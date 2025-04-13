@@ -25,7 +25,7 @@ public class StoreEntity extends BaseEntity {
 
   @Id
   @Column(name = "store_id", nullable = false, unique = true)
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.UUID)
   private UUID storeId;
 
   @Column(name = "store_name", length = 255, nullable = false)
