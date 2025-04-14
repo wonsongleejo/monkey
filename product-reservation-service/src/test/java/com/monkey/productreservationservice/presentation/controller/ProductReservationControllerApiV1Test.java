@@ -23,7 +23,6 @@ import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithNam
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 @SpringBootTest
@@ -51,7 +50,7 @@ public class ProductReservationControllerApiV1Test {
         String reqDtoJson = objectMapper.writeValueAsString(reqDto);
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/product-reservations/{productId}", UUID.randomUUID())
-                        //                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
+                        // .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(reqDtoJson)
                 )
@@ -90,6 +89,41 @@ public class ProductReservationControllerApiV1Test {
     }
 
     // 예약 취소
+    @Test
+    public void testProductReservationCancelPostSuccess() throws Exception {
+        mockMvc.perform(
+                RestDocumentationRequestBuilders.post("/v1/product-reservations/{productReservationId}/cancel", UUID.randomUUID())
+                        // .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
+                        .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpectAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("code").value("000")
+                )
+                .andDo(
+                        document("상품 예약 취소 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("PRODUCT Reservations v1")
+                                        .summary("상품 예약 취소")
+                                        .description("""
+                                                ## 상품 예약 취소 엔드포인트 입니다.
+                                                """)
+                                        .pathParameters(
+                                                parameterWithName("productReservationId").type(SimpleType.STRING).description("상품 예약 ID")
+                                        )
+                                        .responseFields(
+                                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                                fieldWithPath("data.productReservation.productReservationId").type(JsonFieldType.STRING).description("상품 예약 ID"),
+                                                fieldWithPath("data.productReservation.status").type(JsonFieldType.STRING).description("예약 상태")
+                                        )
+                                        .build()
+                                )
+                        )
+                );
+    }
 
     // 예약 상세 조회
 }
