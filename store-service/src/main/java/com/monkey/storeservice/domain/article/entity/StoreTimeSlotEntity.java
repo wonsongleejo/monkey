@@ -26,7 +26,7 @@ import lombok.Setter;
 public class StoreTimeSlotEntity extends BaseEntity {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.UUID)
   @Column(name = "timeslot_id", nullable = false)
   private UUID timeslotId;
 
