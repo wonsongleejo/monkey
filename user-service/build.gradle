@@ -64,7 +64,6 @@ openapi3 {
     format = 'json'
 }
 
-// task를 만듭니다.
 tasks.register('setDocs') {
     dependsOn 'postman'
     dependsOn 'openapi3'
