@@ -1,7 +1,5 @@
 plugins {
-    id 'java'
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
+    id 'com.epages.restdocs-api-spec' version "0.19.2"
 }
 
 ext {
@@ -33,4 +31,62 @@ dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
+}
+
+compileJava {
+    dependsOn 'clean'
+}
+
+test {
+    enabled = true;
+}
+
+postman {
+    baseUrl = 'http://localhost:8080'
+    title = 'SLACK API'
+    version = '1.0.0'
+}
+
+openapi3 {
+    servers = [
+            {
+                url = 'http://localhost:8080'
+            }
+    ]
+    title = 'SLACK API'
+    description = ''
+    version = '1.0.0'
+    format = 'json'
+}
+
+tasks.register('setDocs') {
+    dependsOn 'postman'
+    dependsOn 'openapi3'
+
+    doLast {
+        copy {
+            from "build/api-spec"
+            include "*.json"
+            include "*.yaml"
+            into "build/resources/main/static/springdoc"
+            rename { String fileName ->
+                if (fileName.endsWith('.json')) {
+                    return fileName.replace('.json', '-slack-service.json')
+                } else if (fileName.endsWith('.yaml')) {
+                    return fileName.replace('.yaml', '-slack-service.yml')
+                }
+                return fileName
+            }
+        }
+    }
+}
+
+// bootRun 실행 시 문서 생성 태스크를 실행
+bootRun {
+    dependsOn 'setDocs'
+}
+
+// bootJar 실행 시 문서 생성 태스크를 실행
+bootJar {
+    dependsOn 'setDocs'
 }

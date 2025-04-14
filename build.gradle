@@ -4,7 +4,6 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.4.4' apply false
     id 'io.spring.dependency-management' version '1.1.7' apply false
-    id 'com.epages.restdocs-api-spec' version '0.18.4'
 }
 
 java {
@@ -52,16 +51,4 @@ subprojects {
     tasks.named('test') {
         useJUnitPlatform()
     }
-
-    openapi3 {
-        servers = [
-                { url = 'http://localhost' },
-                { url = 'http://production-api-server-url.com' }
-        ]
-        title = 'Popup Store API'
-        description = 'Popup Store API description'
-        version = '1.0.0'
-        format = 'json'
-    }
-
 }

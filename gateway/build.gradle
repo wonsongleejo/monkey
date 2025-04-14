@@ -1,9 +1,3 @@
-plugins {
-    id 'java'
-    id 'org.springframework.boot'
-    id 'io.spring.dependency-management'
-}
-
 ext {
     set('springCloudVersion', "2024.0.1")
 }
