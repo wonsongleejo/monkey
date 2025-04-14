@@ -1,0 +1,86 @@
+package com.monkey.storereservationservice.presentation.controller;
+
+import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.monkey.storereservationservice.application.dto.request.ReqStoreReservationPostDTOApiV1;
+import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.UUID;
+
+import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+
+@SpringBootTest
+@AutoConfigureRestDocs
+@AutoConfigureMockMvc
+@Transactional
+@ActiveProfiles("test")
+public class StoreReservationControllerApiV1Test {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    // 예약 생성
+    @Test
+    public void testStoreReservationPostSuccess() throws Exception {
+        ReqStoreReservationPostDTOApiV1 reqDto = ReqStoreReservationPostDTOApiV1.builder()
+                .storeReservation(
+                        ReqStoreReservationPostDTOApiV1.StoreReservation.builder()
+                                .timeSlotId(UUID.randomUUID())
+                                .personCount(1)
+                                .build()
+                )
+                .build();
+
+        String reqDtoJson = objectMapper.writeValueAsString(reqDto);
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders.post("/v1/store-reservations")
+                                .content(reqDtoJson)
+                                .contentType(MediaType.APPLICATION_JSON)
+                )
+                .andExpectAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("code").value("000")
+                )
+                .andDo(
+                        document(
+                                "STORE-RESERVATION 예약 생성 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("STORE-RESERVATION v1")
+                                        .summary("팝업스토어 예약 생성")
+                                        .description("""
+                                                ## 팝업스토어 예약 생성 엔드포인트입니다.
+                                                
+                                                시간대 ID와 예약 인원을 입력하여 예약을 생성합니다.
+                                                """)
+                                        .requestFields(
+                                                fieldWithPath("storeReservation.timeSlotId").type(JsonFieldType.STRING).description("예약 시간대 ID"),
+                                                fieldWithPath("storeReservation.personCount").type(JsonFieldType.NUMBER).description("예약 인원 수")
+                                        )
+                                        .build()
+                                )
+                        )
+                );
+    }
+}
