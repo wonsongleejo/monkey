@@ -42,14 +42,14 @@ public class ProductReservationControllerApiV1 {
     }
 
     // 예약 취소
-    @PostMapping("/{productId}/cancel")
+    @PostMapping("/{productReservationId}/cancel")
     public ResponseEntity<ResDTO<ResProductReservationPostByIdCancelDTOApiV1>> cancelBy(
-            @PathVariable UUID productId
+            @PathVariable UUID productReservationId
     ) {
         // 임시 데이터
         ProductReservationEntity productReservationEntity = ProductReservationEntity.builder()
-                .productReservationId(UUID.randomUUID())
-                .productId(productId)
+                .productReservationId(productReservationId)
+                .productId(UUID.randomUUID())
                 .userId(123L)
                 .storeId(UUID.randomUUID())
                 .quantity(1)
