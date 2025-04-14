@@ -67,6 +67,9 @@ public class ProductReservationControllerApiV1Test {
                                         .summary("상품 예약")
                                         .description("""
                                                 ## 상품 예약 엔드포인트 입니다.
+                                                
+                                                ---
+                                                
                                                 """)
                                         .pathParameters(
                                                 parameterWithName("productId").type(SimpleType.STRING).description("상품 ID")
@@ -109,6 +112,9 @@ public class ProductReservationControllerApiV1Test {
                                         .summary("상품 예약 취소")
                                         .description("""
                                                 ## 상품 예약 취소 엔드포인트 입니다.
+                                                
+                                                ---
+                                                
                                                 """)
                                         .pathParameters(
                                                 parameterWithName("productReservationId").type(SimpleType.STRING).description("상품 예약 ID")
@@ -144,6 +150,9 @@ public class ProductReservationControllerApiV1Test {
                                         .summary("상품 예약 상세 조회")
                                         .description("""
                                                 ## 상품 예약 상세 조회 엔드포인트 입니다.
+                                                
+                                                ---
+                                                
                                                 """)
                                         .pathParameters(
                                                 parameterWithName("productReservationId").type(SimpleType.STRING).description("상품 예약 ID")

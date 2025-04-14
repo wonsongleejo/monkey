@@ -74,6 +74,9 @@ public class ProductControllerApiV1Test {
                                         .summary("상품 등록")
                                         .description("""
                                                 ## 상품 등록 엔드포인트 입니다.
+                                                
+                                                ---
+                                                
                                                 """)
                                         .requestFields(
                                                 fieldWithPath("product.storeId").type(JsonFieldType.STRING).description("스토어 ID"),
@@ -125,6 +128,9 @@ public class ProductControllerApiV1Test {
                                         .summary("상품 수정")
                                         .description("""
                                                 ## 상품 수정 엔드포인트 입니다.
+                                                
+                                                ---
+                                                
                                                 """)
                                         .pathParameters(
                                                 parameterWithName("productId").type(SimpleType.STRING).description("상품 ID")
@@ -168,6 +174,9 @@ public class ProductControllerApiV1Test {
                                         .summary("상품 단건 조회")
                                         .description("""
                                                 ## 상품 단건 조회 엔드포인트 입니다.
+                                                
+                                                ---
+                                                
                                                 """)
                                         .pathParameters(
                                                 parameterWithName("productId").type(SimpleType.STRING).description("상품 ID")
