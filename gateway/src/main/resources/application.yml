@@ -9,41 +9,101 @@ spring:
   cloud:
     gateway:
       routes:
-        # User
+        # User-service
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/v1/users/**
+          filters:
+            - RewritePath=/v1/users/(?<segment>.*), /${segment}
+
+        # User-service Swagger Docs
+        - id: user-service-swagger
+          uri: lb://user-service
+          predicates:
+            - Path=/user-service/v3/api-docs
+          filters:
+            - RewritePath=/user-service/v3/api-docs, /v3/api-docs
 
         # Store-service
         - id: store-service
           uri: lb://store-service
           predicates:
             - Path=/v1/stores/**
+          filters:
+            - RewritePath=/v1/stores/(?<segment>.*), /${segment}
+
+        # Store-service Swagger Docs
+        - id: store-service-swagger
+          uri: lb://store-service
+          predicates:
+            - Path=/store-service/v3/api-docs
+          filters:
+            - RewritePath=/store-service/v3/api-docs, /v3/api-docs
 
         # Store-reservation-service
         - id: store-reservation-service
           uri: lb://store-reservation-service
           predicates:
             - Path=/v1/store-reservations/**
+          filters:
+            - RewritePath=/v1/store-reservations/(?<segment>.*), /${segment}
 
-        # Product
+        # Store-reservation-service Swagger Docs
+        - id: store-reservation-service-swagger
+          uri: lb://store-reservation-service
+          predicates:
+            - Path=/store-reservation-service/v3/api-docs
+          filters:
+            - RewritePath=/store-reservation-service/v3/api-docs, /v3/api-docs
+
+        # Product-service API
         - id: product-service
           uri: lb://product-service
           predicates:
             - Path=/v1/products/**
+          filters:
+            - RewritePath=/v1/products/(?<segment>.*), /${segment}
+
+        # Product-service Swagger Docs
+        - id: product-service-swagger
+          uri: lb://product-service
+          predicates:
+            - Path=/product-service/v3/api-docs
+          filters:
+            - RewritePath=/product-service/v3/api-docs, /v3/api-docs
 
         # Product-reservation-service
         - id: product-reservation-service
           uri: lb://product-reservation-service
           predicates:
             - Path=/v1/product-reservations/**
+          filters:
+            - RewritePath=/v1/product-reservations/(?<segment>.*), /${segment}
 
-        # Slack
+        # Product-reservation-service Swagger Docs
+        - id: product-reservation-service-swagger
+          uri: lb://product-reservation-service
+          predicates:
+            - Path=/product-reservation-service/v3/api-docs
+          filters:
+            - RewritePath=/product-reservation-service/v3/api-docs, /v3/api-docs
+
+        # Slack-service
         - id: slack-service
           uri: lb://slack-service
           predicates:
             - Path=/v1/slacks/**
+          filters:
+            - RewritePath=/v1/slacks/(?<segment>.*), /${segment}
+
+        # Slack-service Swagger Docs
+        - id: slack-service-swagger
+          uri: lb://slack-service
+          predicates:
+            - Path=/slack-service/v3/api-docs
+          filters:
+            - RewritePath=/slack-service/v3/api-docs, /v3/api-docs
 
       discovery:
         locator:
@@ -56,3 +116,21 @@ eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka/
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    urls:
+      - name: user-service
+        url: /v1/users/v3/api-docs
+      - name: store-service
+        url: /v1/stores/v3/api-docs
+      - name: store-reservation-service
+        url: /v1/store-reservations/v3/api-docs
+      - name: product-service
+        url: /v1/products/v3/api-docs
+      - name: product-reservation-service
+        url: /v1/product-reservations/v3/api-docs
+      - name: slack-service
+        url: /v1/slacks/v3/api-docs
