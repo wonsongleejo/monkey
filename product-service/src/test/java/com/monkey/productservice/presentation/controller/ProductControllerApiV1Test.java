@@ -48,6 +48,7 @@ public class ProductControllerApiV1Test {
                                 .productName("테스트 상품")
                                 .price(10000)
                                 .quantity(20)
+                                .purchaseLimitPerUser(3)
                                 .build()
                 )
                  .build();
@@ -78,7 +79,8 @@ public class ProductControllerApiV1Test {
                                                 fieldWithPath("product.storeId").type(JsonFieldType.STRING).description("스토어 ID"),
                                                 fieldWithPath("product.productName").type(JsonFieldType.STRING).description("상품명"),
                                                 fieldWithPath("product.price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                                fieldWithPath("product.quantity").type(JsonFieldType.NUMBER).description("상품 수량")
+                                                fieldWithPath("product.quantity").type(JsonFieldType.NUMBER).description("상품 수량"),
+                                                fieldWithPath("product.purchaseLimitPerUser").type(JsonFieldType.NUMBER).description("상품 1인당 구매 수량 제한")
                                         )
                                         .responseFields(
                                                 fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
@@ -130,14 +132,16 @@ public class ProductControllerApiV1Test {
                                         .requestFields(
                                                 fieldWithPath("product.productName").type(JsonFieldType.STRING).description("상품명"),
                                                 fieldWithPath("product.price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                                fieldWithPath("product.quantity").type(JsonFieldType.NUMBER).description("상품 수량")
+                                                fieldWithPath("product.quantity").type(JsonFieldType.NUMBER).description("상품 수량"),
+                                                fieldWithPath("product.purchaseLimitPerUser").type(JsonFieldType.NUMBER).description("상품 1인당 구매 수량 제한")
                                         )
                                         .responseFields(
                                                 fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
                                                 fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
                                                 fieldWithPath("data.product.productName").type(JsonFieldType.STRING).description("상품명"),
                                                 fieldWithPath("data.product.price").type(JsonFieldType.NUMBER).description("상품 가격"),
-                                                fieldWithPath("data.product.quantity").type(JsonFieldType.NUMBER).description("상품 수량")
+                                                fieldWithPath("data.product.quantity").type(JsonFieldType.NUMBER).description("상품 수량"),
+                                                fieldWithPath("data.product.purchaseLimitPerUser").type(JsonFieldType.NUMBER).description("상품 1인당 구매 수량 제한")
                                         )
                                         .build()
                                 )
@@ -167,6 +171,17 @@ public class ProductControllerApiV1Test {
                                                 """)
                                         .pathParameters(
                                                 parameterWithName("productId").type(SimpleType.STRING).description("상품 ID")
+                                        )
+                                        .responseFields(
+                                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                                fieldWithPath("data.product.productId").type(JsonFieldType.STRING).description("상품 ID"),
+                                                fieldWithPath("data.product.store.storeId").type(JsonFieldType.STRING).description("스토어 ID"),
+                                                fieldWithPath("data.product.store.storeName").type(JsonFieldType.STRING).description("스토어 이름"),
+                                                fieldWithPath("data.product.productName").type(JsonFieldType.STRING).description("상품명"),
+                                                fieldWithPath("data.product.price").type(JsonFieldType.NUMBER).description("상품 가격"),
+                                                fieldWithPath("data.product.quantity").type(JsonFieldType.NUMBER).description("상품 수량"),
+                                                fieldWithPath("data.product.purchaseLimitPerUser").type(JsonFieldType.NUMBER).description("1인당 구매 수량 제한")
                                         )
                                         .build()
                                 )
