@@ -39,8 +39,12 @@ public class ReqProductPostDTOApiV1 {
         private Integer price;
 
         @NotNull(message = "상품 수량을 입력해주세요.")
-        @Min(value = 0, message = "상품 수량은 0 이상이어야 합니다.")
+        @Min(value = 1, message = "상품 수량은 1개 이상이어야 합니다.")
         private Integer quantity;
+
+        @NotNull(message = "1인당 구매 제한 수량을 입력해주세요.")
+        @Min(value = 1, message = "1인당 구매 제한 수량은 1개 이상이어야 합니다.")
+        private Integer purchaseLimitPerUser;
 
         // DTO → Entity 변환 메서드
         // 엔티티에 생성자 만들어서 이용하면 안됨 -> ProductEntity.builder() 사용하는 방식으로 수정
@@ -50,6 +54,7 @@ public class ReqProductPostDTOApiV1 {
                     .productName(productName)
                     .price(price)
                     .quantity(quantity)
+                    .purchaseLimitPerUser(purchaseLimitPerUser)
                     .build();
         }
     }

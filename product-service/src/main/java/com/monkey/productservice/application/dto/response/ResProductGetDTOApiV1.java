@@ -1,6 +1,5 @@
 package com.monkey.productservice.application.dto.response;
 
-
 import com.monkey.productservice.domain.entity.ProductEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -34,6 +33,7 @@ public class ResProductGetDTOApiV1 {
         private String productName;
         private Integer price;
         private Integer quantity;
+        private Integer purchaseLimitPerUser;
 
         public static Product from(ProductEntity productEntity) {
             return Product.builder()
@@ -42,6 +42,7 @@ public class ResProductGetDTOApiV1 {
                     .productName(productEntity.getProductName())
                     .price(productEntity.getPrice())
                     .quantity(productEntity.getQuantity())
+                    .purchaseLimitPerUser(productEntity.getPurchaseLimitPerUser())
                     .build();
         }
 

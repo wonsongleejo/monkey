@@ -31,6 +31,7 @@ public class ResProductGetByIdDTOApiV1 {
         private String productName;
         private Integer price;
         private Integer quantity;
+        private Integer purchaseLimitPerUser;
 
         public static Product from(ProductEntity productEntity) { // ,StoreDTO 추가해서 from 안에 넣기 (FeignClient로 받아옴)
             return Product.builder()
@@ -39,6 +40,7 @@ public class ResProductGetByIdDTOApiV1 {
                     .productName(productEntity.getProductName())
                     .price(productEntity.getPrice())
                     .quantity(productEntity.getQuantity())
+                    .purchaseLimitPerUser(productEntity.getPurchaseLimitPerUser())
                     .build();
         }
 
