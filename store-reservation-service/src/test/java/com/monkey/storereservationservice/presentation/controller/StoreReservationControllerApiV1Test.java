@@ -83,4 +83,33 @@ public class StoreReservationControllerApiV1Test {
                         )
                 );
     }
+
+    // 예약 단건 상세 조회
+    @Test
+    public void testStoreReservationGetDetailSuccess() throws Exception {
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders.get("/v1/store-reservations/{reservationId}", UUID.randomUUID())
+                )
+                .andExpectAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("code").value("000")
+                )
+                .andDo(
+                        document(
+                                "STORE-RESERVATION 예약 상세조회 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("STORE-RESERVATION v1")
+                                        .summary("팝업스토어 예약 상세 조회")
+                                        .description("""
+                                                ## 팝업스토어 예약 상세 조회 엔드포인트입니다.
+                                                
+                                                예약 ID로 예약 상세정보를 조회합니다.
+                                                """)
+                                        .build()
+                                )
+                        )
+                );
+    }
 }
