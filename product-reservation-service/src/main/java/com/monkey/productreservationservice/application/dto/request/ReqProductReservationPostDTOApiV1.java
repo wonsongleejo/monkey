@@ -33,7 +33,7 @@ public class ReqProductReservationPostDTOApiV1 {
                     .productId(productId)
                     .userId(userId)
                     .storeId(storeId)
-                    .status(ProductReservationStatus.PENDING_PICKUP)
+                    .status(status)
                     .quantity(quantity)
                     .build();
         }

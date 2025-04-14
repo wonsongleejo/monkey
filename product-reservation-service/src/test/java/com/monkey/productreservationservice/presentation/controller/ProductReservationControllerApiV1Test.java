@@ -77,7 +77,7 @@ public class ProductReservationControllerApiV1Test {
                                         .responseFields(
                                                 fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
                                                 fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
-                                                fieldWithPath("data.productReservation.productReservationId").type(JsonFieldType.STRING).description("상품 예약 ID"),
+                                                fieldWithPath("data.productReservation.productReservationId").type(JsonFieldType.STRING).optional().description("상품 예약 ID"),
                                                 fieldWithPath("data.productReservation.productId").type(JsonFieldType.STRING).description("상품 ID"),
                                                 fieldWithPath("data.productReservation.quantity").type(JsonFieldType.NUMBER).description("상품 수량")
                                         )
@@ -154,7 +154,7 @@ public class ProductReservationControllerApiV1Test {
                                                 fieldWithPath("data.productReservation.productReservationId").type(JsonFieldType.STRING).description("상품 예약 ID"),
                                                 fieldWithPath("data.productReservation.quantity").type(JsonFieldType.NUMBER).description("예약 수량"),
                                                 fieldWithPath("data.productReservation.status").type(JsonFieldType.STRING).description("예약 상태"),
-                                                fieldWithPath("data.productReservation.createdAt").type(JsonFieldType.STRING).description("예약 생성일시"),
+                                                fieldWithPath("data.productReservation.createdAt").type(JsonFieldType.STRING).optional().description("예약 생성일시"),
 
                                                 fieldWithPath("data.productReservation.product.productId").type(JsonFieldType.STRING).description("상품 ID"),
                                                 fieldWithPath("data.productReservation.product.productName").type(JsonFieldType.STRING).description("상품명"),
