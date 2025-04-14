@@ -143,4 +143,33 @@ public class StoreReservationControllerApiV1Test {
                         )
                 );
     }
+
+    // 예약 취소
+    @Test
+    public void testStoreReservationCancelSuccess() throws Exception {
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders.post("/v1/store-reservations/{reservationId}/cancel", UUID.randomUUID())
+                )
+                .andExpectAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("code").value("000")
+                )
+                .andDo(
+                        document(
+                                "STORE-RESERVATION 예약 취소 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("STORE-RESERVATION v1")
+                                        .summary("팝업스토어 예약 취소")
+                                        .description("""
+                                                ## 팝업스토어 예약 취소 엔드포인트입니다.
+                                                
+                                                storeReservationID로 예약을 취소합니다.
+                                                """)
+                                        .build()
+                                )
+                        )
+                );
+    }
 }
