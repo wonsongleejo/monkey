@@ -14,7 +14,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -27,7 +26,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @Transactional
-@ActiveProfiles("test") //Eureka 실행 없이 하기 위함
+//@ActiveProfiles("test") //Eureka 실행 없이 하기 위함
 public class AuthControllerApiV1Test {
 
     @Autowired
@@ -52,7 +51,7 @@ public class AuthControllerApiV1Test {
 
         String reqDtoJson = objectMapper.writeValueAsString(reqDto);
         mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/auth/sign-up")
+                RestDocumentationRequestBuilders.post("/v1/auth/sign-up")
                         .content(reqDtoJson)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
