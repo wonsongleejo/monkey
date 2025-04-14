@@ -7,13 +7,12 @@ import com.monkey.productreservationservice.application.dto.response.ResProductR
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostByIdCancelDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
-import com.monkey.productreservationservice.domain.enums.ProductReservationStatus;
+import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
