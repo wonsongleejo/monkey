@@ -80,7 +80,7 @@ public class ProductReservationControllerApiV1 {
 
     // 존재하는 예약 검증 메서드
     private ProductReservationEntity getActiveProductReservationById(UUID productReservationId) {
-        return productReservationRepository.findByIdAndIsDeletedFalse(productReservationId)
+        return productReservationRepository.findByProductReservationIdAndIsDeletedFalse(productReservationId)
                 .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
     }
 
