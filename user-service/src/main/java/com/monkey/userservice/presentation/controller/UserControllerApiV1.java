@@ -4,7 +4,13 @@ import com.monkey.commonmodule.dto.ResDTO;
 import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import com.monkey.userservice.application.dto.response.*;
 import com.monkey.userservice.domain.entity.UserEntity;
+import com.monkey.userservice.domain.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,25 +26,18 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserControllerApiV1 {
 
+    private final UserRepository userRepository;
+
     //사용자 전체 조회
     @GetMapping
     public ResponseEntity<ResDTO<ResUserGetDTOApiV1>> getBy(
-            //@RequestParam(required = false) String searchValue,
-            //@PageableDefault(sort="id", direction = Sort.Direction.DESC) Pageable pageable
+            @RequestParam(required = false) String searchValue,
+            @PageableDefault(sort="id", direction = Sort.Direction.DESC) Pageable pageable
     ) {
 
-        List<UserEntity> userList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            userList.add(UserEntity.builder()
-                    .userId((long) i)
-                    .username("testUser"+ i)
-                    .slackId("slackID" + i)
-                    .role(UserEntity.Role.USER)
-                    .build()
-            );
-        }
-
-        ResUserGetDTOApiV1 response = ResUserGetDTOApiV1.of(userList);
+        List<UserEntity> userList = userRepository.findAllByIsDeletedFalse(pageable);
+        Page<UserEntity> userListPage = new PageImpl<>(userList, pageable, userList.size());
+        ResUserGetDTOApiV1 response = ResUserGetDTOApiV1.of(userListPage);
 
         return new ResponseEntity<>(
                 ResDTO.success(response),
@@ -50,12 +49,8 @@ public class UserControllerApiV1 {
     @GetMapping("/{userId}")
     public ResponseEntity<ResDTO<ResUserGetByIdDTOApiV1>> getBy(@PathVariable(name="userId") Long userId) {
 
-        UserEntity user = UserEntity.builder()
-                .userId(userId)
-                .username("testUser")
-                .slackId("slackId1")
-                .role(UserEntity.Role.USER)
-                .build();
+        UserEntity user = userRepository.findByIsDeletedFalse(userId)
+                .orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다."));
 
         ResUserGetByIdDTOApiV1 resDto = ResUserGetByIdDTOApiV1.of(user);
 
@@ -71,13 +66,12 @@ public class UserControllerApiV1 {
             @PathVariable(name="userId") Long userId, @RequestBody ReqUserPutDTOApiV1 reqDto
     ) {
 
-        UserEntity user = UserEntity.builder()
-                .userId(userId)
-                .password(reqDto.getUser().getPassword())
-                .slackId(reqDto.getUser().getSlackId())
-                .build();
+        UserEntity user = userRepository.findByIsDeletedFalse(userId)
+                .orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        reqDto.getUser().update(user);
 
-        ResUserPutDTOApiV1 resDto = ResUserPutDTOApiV1.of(user);
+        UserEntity updatedUserEntity = userRepository.save(user);
+        ResUserPutDTOApiV1 resDto = ResUserPutDTOApiV1.of(updatedUserEntity);
 
         return new ResponseEntity<>(
                 ResDTO.success(resDto),
@@ -89,10 +83,11 @@ public class UserControllerApiV1 {
     @DeleteMapping("/{userId}")
     public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable(name="userId") Long userId) {
 
-        //soft-delete : 추후 service 제작 시 적용
-        UserEntity userEntity = UserEntity.builder()
-                .isDeleted(true)
-                .build();
+        UserEntity user = userRepository.findByIsDeletedFalse(userId)
+                .orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다."));
+
+        user.setDeleted(true);
+        userRepository.save(user);
 
         return new ResponseEntity<>(
                 ResDTO.success(),
@@ -103,7 +98,8 @@ public class UserControllerApiV1 {
     //팝업 스토어 예약 내역
     @GetMapping("/{userId}/store-reservation")
     public ResponseEntity<ResDTO<ResStoreReservationGetDTOApiV1>> getStoreReservationBy(
-            @PathVariable(name="userId") Long userId
+            @PathVariable(name="userId") Long userId,
+            @PageableDefault(sort="id", direction = Sort.Direction.DESC) Pageable pageable
     ){
 
         //List<ResStoreReservationGetApiDTOV1> reservations = ProductReservationFeignClient.getStoreReservations();
@@ -136,11 +132,14 @@ public class UserControllerApiV1 {
             storeReservationList.add(reservation);
         }
 
+        Page<ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation> sotreReservationListPage =
+                new PageImpl<>(storeReservationList, pageable, storeReservationList.size());
+
         return new ResponseEntity<>(
                 ResDTO.<ResStoreReservationGetDTOApiV1>builder()
                         .code("000")
                         .message("성공적으로 처리되었습니다.")
-                        .data(ResStoreReservationGetDTOApiV1.of(storeReservationList))
+                        .data(ResStoreReservationGetDTOApiV1.of(sotreReservationListPage))
                         .build(),
                 HttpStatus.OK
         );
@@ -149,7 +148,8 @@ public class UserControllerApiV1 {
     //한정 상품 예약 내역
     @GetMapping("/{userId}/product-reservation")
     public ResponseEntity<ResDTO<ResProductReservationGetDTOApiV1>> getProductReservationsBy(
-            @PathVariable(name="userId") Long userId
+            @PathVariable(name="userId") Long userId,
+            @PageableDefault(sort="id", direction = Sort.Direction.DESC) Pageable pageable
     ){
         //List<ResProductReservationClientGetDTOApiV1> reservations = ProductReservationFeignClient.getStoreReservations();
         List<ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation> prodcutReservationList = new ArrayList<>();
@@ -179,11 +179,14 @@ public class UserControllerApiV1 {
             prodcutReservationList.add(reqDto);
         }
 
+        Page<ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation> productReservationListPage =
+                new PageImpl<>(prodcutReservationList, pageable, prodcutReservationList.size());
+
         return new ResponseEntity<>(
                 ResDTO.<ResProductReservationGetDTOApiV1>builder()
                         .code("000")
                         .message("성공적으로 처리되었습니다.")
-                        .data(ResProductReservationGetDTOApiV1.of(prodcutReservationList))
+                        .data(ResProductReservationGetDTOApiV1.of(productReservationListPage))
                         .build(),
                 HttpStatus.OK
         );
