@@ -8,6 +8,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface ProductReservationJpaRepository extends JpaRepository<ProductReservationEntity, UUID> {
-    Optional<ProductReservationEntity> findByIdAndIsDeletedFalse(UUID id);
+    Optional<ProductReservationEntity> findByProductReservationIdAndIsDeletedFalse(UUID productReservationId);
     List<ProductReservationEntity> findAllByIsDeletedFalse();
 }
