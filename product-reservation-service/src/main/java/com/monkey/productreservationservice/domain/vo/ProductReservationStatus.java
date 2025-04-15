@@ -1,4 +1,4 @@
-package com.monkey.productreservationservice.domain.enums;
+package com.monkey.productreservationservice.domain.vo;
 
 public enum ProductReservationStatus {
     PENDING_PICKUP,
