@@ -1,7 +1,7 @@
 package com.monkey.productreservationservice.application.dto.response;
 
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
-import com.monkey.productreservationservice.domain.enums.ProductReservationStatus;
+import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

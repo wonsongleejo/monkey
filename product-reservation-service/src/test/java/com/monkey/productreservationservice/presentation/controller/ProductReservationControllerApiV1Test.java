@@ -4,6 +4,9 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
+import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
+import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
+import com.monkey.productreservationservice.infrastructure.persistence.ProductReservationJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -36,6 +39,8 @@ public class ProductReservationControllerApiV1Test {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private ProductReservationJpaRepository productReservationJpaRepository;
 
     // 예약 생성
     @Test
@@ -67,6 +72,9 @@ public class ProductReservationControllerApiV1Test {
                                         .summary("상품 예약")
                                         .description("""
                                                 ## 상품 예약 엔드포인트 입니다.
+                                                
+                                                ---
+                                                
                                                 """)
                                         .pathParameters(
                                                 parameterWithName("productId").type(SimpleType.STRING).description("상품 ID")
@@ -91,8 +99,19 @@ public class ProductReservationControllerApiV1Test {
     // 예약 취소
     @Test
     public void testProductReservationCancelPostSuccess() throws Exception {
+        // 테스트용 예약 생성 및 저장
+        ProductReservationEntity saved = productReservationJpaRepository.save(
+                ProductReservationEntity.builder()
+                        .productId(UUID.randomUUID())
+                        .userId(1L)
+                        .storeId(UUID.randomUUID())
+                        .quantity(1)
+                        .status(ProductReservationStatus.PENDING_PICKUP)
+                        .build()
+        );
+
         mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/v1/product-reservations/{productReservationId}/cancel", UUID.randomUUID())
+                RestDocumentationRequestBuilders.post("/v1/product-reservations/{productReservationId}/cancel", saved.getProductReservationId())
                         // .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
                         .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -109,6 +128,9 @@ public class ProductReservationControllerApiV1Test {
                                         .summary("상품 예약 취소")
                                         .description("""
                                                 ## 상품 예약 취소 엔드포인트 입니다.
+                                                
+                                                ---
+                                                
                                                 """)
                                         .pathParameters(
                                                 parameterWithName("productReservationId").type(SimpleType.STRING).description("상품 예약 ID")
@@ -128,8 +150,19 @@ public class ProductReservationControllerApiV1Test {
     // 예약 상세 조회
     @Test
     public void testProductReservationGetByIdSuccess() throws Exception {
+        // 테스트용 예약 생성 및 저장
+        ProductReservationEntity saved = productReservationJpaRepository.save(
+                ProductReservationEntity.builder()
+                        .productId(UUID.randomUUID())
+                        .userId(1L)
+                        .storeId(UUID.randomUUID())
+                        .quantity(1)
+                        .status(ProductReservationStatus.PENDING_PICKUP)
+                        .build()
+        );
+
         mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/v1/product-reservations/{productReservationId}", UUID.randomUUID())
+                RestDocumentationRequestBuilders.get("/v1/product-reservations/{productReservationId}", saved.getProductReservationId())
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -144,6 +177,9 @@ public class ProductReservationControllerApiV1Test {
                                         .summary("상품 예약 상세 조회")
                                         .description("""
                                                 ## 상품 예약 상세 조회 엔드포인트 입니다.
+                                                
+                                                ---
+                                                
                                                 """)
                                         .pathParameters(
                                                 parameterWithName("productReservationId").type(SimpleType.STRING).description("상품 예약 ID")

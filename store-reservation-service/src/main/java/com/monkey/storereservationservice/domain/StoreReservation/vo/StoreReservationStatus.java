@@ -1,4 +1,4 @@
-package com.monkey.storereservationservice.domain.StoreReservation.entity;
+package com.monkey.storereservationservice.domain.StoreReservation.vo;
 
 public enum StoreReservationStatus {
     SCHEDULED,
