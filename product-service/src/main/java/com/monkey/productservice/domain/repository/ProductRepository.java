@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public interface ProductRepository {
     ProductEntity save(ProductEntity productEntity);
-    Optional<ProductEntity> findByIdAndIsDeletedFalse(UUID id);
+    Optional<ProductEntity> findByProductIdAndIsDeletedFalse(UUID productId);
     List<ProductEntity> findAllByIsDeletedFalse();
 }

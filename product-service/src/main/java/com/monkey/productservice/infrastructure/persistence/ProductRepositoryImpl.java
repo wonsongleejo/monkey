@@ -20,8 +20,8 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public Optional<ProductEntity> findByIdAndIsDeletedFalse(UUID id) {
-        return productJpaRepository.findByIdAndIsDeletedFalse(id);
+    public Optional<ProductEntity> findByProductIdAndIsDeletedFalse(UUID productId) {
+        return productJpaRepository.findByProductIdAndIsDeletedFalse(productId);
     }
 
     @Override

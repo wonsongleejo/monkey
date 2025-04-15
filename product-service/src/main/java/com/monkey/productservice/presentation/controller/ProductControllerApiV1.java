@@ -84,7 +84,7 @@ public class ProductControllerApiV1 {
 
     // 존재하는 상품 검증 메서드
     private ProductEntity getActiveProductById(UUID productId) {
-        return productRepository.findByIdAndIsDeletedFalse(productId)
+        return productRepository.findByProductIdAndIsDeletedFalse(productId)
                 .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
     }
 }
