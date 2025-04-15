@@ -65,8 +65,8 @@ public class ProductReservationControllerApiV1 {
     // 예약내역 전체 조회
     @GetMapping
     public ResponseEntity<ResDTO<ResProductReservationGetDTOApiV1>> getBy() {
-        List<ProductReservationEntity> productEntityList = productReservationRepository.findAllByIsDeletedFalse();
-        ResProductReservationGetDTOApiV1 resDto = ResProductReservationGetDTOApiV1.of(productEntityList);
+        List<ProductReservationEntity> productReservationList = productReservationRepository.findAllByIsDeletedFalse();
+        ResProductReservationGetDTOApiV1 resDto = ResProductReservationGetDTOApiV1.of(productReservationList);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
