@@ -24,7 +24,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/v1/products")
 public class ProductControllerApiV1 {
-    private final ProductRepository productRepository;
+    private final ProductRepository productRepository; // 추후에 서비스로 이동
 
     // 상품 등록
     @PostMapping
@@ -84,7 +84,7 @@ public class ProductControllerApiV1 {
 
     // 존재하는 상품 검증 메서드
     private ProductEntity getActiveProductById(UUID productId) {
-        return productRepository.findByIdAndIsDeletedIsFalse(productId)
+        return productRepository.findByIdAndIsDeletedFalse(productId)
                 .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
     }
 }
