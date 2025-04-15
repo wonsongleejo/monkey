@@ -1,5 +1,6 @@
 package com.monkey.userservice.domain.entity;
 
+import com.monkey.commonmodule.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -10,7 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class UserEntity {
+public class UserEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
@@ -40,6 +41,14 @@ public class UserEntity {
         ;
 
         private final String value;
+    }
+
+    // 회원 정보 수정
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public void setSlackId(String slackId) {
+        this.slackId = slackId;
     }
 
     // 회원 삭제 (soft-delete)

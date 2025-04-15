@@ -2,6 +2,10 @@ package com.monkey.userservice.application.dto.response;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.web.PagedModel;
 
 import java.util.List;
 import java.util.UUID;
@@ -10,74 +14,91 @@ import java.util.UUID;
 @Builder
 public class ResProductReservationGetDTOApiV1 {
 
-    private List<ProductReservation> productReservationList;
+    private ProductReservationPage productReservationPage;
 
     public static ResProductReservationGetDTOApiV1 of(
-            List<ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation> resClientDtoList
+            Page<ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation> productReservationList
     ) {
         return ResProductReservationGetDTOApiV1.builder()
-                .productReservationList(ProductReservation.from(resClientDtoList))
+                .productReservationPage(new ProductReservationPage(productReservationList))
                 .build();
     }
 
     @Getter
-    @Builder
-    public static class ProductReservation{
-        private UUID productReservationId;
-        private Product product;
-        private Store store;
+    @ToString
+    public static class ProductReservationPage extends PagedModel<ProductReservationPage.ProductReservation> {
 
-        public static ProductReservation from(
-                ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation resClientDto
+        public ProductReservationPage(
+                Page<ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation> productReservationPage
         ) {
-            return ProductReservation.builder()
-                    .productReservationId(resClientDto.getProductReservationId())
-                    .product(Product.from(resClientDto.getProduct()))
-                    .store(Store.from(resClientDto.getStore()))
-                    .build();
-        }
-
-        public static List<ProductReservation> from(
-                List<ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation> resClientDtoList
-        ){
-            return resClientDtoList.stream()
-                    .map(ProductReservation::from)
-                    .toList();
+            super(
+                    new PageImpl<>(
+                            ProductReservationPage.ProductReservation.from(productReservationPage.getContent()),
+                            productReservationPage.getPageable(),
+                            productReservationPage.getTotalElements()
+                    )
+            );
         }
 
         @Getter
         @Builder
-        public static class Product{
-            private UUID productId;
-            private String productName;
+        public static class ProductReservation{
+            private UUID productReservationId;
+            private Product product;
+            private Store store;
 
-            public static Product from(
-                    ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.Product product
+            public static ProductReservation from(
+                    ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation resClientDto
             ) {
-                return Product.builder()
-                        .productId(product.getProductId())
-                        .productName(product.getProductName())
+                return ProductReservation.builder()
+                        .productReservationId(resClientDto.getProductReservationId())
+                        .product(Product.from(resClientDto.getProduct()))
+                        .store(Store.from(resClientDto.getStore()))
                         .build();
             }
-        }
 
-        @Getter
-        @Builder
-        public static class Store{
-            private UUID storeId;
-            private String storeName;
-            private int quantity;
-            private String receivedStatus;
+            public static List<ProductReservation> from(
+                    List<ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation> resClientDtoList
+            ){
+                return resClientDtoList.stream()
+                        .map(ProductReservation::from)
+                        .toList();
+            }
 
-            public static Store from(
-                    ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.Store store
-            ) {
-                return Store.builder()
-                        .storeId(store.getStoreId())
-                        .storeName(store.getStoreName())
-                        .quantity(store.getQuantity())
-                        .receivedStatus(store.getReceivedStatus())
-                        .build();
+            @Getter
+            @Builder
+            public static class Product{
+                private UUID productId;
+                private String productName;
+
+                public static Product from(
+                        ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.Product product
+                ) {
+                    return Product.builder()
+                            .productId(product.getProductId())
+                            .productName(product.getProductName())
+                            .build();
+                }
+            }
+
+            @Getter
+            @Builder
+            public static class Store{
+                private UUID storeId;
+                private String storeName;
+                private int quantity;
+                private String receivedStatus;
+
+                public static Store from(
+                        ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.Store store
+                ) {
+                    return Store.builder()
+                            .storeId(store.getStoreId())
+                            .storeName(store.getStoreName())
+                            .quantity(store.getQuantity())
+                            .receivedStatus(store.getReceivedStatus())
+                            .build();
+                }
             }
         }
     }
