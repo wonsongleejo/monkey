@@ -1,6 +1,8 @@
 package com.monkey.productservice.presentation.controller;
 
 import com.monkey.commonmodule.dto.ResDTO;
+import com.monkey.commonmodule.dto.ResponseCode;
+import com.monkey.commonmodule.exception.CustomException;
 import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.request.ReqProductPutDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductGetByIdDTOApiV1;
@@ -83,6 +85,6 @@ public class ProductControllerApiV1 {
     // 존재하는 상품 검증 메서드
     private ProductEntity getActiveProductById(UUID productId) {
         return productRepository.findByIdAndIsDeletedIsFalse(productId)
-                .orElseThrow(() -> new RuntimeException("상품이 존재하지 않습니다."));
+                .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
     }
 }
