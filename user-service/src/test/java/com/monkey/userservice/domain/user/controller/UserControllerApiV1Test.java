@@ -1,8 +1,11 @@
 package com.monkey.userservice.domain.user.controller;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
+import com.monkey.userservice.domain.entity.UserEntity;
+import com.monkey.userservice.domain.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,10 +15,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -25,7 +28,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @Transactional
-@ActiveProfiles("test")
+//@ActiveProfiles("test")
 public class UserControllerApiV1Test {
 
     @Autowired
@@ -34,10 +37,12 @@ public class UserControllerApiV1Test {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
     // 회원 전제조회
     @Test
     public void testUserGetSuccess() throws Exception {
-
         mockMvc.perform(
                         RestDocumentationRequestBuilders.get("/v1/users")
                 )
@@ -59,12 +64,27 @@ public class UserControllerApiV1Test {
                                                         
                                                         ---
                                                         
-                                                        추후 Page 적용 예정
+                                                        정렬 기준을 지정할 수 있습니다. 기본 정렬은 id,desc입니다.
+                                                        
+                                                        ex) sort=asc
+                                                        
+                                                        페이징이 가능합니다. 기본 페이지 번호는 0번입니다.
+                                                        페이지 당 조회 개수는 10, 30, 50로만 설정 가능합니다.(기본 조회 개수는 10입니다.)
+                                                        
+                                                        ex) size=30
+                                                        
+                                                        ex) page=1
+                                                        
+                                                        ex) page=2&size=10
                                                         
                                                         """)
+                                                .queryParameters(
+                                                        parameterWithName("sort").type(SimpleType.STRING).optional().description("정렬 기준"),
+                                                        parameterWithName("page").type(SimpleType.NUMBER).optional().description("페이지 번호"),
+                                                        parameterWithName("size").type(SimpleType.NUMBER).optional().description("페이지 당 조회 개수")
+                                                )
                                                 .build()
                                 )
-
                         )
                 );
     }
@@ -72,35 +92,53 @@ public class UserControllerApiV1Test {
     // 회원 상세조회
     @Test
     public void testUserGetByIdSuccess() throws Exception {
-        mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/v1/users/1")
+        UserEntity user = userRepository.save(
+                UserEntity.builder()
+                        .username("testUser")
+                        .password("test1234")
+                        .slackId("slackId1")
+                        .role(UserEntity.Role.USER)
+                        .build()
+        );
 
-        )
-        .andExpectAll(
-                MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.jsonPath("code").value("000")
-        )
-        .andDo(
-                document(
-                        "USER 회원 상세조회 성공",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        resource(
-                                ResourceSnippetParameters.builder()
-                                        .tag("USER v1")
-                                        .summary("""
-                                                ## USER 회원 상세조회 엔드포인트 입니다.
-                                                """)
-                                        .build()
-                        )
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders.get("/v1/users/{id}", user.getUserId())
 
                 )
-        );
+                .andExpectAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("code").value("000")
+                )
+                .andDo(
+                        document(
+                                "USER 회원 상세조회 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(
+                                        ResourceSnippetParameters.builder()
+                                                .tag("USER v1")
+                                                .summary("USER 상세 조회")
+                                                .description("""
+                                                ## USER 회원 상세조회 엔드포인트 입니다.
+                                                """)
+                                                .build()
+                                )
+                        )
+                );
     }
 
     // 회원 정보 수정
     @Test
     public void testUserPutByIdSuccess() throws Exception {
+        UserEntity user = userRepository.save(
+                UserEntity.builder()
+                        .username("testUser")
+                        .password("test1234")
+                        .slackId("slackId1")
+                        .role(UserEntity.Role.USER)
+                        .build()
+        );
+
         ReqUserPutDTOApiV1 reqDto = ReqUserPutDTOApiV1.builder()
                 .user(
                         ReqUserPutDTOApiV1.User.builder()
@@ -113,9 +151,9 @@ public class UserControllerApiV1Test {
         String reqDtoJson = objectMapper.writeValueAsString(reqDto);
 
         mockMvc.perform(
-                RestDocumentationRequestBuilders.put("/v1/users/1")
-                        .content(reqDtoJson)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        RestDocumentationRequestBuilders.put("/v1/users/{id}", user.getUserId())
+                                .content(reqDtoJson)
+                                .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -127,7 +165,7 @@ public class UserControllerApiV1Test {
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
                                         .tag("USER v1")
-                                        .summary("USER 회원 정보 수정")
+                                        .summary("USER 정보 수정")
                                         .description("""
                                                 ## USER 회원 정보 수정 엔드포인트 입니다.
                                                 
@@ -142,42 +180,52 @@ public class UserControllerApiV1Test {
                                         .build()
                                 )
                         )
-                 );
+                );
     }
 
     // 회원 탈퇴
     @Test
     public void testUserDeleteByIdSuccess() throws Exception {
-        mockMvc.perform(
-                RestDocumentationRequestBuilders.delete("/v1/users/1")
-        )
-        .andExpectAll(
-                MockMvcResultMatchers.status().isOk(),
-                MockMvcResultMatchers.jsonPath("code").value("000")
-        )
-        .andDo(
-                document(
-                        "USER 회원 탈퇴 성공",
-                        preprocessRequest(prettyPrint()),
-                        preprocessResponse(prettyPrint()),
-                        resource(
-                                ResourceSnippetParameters.builder()
-                                        .tag("USER v1")
-                                        .summary("""
-                                        ## USER 회원 탈퇴 엔드포인트 입니다.
-                                        """)
-                                        .build()
-                        )
-
-                )
+        UserEntity user = userRepository.save(
+                UserEntity.builder()
+                        .username("testUser")
+                        .password("test1234")
+                        .slackId("slackId1")
+                        .role(UserEntity.Role.USER)
+                        .build()
         );
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders.delete("/v1/users/{id}", user.getUserId())
+                )
+                .andExpectAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("code").value("000")
+                )
+                .andDo(
+                        document(
+                                "USER 회원 탈퇴 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(
+                                        ResourceSnippetParameters.builder()
+                                                .tag("USER v1")
+                                                .summary("USER 탈퇴")
+                                                .description("""
+                                                ## USER 회원 탈퇴 엔드포인트 입니다.
+                                                """)
+                                                .build()
+                                )
+
+                        )
+                );
     }
 
     // 팝업 스토어 예약 내역 조회
     @Test
     public void tesStoreReservationGetByIdSuccess() throws Exception {
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.get("/v1/users/1/store-reservation")
+                        RestDocumentationRequestBuilders.get("/v1/users/{id}/store-reservation",1)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -191,7 +239,8 @@ public class UserControllerApiV1Test {
                                 resource(
                                         ResourceSnippetParameters.builder()
                                                 .tag("USER v1")
-                                                .summary("""
+                                                .summary("USER 팝업 스토어 예약 내역 조회")
+                                                .description("""
                                                         ## USER 팝업 스토어 예약 내역 조회 엔드포인트 입니다.
                                                         
                                                         ---
@@ -200,7 +249,6 @@ public class UserControllerApiV1Test {
                                                         """)
                                                 .build()
                                 )
-
                         )
                 );
     }
@@ -209,7 +257,7 @@ public class UserControllerApiV1Test {
     @Test
     public void tesProductReservationGetByIdSuccess() throws Exception {
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.get("/v1/users/1/product-reservation")
+                        RestDocumentationRequestBuilders.get("/v1/users/{id}/product-reservation",1)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -223,7 +271,8 @@ public class UserControllerApiV1Test {
                                 resource(
                                         ResourceSnippetParameters.builder()
                                                 .tag("USER v1")
-                                                .summary("""
+                                                .summary("USER 한정 상품 예약 내역 조회")
+                                                .description("""
                                                         ## USER 한정 상품 예약 내역 조회 엔드포인트 입니다.
                                                         
                                                         ---
@@ -232,7 +281,6 @@ public class UserControllerApiV1Test {
                                                         """)
                                                 .build()
                                 )
-
                         )
                 );
     }
