@@ -10,6 +10,11 @@ spring:
     hibernate:
       ddl-auto: create-drop
     defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   sql:
     init:
       mode: always
@@ -25,3 +30,15 @@ eureka:
       defaultZone: http://localhost:8761/eureka/
   instance:
     prefer-ip-address: true
+
+springdoc:
+  group-configs:
+    - group: openapi3-product-service
+      paths-to-match:
+        - /v1/products/**
+      packages-to-scan:
+        - com.monkey.productservice.presentation.controller
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /docs

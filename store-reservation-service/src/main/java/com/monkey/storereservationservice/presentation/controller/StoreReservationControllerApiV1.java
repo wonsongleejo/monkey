@@ -30,8 +30,8 @@ public class StoreReservationControllerApiV1 {
         );
     }
 
-    @PostMapping("/{reservationId}/cancel")
-    public ResponseEntity<ResDTO<ResStoreReservationPostByIdCancelDTOApiV1>> cancelBy(@PathVariable UUID reservationId) {
+    @PostMapping("/{storeReservationId}/cancel")
+    public ResponseEntity<ResDTO<ResStoreReservationPostByIdCancelDTOApiV1>> cancelBy(@PathVariable UUID storeReservationId) {
 
         ResStoreReservationPostByIdCancelDTOApiV1 resDto = ResStoreReservationPostByIdCancelDTOApiV1.of();
 

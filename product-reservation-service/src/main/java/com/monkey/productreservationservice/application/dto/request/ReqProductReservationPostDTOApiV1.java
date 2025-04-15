@@ -1,7 +1,7 @@
 package com.monkey.productreservationservice.application.dto.request;
 
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
-import com.monkey.productreservationservice.domain.enums.ProductReservationStatus;
+import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;

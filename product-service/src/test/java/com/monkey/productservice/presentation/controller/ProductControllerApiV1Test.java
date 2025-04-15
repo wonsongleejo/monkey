@@ -5,6 +5,8 @@ import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.request.ReqProductPutDTOApiV1;
+import com.monkey.productservice.domain.entity.ProductEntity;
+import com.monkey.productservice.infrastructure.persistence.ProductJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -37,6 +39,8 @@ public class ProductControllerApiV1Test {
 
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private ProductJpaRepository productJpaRepository;
 
     // 상품 등록
     @Test
@@ -74,6 +78,9 @@ public class ProductControllerApiV1Test {
                                         .summary("상품 등록")
                                         .description("""
                                                 ## 상품 등록 엔드포인트 입니다.
+                                                
+                                                ---
+                                                
                                                 """)
                                         .requestFields(
                                                 fieldWithPath("product.storeId").type(JsonFieldType.STRING).description("스토어 ID"),
@@ -96,18 +103,31 @@ public class ProductControllerApiV1Test {
     // 상품 수정
     @Test
     public void testProductPutSuccess() throws Exception {
+        // 실제 저장된 상품
+        ProductEntity saved = productJpaRepository.save(
+                ProductEntity.builder()
+                        .storeId(UUID.randomUUID())
+                        .productName("테스트 상품 ver1")
+                        .price(10000)
+                        .quantity(100)
+                        .purchaseLimitPerUser(1)
+                        .build()
+        );
+
+
         ReqProductPutDTOApiV1 reqDto = ReqProductPutDTOApiV1.builder()
                 .product(
                         ReqProductPutDTOApiV1.Product.builder()
                                 .productName("테스트 상품 ver2")
                                 .price(50000)
                                 .quantity(200)
+                                .purchaseLimitPerUser(2)
                                 .build()
                 )
                 .build();
         String reqDtoJson = objectMapper.writeValueAsString(reqDto);
         mockMvc.perform(
-                RestDocumentationRequestBuilders.put("/v1/products/{productId}", UUID.randomUUID())
+                RestDocumentationRequestBuilders.put("/v1/products/{productId}", saved.getProductId())
 //                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(reqDtoJson)
@@ -125,6 +145,9 @@ public class ProductControllerApiV1Test {
                                         .summary("상품 수정")
                                         .description("""
                                                 ## 상품 수정 엔드포인트 입니다.
+                                                
+                                                ---
+                                                
                                                 """)
                                         .pathParameters(
                                                 parameterWithName("productId").type(SimpleType.STRING).description("상품 ID")
@@ -152,8 +175,21 @@ public class ProductControllerApiV1Test {
     // 상품 단건 조회
     @Test
     public void testProductGetByIdSuccess() throws Exception {
+        // 테스트용 상품 생성 및 저장
+        UUID storeId = UUID.randomUUID();
+        ProductEntity saved = productJpaRepository.save(
+                ProductEntity.builder()
+                        .storeId(storeId)
+                        .productName("테스트 상품 ver1")
+                        .price(12345)
+                        .quantity(99)
+                        .purchaseLimitPerUser(5)
+                        .build()
+        );
+        // FeignClient로 Store 조회하는 부분은 생략
+
         mockMvc.perform(
-                RestDocumentationRequestBuilders.get("/v1/products/{productId}", UUID.randomUUID())
+                RestDocumentationRequestBuilders.get("/v1/products/{productId}", saved.getProductId())
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -168,6 +204,9 @@ public class ProductControllerApiV1Test {
                                         .summary("상품 단건 조회")
                                         .description("""
                                                 ## 상품 단건 조회 엔드포인트 입니다.
+                                                
+                                                ---
+                                                
                                                 """)
                                         .pathParameters(
                                                 parameterWithName("productId").type(SimpleType.STRING).description("상품 ID")
