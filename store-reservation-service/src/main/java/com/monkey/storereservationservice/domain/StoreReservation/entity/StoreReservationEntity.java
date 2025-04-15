@@ -12,9 +12,9 @@ import java.util.UUID;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
+@AllArgsConstructor
 @Table(name = "p_store_reservation")
 @SQLRestriction("deleted_at is null")
-@AllArgsConstructor
 public class StoreReservationEntity extends BaseEntity {
 
     @Id
