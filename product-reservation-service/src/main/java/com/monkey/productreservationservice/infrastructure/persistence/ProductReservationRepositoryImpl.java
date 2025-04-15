@@ -15,13 +15,13 @@ public class ProductReservationRepositoryImpl implements ProductReservationRepos
     private final ProductReservationJpaRepository productReservationJpaRepository;
 
     @Override
-    public ProductReservationEntity save(ProductReservationEntity entity) {
-        return productReservationJpaRepository.save(entity);
+    public ProductReservationEntity save(ProductReservationEntity productReservationEntity) {
+        return productReservationJpaRepository.save(productReservationEntity);
     }
 
     @Override
-    public Optional<ProductReservationEntity> findByIdAndIsDeletedFalse(UUID id) {
-        return productReservationJpaRepository.findByIdAndIsDeletedFalse(id);
+    public Optional<ProductReservationEntity> findByProductReservationIdAndIsDeletedFalse(UUID productReservationId) {
+        return productReservationJpaRepository.findByProductReservationIdAndIsDeletedFalse(productReservationId);
     }
 
     @Override
