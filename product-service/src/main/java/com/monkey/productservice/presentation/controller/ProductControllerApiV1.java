@@ -1,8 +1,6 @@
 package com.monkey.productservice.presentation.controller;
 
 import com.monkey.common_module.dto.ResDTO;
-import com.monkey.common_module.dto.ResponseCode;
-import com.monkey.common_module.exception.CustomException;
 import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.request.ReqProductPutDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductGetByIdDTOApiV1;
@@ -10,7 +8,6 @@ import com.monkey.productservice.application.dto.response.ResProductGetDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductPutDTOApiV1;
 import com.monkey.productservice.application.service.ProductServiceApiV1;
-import com.monkey.productservice.domain.entity.ProductEntity;
 import com.monkey.productservice.domain.repository.ProductRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
@@ -50,9 +46,7 @@ public class ProductControllerApiV1 {
     // 상품 전체 조회
     @GetMapping
     public ResponseEntity<ResDTO<ResProductGetDTOApiV1>> getBy() {
-        List<ProductEntity> productList = productRepository.findAllByIsDeletedFalse();
-
-        ResProductGetDTOApiV1 resDto = ResProductGetDTOApiV1.of(productList);
+        ResProductGetDTOApiV1 resDto = productServiceApiV1.getBy();
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
@@ -66,16 +60,7 @@ public class ProductControllerApiV1 {
     // 상품 삭제
     @DeleteMapping("/{productId}")
     public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID productId) {
-        ProductEntity productEntity = getActiveProductById(productId);
-        productEntity.delete(123L);
-        productRepository.save(productEntity);
-
+        productServiceApiV1.deleteById(productId);
         return new ResponseEntity<>(ResDTO.success(null), HttpStatus.OK);
-    }
-
-    // 존재하는 상품 검증 메서드
-    private ProductEntity getActiveProductById(UUID productId) {
-        return productRepository.findByProductIdAndIsDeletedFalse(productId)
-                .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
     }
 }
