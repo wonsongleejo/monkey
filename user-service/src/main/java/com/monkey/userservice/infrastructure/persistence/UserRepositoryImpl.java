@@ -32,4 +32,9 @@ public class UserRepositoryImpl implements UserRepository {
     public Optional<UserEntity> findByIsDeletedFalse(Long userId) {
         return userJpaRepository.findById(userId);
     }
+
+    @Override
+    public long count() {
+        return userJpaRepository.count();
+    }
 }

@@ -15,4 +15,6 @@ public interface UserRepository {
     Page<UserEntity> findAllByIsDeletedFalse(Predicate predicate, Pageable pageable);
 
     Optional<UserEntity> findByIsDeletedFalse(Long userId);
+
+    long count();
 }

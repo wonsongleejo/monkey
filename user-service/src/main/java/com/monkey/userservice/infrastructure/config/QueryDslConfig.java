@@ -1,4 +1,4 @@
-package com.monkey.userservice.config;
+package com.monkey.userservice.infrastructure.config;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
