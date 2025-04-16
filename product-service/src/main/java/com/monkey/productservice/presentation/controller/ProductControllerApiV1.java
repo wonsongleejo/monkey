@@ -1,8 +1,8 @@
 package com.monkey.productservice.presentation.controller;
 
-import com.monkey.commonmodule.dto.ResDTO;
-import com.monkey.commonmodule.dto.ResponseCode;
-import com.monkey.commonmodule.exception.CustomException;
+import com.monkey.common_module.dto.ResDTO;
+import com.monkey.common_module.dto.ResponseCode;
+import com.monkey.common_module.exception.CustomException;
 import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.request.ReqProductPutDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductGetByIdDTOApiV1;
