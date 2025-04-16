@@ -7,4 +7,5 @@ import java.util.UUID;
 public interface StoreReservationRepository {
     StoreReservationEntity save(StoreReservationEntity storeReservationEntity);
     StoreReservationEntity findById(UUID storeReservationId);
+    long count();
 }

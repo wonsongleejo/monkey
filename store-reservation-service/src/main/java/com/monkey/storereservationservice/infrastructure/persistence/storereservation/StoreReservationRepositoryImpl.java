@@ -23,4 +23,9 @@ public class StoreReservationRepositoryImpl implements StoreReservationRepositor
         return storeReservationJpaRepository.findById(storeReservationId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 예약 ID입니다."));
     }
+
+    @Override
+    public long count() {
+        return storeReservationJpaRepository.count();
+    }
 }
