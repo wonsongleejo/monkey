@@ -9,6 +9,7 @@ import com.monkey.productservice.application.dto.response.ResProductGetByIdDTOAp
 import com.monkey.productservice.application.dto.response.ResProductGetDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductPutDTOApiV1;
+import com.monkey.productservice.application.service.ProductServiceApiV1;
 import com.monkey.productservice.domain.entity.ProductEntity;
 import com.monkey.productservice.domain.repository.ProductRepository;
 import jakarta.validation.Valid;
@@ -25,6 +26,7 @@ import java.util.UUID;
 @RequestMapping("/v1/products")
 public class ProductControllerApiV1 {
     private final ProductRepository productRepository; // 추후에 서비스로 이동
+    private final ProductServiceApiV1 productServiceApiV1;
 
     // 상품 등록
     @PostMapping
@@ -66,9 +68,7 @@ public class ProductControllerApiV1 {
     // 상품 단건 조회
     @GetMapping("/{productId}")
     public ResponseEntity<ResDTO<ResProductGetByIdDTOApiV1>> getById(@PathVariable UUID productId) {
-        ProductEntity product = getActiveProductById(productId);
-
-        ResProductGetByIdDTOApiV1 resDto = ResProductGetByIdDTOApiV1.of(product);
+        ResProductGetByIdDTOApiV1 resDto = productServiceApiV1.getById(productId);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
