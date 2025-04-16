@@ -12,7 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
 @AllArgsConstructor
-@Table(name = "p_slack_message")
+@Table(name = "p_slack")
 @SQLRestriction("deleted_at is null")
 public class SlackEntity extends BaseEntity {
 
