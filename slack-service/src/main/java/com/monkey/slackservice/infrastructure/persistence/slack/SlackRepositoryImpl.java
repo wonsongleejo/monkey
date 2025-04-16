@@ -15,4 +15,9 @@ public class SlackRepositoryImpl implements SlackRepository {
     public SlackEntity save(SlackEntity slackEntity) {
         return slackJpaRepository.save(slackEntity);
     }
+
+    @Override
+    public long count() {
+        return slackJpaRepository.count();
+    }
 }
