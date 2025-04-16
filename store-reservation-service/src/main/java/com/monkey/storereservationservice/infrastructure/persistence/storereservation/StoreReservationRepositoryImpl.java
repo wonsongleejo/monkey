@@ -1,7 +1,7 @@
 package com.monkey.storereservationservice.infrastructure.persistence.storereservation;
 
-import com.monkey.storereservationservice.domain.StoreReservation.entity.StoreReservationEntity;
-import com.monkey.storereservationservice.domain.StoreReservation.repository.StoreReservationRepository;
+import com.monkey.storereservationservice.domain.storereservation.entity.StoreReservationEntity;
+import com.monkey.storereservationservice.domain.storereservation.repository.StoreReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -22,5 +22,10 @@ public class StoreReservationRepositoryImpl implements StoreReservationRepositor
     public StoreReservationEntity findById(UUID storeReservationId) {
         return storeReservationJpaRepository.findById(storeReservationId)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않은 예약 ID입니다."));
+    }
+
+    @Override
+    public long count() {
+        return storeReservationJpaRepository.count();
     }
 }
