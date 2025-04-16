@@ -1,6 +1,8 @@
 package com.monkey.productservice.application.dto.response;
 
 import com.monkey.productservice.domain.entity.ProductEntity;
+import com.monkey.productservice.infrastructure.feignclient.dto.StoreDTO;
+import com.monkey.productservice.infrastructure.feignclient.dto.UserDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,9 +17,9 @@ import java.util.UUID;
 public class ResProductGetByIdDTOApiV1 {
     private Product product;
 
-    public static ResProductGetByIdDTOApiV1 of(ProductEntity productEntity) { // ,StoreDTO 추가해서 from 안에 넣기 (FeignClient로 받아옴)
+    public static ResProductGetByIdDTOApiV1 of(ProductEntity productEntity, StoreDTO storeDto, UserDTO userDto) {
         return ResProductGetByIdDTOApiV1.builder()
-                .product(Product.from(productEntity))
+                .product(Product.from(productEntity, storeDto, userDto))
                 .build();
     }
 
@@ -27,33 +29,51 @@ public class ResProductGetByIdDTOApiV1 {
     @AllArgsConstructor
     public static class Product{
         private UUID productId;
-        private Store store; // Store 자체를 리턴하도록 수정
         private String productName;
         private Integer price;
         private Integer quantity;
         private Integer purchaseLimitPerUser;
+        private Store store;
+        private User user;
 
-        public static Product from(ProductEntity productEntity) { // ,StoreDTO 추가해서 from 안에 넣기 (FeignClient로 받아옴)
+        public static Product from(ProductEntity productEntity, StoreDTO storeDto, UserDTO userDto) {
             return Product.builder()
                     .productId(productEntity.getProductId())
-                    .store(Store.from())
                     .productName(productEntity.getProductName())
                     .price(productEntity.getPrice())
                     .quantity(productEntity.getQuantity())
                     .purchaseLimitPerUser(productEntity.getPurchaseLimitPerUser())
+                    .store(Store.from(storeDto))
+                    .user(User.from(userDto))
                     .build();
         }
 
         @Getter
         @Builder
+        @NoArgsConstructor
+        @AllArgsConstructor
         public static class Store {
             private UUID storeId;
             private String storeName;
 
-            public static Store from() { // Store 값 나중에 받아오기
+            public static Store from(StoreDTO storeDto) {
                 return Store.builder()
-                        .storeId(UUID.randomUUID())
-                        .storeName(UUID.randomUUID().toString())
+                        .storeId(storeDto.getStoreId())
+                        .storeName(storeDto.getStoreName())
+                        .build();
+            }
+        }
+
+        @Getter
+        @Builder
+        @NoArgsConstructor
+        @AllArgsConstructor
+        public static class User {
+            private Long userId;
+
+            public static User from(UserDTO userDto) {
+                return User.builder()
+                        .userId(userDto.getUserId())
                         .build();
             }
         }
