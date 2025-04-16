@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -26,7 +27,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @Transactional
-//@ActiveProfiles("test") //Eureka 실행 없이 하기 위함
+@ActiveProfiles("test")
 public class AuthControllerApiV1Test {
 
     @Autowired
@@ -41,7 +42,7 @@ public class AuthControllerApiV1Test {
         ReqAuthPostSingUpDTOApiV1 reqDto = ReqAuthPostSingUpDTOApiV1.builder()
                 .user(
                         ReqAuthPostSingUpDTOApiV1.User.builder()
-                                .username("testUser")
+                                .username("testUser0")
                                 .password("test1234")
                                 .slackId("slackID")
                                 .role(UserEntity.Role.USER)
@@ -93,7 +94,7 @@ public class AuthControllerApiV1Test {
         ReqAuthPostSignInDTOApiV1 reqDto = ReqAuthPostSignInDTOApiV1.builder()
                 .user(
                         ReqAuthPostSignInDTOApiV1.User.builder()
-                                .username("testUset")
+                                .username("testUser0")
                                 .password("test123")
                                 .build()
                 )
