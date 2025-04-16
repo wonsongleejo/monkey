@@ -1,4 +1,4 @@
-package com.monkey.productreservationservice.infrastructure.feignclient.dto;
+package com.monkey.productreservationservice.infrastructure.feignclient.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
