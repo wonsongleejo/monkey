@@ -33,11 +33,7 @@ public class ProductControllerApiV1 {
     public ResponseEntity<ResDTO<ResProductPostDTOApiV1>> postBy(
             @RequestBody @Valid ReqProductPostDTOApiV1 reqDto
             ) {
-        ProductEntity productEntity = reqDto.getProduct().toEntity();
-
-        ProductEntity savedProductEntity = productRepository.save(productEntity);
-        ResProductPostDTOApiV1 resDto = ResProductPostDTOApiV1.of(savedProductEntity);
-
+        ResProductPostDTOApiV1 resDto = productServiceApiV1.postBy(reqDto);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
@@ -47,12 +43,7 @@ public class ProductControllerApiV1 {
             @PathVariable UUID productId,
             @RequestBody @Valid ReqProductPutDTOApiV1 reqDto
     ) {
-        ProductEntity productEntity = getActiveProductById(productId);
-        reqDto.getProduct().update(productEntity);
-
-        ProductEntity updatedProductEntity = productRepository.save(productEntity);
-        ResProductPutDTOApiV1 resDto = ResProductPutDTOApiV1.of(updatedProductEntity);
-
+        ResProductPutDTOApiV1 resDto = productServiceApiV1.putBy(productId, reqDto);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
