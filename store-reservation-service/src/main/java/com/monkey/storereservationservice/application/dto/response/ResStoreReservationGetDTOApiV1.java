@@ -1,6 +1,6 @@
 package com.monkey.storereservationservice.application.dto.response;
 
-import com.monkey.storereservationservice.domain.StoreReservation.vo.StoreReservationStatus;
+import com.monkey.storereservationservice.domain.storereservation.vo.StoreReservationStatus;
 import lombok.Builder;
 import lombok.Getter;
 

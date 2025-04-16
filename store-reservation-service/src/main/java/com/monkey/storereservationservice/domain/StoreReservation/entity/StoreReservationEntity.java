@@ -1,7 +1,7 @@
-package com.monkey.storereservationservice.domain.StoreReservation.entity;
+package com.monkey.storereservationservice.domain.storereservation.entity;
 
 import com.monkey.commonmodule.entity.BaseEntity;
-import com.monkey.storereservationservice.domain.StoreReservation.vo.StoreReservationStatus;
+import com.monkey.storereservationservice.domain.storereservation.vo.StoreReservationStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
