@@ -50,10 +50,11 @@ public class AuthControllerApiV1Test {
                 .build();
 
         String reqDtoJson = objectMapper.writeValueAsString(reqDto);
+
         mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/v1/auth/sign-up")
-                        .content(reqDtoJson)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        RestDocumentationRequestBuilders.post("/v1/auth/sign-up")
+                                .content(reqDtoJson)
+                                .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -100,9 +101,9 @@ public class AuthControllerApiV1Test {
 
         String reqDtoJson = objectMapper.writeValueAsString(reqDto);
         mockMvc.perform(
-                RestDocumentationRequestBuilders.post("/v1/auth/sign-in")
-                        .content(reqDtoJson)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        RestDocumentationRequestBuilders.post("/v1/auth/sign-in")
+                                .content(reqDtoJson)
+                                .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),

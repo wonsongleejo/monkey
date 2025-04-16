@@ -5,11 +5,13 @@ import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import com.monkey.userservice.application.dto.response.*;
 import com.monkey.userservice.domain.entity.UserEntity;
 import com.monkey.userservice.domain.repository.UserRepository;
+import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,12 +33,10 @@ public class UserControllerApiV1 {
     //사용자 전체 조회
     @GetMapping
     public ResponseEntity<ResDTO<ResUserGetDTOApiV1>> getBy(
-            @RequestParam(required = false) String searchValue,
-            @PageableDefault(sort="id", direction = Sort.Direction.DESC) Pageable pageable
+            @QuerydslPredicate(root = UserEntity.class) Predicate predicate,
+            @PageableDefault(sort="userId", size=10, direction = Sort.Direction.DESC) Pageable pageable
     ) {
-
-        List<UserEntity> userList = userRepository.findAllByIsDeletedFalse(pageable);
-        Page<UserEntity> userListPage = new PageImpl<>(userList, pageable, userList.size());
+        Page<UserEntity> userListPage = userRepository.findAllByIsDeletedFalse(predicate, pageable);
         ResUserGetDTOApiV1 response = ResUserGetDTOApiV1.of(userListPage);
 
         return new ResponseEntity<>(
@@ -99,7 +99,7 @@ public class UserControllerApiV1 {
     @GetMapping("/{userId}/store-reservation")
     public ResponseEntity<ResDTO<ResStoreReservationGetDTOApiV1>> getStoreReservationBy(
             @PathVariable(name="userId") Long userId,
-            @PageableDefault(sort="id", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(sort="userId", direction = Sort.Direction.DESC) Pageable pageable
     ){
 
         //List<ResStoreReservationGetApiDTOV1> reservations = ProductReservationFeignClient.getStoreReservations();
@@ -149,7 +149,7 @@ public class UserControllerApiV1 {
     @GetMapping("/{userId}/product-reservation")
     public ResponseEntity<ResDTO<ResProductReservationGetDTOApiV1>> getProductReservationsBy(
             @PathVariable(name="userId") Long userId,
-            @PageableDefault(sort="id", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(sort="userId", direction = Sort.Direction.DESC) Pageable pageable
     ){
         //List<ResProductReservationClientGetDTOApiV1> reservations = ProductReservationFeignClient.getStoreReservations();
         List<ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation> prodcutReservationList = new ArrayList<>();
@@ -157,24 +157,24 @@ public class UserControllerApiV1 {
         for (int i = 0; i < 10; i++) {
             ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.Product product =
                     ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.Product.builder()
-                    .productId(UUID.randomUUID())
-                    .productName("맛있는 마카롱 " + i)
-                    .build();
+                            .productId(UUID.randomUUID())
+                            .productName("맛있는 마카롱 " + i)
+                            .build();
 
             ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.Store store =
                     ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.Store.builder()
-                    .storeId(UUID.randomUUID())
-                    .storeName("마카롱 맛집 " + i)
-                    .quantity(i + 1)
-                    .receivedStatus("PENDING")
-                    .build();
+                            .storeId(UUID.randomUUID())
+                            .storeName("마카롱 맛집 " + i)
+                            .quantity(i + 1)
+                            .receivedStatus("PENDING")
+                            .build();
 
             ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation reqDto =
                     ResProductReservationClientGetDTOApiV1.ModelData.ProductReservation.builder()
-                    .productReservationId(UUID.randomUUID())
-                    .product(product)
-                    .store(store)
-                    .build();
+                            .productReservationId(UUID.randomUUID())
+                            .product(product)
+                            .store(store)
+                            .build();
 
             prodcutReservationList.add(reqDto);
         }
