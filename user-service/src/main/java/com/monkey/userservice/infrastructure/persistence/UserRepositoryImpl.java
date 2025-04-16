@@ -2,12 +2,11 @@ package com.monkey.userservice.infrastructure.persistence;
 
 import com.monkey.userservice.domain.entity.UserEntity;
 import com.monkey.userservice.domain.repository.UserRepository;
+import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -23,24 +22,14 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<UserEntity> findAllByIsDeletedFalse(Pageable pageable) {
-        List<UserEntity> userList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            userList.add(UserEntity.builder()
-                    .userId((long) i)
-                    .username("testUser"+ i)
-                    .slackId("slackID" + i)
-                    .role(UserEntity.Role.USER)
-                    .build()
-            );
-        }
-        //return userJpaRepository.findAllByIsDeletedFalse(pageable);
-        return userList;
+
+    public Page<UserEntity> findAllByIsDeletedFalse(Predicate predicate, Pageable pageable) {
+        //return userJpaRepository.findAll(predicate, pageable);
+        return userQueryDslRepository.findAllByIsDeletedFalse(predicate, pageable);
     }
 
     @Override
     public Optional<UserEntity> findByIsDeletedFalse(Long userId) {
-
         return userJpaRepository.findById(userId);
     }
 }

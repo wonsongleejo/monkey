@@ -1,6 +1,7 @@
 package com.monkey.userservice.domain.user.controller;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
+import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import com.monkey.userservice.domain.entity.UserEntity;
@@ -17,6 +18,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
@@ -62,9 +64,25 @@ public class UserControllerApiV1Test {
                                                         
                                                         ---
                                                         
-                                                        추후 Page 적용 예정
+                                                        정렬 기준을 지정할 수 있습니다. 기본 정렬은 id,desc입니다.
+                                                        
+                                                        ex) sort=asc
+                                                        
+                                                        페이징이 가능합니다. 기본 페이지 번호는 0번입니다.
+                                                        페이지 당 조회 개수는 10, 30, 50로만 설정 가능합니다.(기본 조회 개수는 10입니다.)
+                                                        
+                                                        ex) size=30
+                                                        
+                                                        ex) page=1
+                                                        
+                                                        ex) page=2&size=10
                                                         
                                                         """)
+                                                .queryParameters(
+                                                        parameterWithName("sort").type(SimpleType.STRING).optional().description("정렬 기준"),
+                                                        parameterWithName("page").type(SimpleType.NUMBER).optional().description("페이지 번호"),
+                                                        parameterWithName("size").type(SimpleType.NUMBER).optional().description("페이지 당 조회 개수")
+                                                )
                                                 .build()
                                 )
                         )
