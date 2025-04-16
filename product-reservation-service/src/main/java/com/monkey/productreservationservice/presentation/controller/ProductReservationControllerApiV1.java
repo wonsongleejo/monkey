@@ -1,8 +1,8 @@
 package com.monkey.productreservationservice.presentation.controller;
 
-import com.monkey.commonmodule.dto.ResDTO;
-import com.monkey.commonmodule.dto.ResponseCode;
-import com.monkey.commonmodule.exception.CustomException;
+import com.monkey.common_module.dto.ResDTO;
+import com.monkey.common_module.dto.ResponseCode;
+import com.monkey.common_module.exception.CustomException;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetByIdDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
