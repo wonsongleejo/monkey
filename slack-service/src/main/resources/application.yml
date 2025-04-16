@@ -16,6 +16,10 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 
+  #  더미데이터용 환경설정 *배포시 삭제 필요*
+  profiles:
+    active: dev
+
 server:
   port: 8086
 
