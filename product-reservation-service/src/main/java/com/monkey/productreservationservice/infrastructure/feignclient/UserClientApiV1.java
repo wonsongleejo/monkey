@@ -1,7 +1,7 @@
 package com.monkey.productreservationservice.infrastructure.feignclient;
 
 import com.monkey.common_module.dto.ResDTO;
-import com.monkey.productreservationservice.infrastructure.feignclient.dto.ResUserClientGetByIdDTOApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
