@@ -4,8 +4,6 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
-import com.monkey.userservice.domain.entity.UserEntity;
-import com.monkey.userservice.domain.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -28,7 +27,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 @Transactional
-//@ActiveProfiles("test")
+@ActiveProfiles("test")
 public class UserControllerApiV1Test {
 
     @Autowired
@@ -36,9 +35,6 @@ public class UserControllerApiV1Test {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private UserRepository userRepository;
 
     // 회원 전제조회
     @Test
@@ -92,17 +88,8 @@ public class UserControllerApiV1Test {
     // 회원 상세조회
     @Test
     public void testUserGetByIdSuccess() throws Exception {
-        UserEntity user = userRepository.save(
-                UserEntity.builder()
-                        .username("testUser")
-                        .password("test1234")
-                        .slackId("slackId1")
-                        .role(UserEntity.Role.USER)
-                        .build()
-        );
-
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.get("/v1/users/{id}", user.getUserId())
+                        RestDocumentationRequestBuilders.get("/v1/users/{id}", 1)
 
                 )
                 .andExpectAll(
@@ -130,15 +117,6 @@ public class UserControllerApiV1Test {
     // 회원 정보 수정
     @Test
     public void testUserPutByIdSuccess() throws Exception {
-        UserEntity user = userRepository.save(
-                UserEntity.builder()
-                        .username("testUser")
-                        .password("test1234")
-                        .slackId("slackId1")
-                        .role(UserEntity.Role.USER)
-                        .build()
-        );
-
         ReqUserPutDTOApiV1 reqDto = ReqUserPutDTOApiV1.builder()
                 .user(
                         ReqUserPutDTOApiV1.User.builder()
@@ -151,7 +129,7 @@ public class UserControllerApiV1Test {
         String reqDtoJson = objectMapper.writeValueAsString(reqDto);
 
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.put("/v1/users/{id}", user.getUserId())
+                        RestDocumentationRequestBuilders.put("/v1/users/{id}", 1)
                                 .content(reqDtoJson)
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -186,17 +164,8 @@ public class UserControllerApiV1Test {
     // 회원 탈퇴
     @Test
     public void testUserDeleteByIdSuccess() throws Exception {
-        UserEntity user = userRepository.save(
-                UserEntity.builder()
-                        .username("testUser")
-                        .password("test1234")
-                        .slackId("slackId1")
-                        .role(UserEntity.Role.USER)
-                        .build()
-        );
-
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.delete("/v1/users/{id}", user.getUserId())
+                        RestDocumentationRequestBuilders.delete("/v1/users/{id}", 1)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
