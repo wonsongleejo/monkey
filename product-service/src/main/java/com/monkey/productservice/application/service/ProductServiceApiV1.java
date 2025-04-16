@@ -2,7 +2,11 @@ package com.monkey.productservice.application.service;
 
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;
+import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
+import com.monkey.productservice.application.dto.request.ReqProductPutDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductGetByIdDTOApiV1;
+import com.monkey.productservice.application.dto.response.ResProductPostDTOApiV1;
+import com.monkey.productservice.application.dto.response.ResProductPutDTOApiV1;
 import com.monkey.productservice.domain.entity.ProductEntity;
 import com.monkey.productservice.domain.repository.ProductRepository;
 import com.monkey.productservice.infrastructure.feignclient.StoreFeignClient;
@@ -20,6 +24,24 @@ public class ProductServiceApiV1 {
     private final ProductRepository productRepository;
     private final StoreFeignClient storeFeignClient;
     private final UserFeignClient userFeignClient;
+
+    // 상품 등록
+    public ResProductPostDTOApiV1 postBy(ReqProductPostDTOApiV1 reqDto) {
+        ProductEntity productEntity = reqDto.getProduct().toEntity();
+        ProductEntity savedProductEntity = productRepository.save(productEntity);
+
+        return ResProductPostDTOApiV1.of(savedProductEntity);
+    }
+
+    // 상품 수정
+    public ResProductPutDTOApiV1 putBy(UUID productId, ReqProductPutDTOApiV1 reqDto) {
+        ProductEntity productEntity = getActiveProductById(productId);
+
+        reqDto.getProduct().update(productEntity);
+        ProductEntity updatedProductEntity = productRepository.save(productEntity);
+
+        return ResProductPutDTOApiV1.of(updatedProductEntity);
+    }
 
     // 상품 단건 조회
     public ResProductGetByIdDTOApiV1 getById(UUID productId) {
