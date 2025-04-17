@@ -10,10 +10,10 @@ import com.monkey.productservice.application.dto.response.ResProductPostDTOApiV1
 import com.monkey.productservice.application.dto.response.ResProductPutDTOApiV1;
 import com.monkey.productservice.domain.entity.ProductEntity;
 import com.monkey.productservice.domain.repository.ProductRepository;
-import com.monkey.productservice.infrastructure.feignclient.StoreFeignClient;
-import com.monkey.productservice.infrastructure.feignclient.UserFeignClient;
-import com.monkey.productservice.infrastructure.feignclient.dto.StoreDTO;
-import com.monkey.productservice.infrastructure.feignclient.dto.UserDTO;
+import com.monkey.productservice.infrastructure.feignclient.StoreFeignClientApiV1;
+import com.monkey.productservice.infrastructure.feignclient.UserFeignClientApiV1;
+import com.monkey.productservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
+import com.monkey.productservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,8 +24,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductServiceApiV1 {
     private final ProductRepository productRepository;
-    private final StoreFeignClient storeFeignClient;
-    private final UserFeignClient userFeignClient;
+    private final StoreFeignClientApiV1 storeClient;
+    private final UserFeignClientApiV1 userClient;
 
     // 상품 등록
     public ResProductPostDTOApiV1 postBy(ReqProductPostDTOApiV1 reqDto) {
@@ -53,12 +53,12 @@ public class ProductServiceApiV1 {
 
     // 상품 단건 조회
     public ResProductGetByIdDTOApiV1 getById(UUID productId) {
-        ProductEntity productEntity = getActiveProductById(productId);
+        ProductEntity product = getActiveProductById(productId);
 
-        StoreDTO store = storeFeignClient.getStoreById(productEntity.getStoreId()).getData();
-        UserDTO user = userFeignClient.getUserById(productEntity.getCreatedBy()).getData();
+        ResStoreClientGetByIdDTOApiV1 resStore = storeClient.getStoreById(product.getStoreId()).getData();
+        ResUserClientGetByIdDTOApiV1 resUser = userClient.getUserById(product.getCreatedBy()).getData();
 
-        return ResProductGetByIdDTOApiV1.of(productEntity, store, user);
+        return ResProductGetByIdDTOApiV1.of(product, resStore, resUser);
     }
 
     // 상품 삭제
