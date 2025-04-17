@@ -38,7 +38,7 @@ public class ResStoreTimeSlotGetDtoApiV1 {
 
     private UUID storeId;
 
-    private UUID slotId;
+    private UUID timeSlotId;
 
     private LocalDate slotDate;
 
@@ -51,7 +51,7 @@ public class ResStoreTimeSlotGetDtoApiV1 {
     public static StoreTimeSlot from(StoreTimeSlotEntity storeTimeSlotEntity) {
       return StoreTimeSlot.builder()
           .storeId(storeTimeSlotEntity.getStoreId())
-          .slotId(storeTimeSlotEntity.getTimeslotId())
+          .timeSlotId(storeTimeSlotEntity.getTimeslotId())
           .slotDate(storeTimeSlotEntity.getSlotDate())
           .entryTime(storeTimeSlotEntity.getEntryTime())
           .exitTime(storeTimeSlotEntity.getExitTime())
