@@ -1,5 +1,6 @@
 package com.monkey.storereservationservice.application.dto.response;
 
+import com.monkey.storereservationservice.domain.storereservation.entity.StoreReservationEntity;
 import com.monkey.storereservationservice.domain.storereservation.vo.StoreReservationStatus;
 import lombok.*;
 
@@ -11,9 +12,9 @@ public class ResStoreReservationPostByIdCancelDTOApiV1 {
 
     private StoreReservation storeReservation;
 
-    public static ResStoreReservationPostByIdCancelDTOApiV1 of() {
+    public static ResStoreReservationPostByIdCancelDTOApiV1 from(StoreReservationEntity storeReservationEntity) {
         return ResStoreReservationPostByIdCancelDTOApiV1.builder()
-                .storeReservation(StoreReservation.from())
+                .storeReservation(StoreReservation.from(storeReservationEntity))
                 .build();
     }
 
@@ -26,10 +27,10 @@ public class ResStoreReservationPostByIdCancelDTOApiV1 {
         private UUID storeReservationId;
         private StoreReservationStatus status;
 
-        public static StoreReservation from() {
+        public static StoreReservation from(StoreReservationEntity storeReservationEntity) {
             return StoreReservation.builder()
-                    .storeReservationId(UUID.randomUUID())
-                    .status(StoreReservationStatus.CANCELED)
+                    .storeReservationId(storeReservationEntity.getStoreReservationId())
+                    .status(storeReservationEntity.getStatus())
                     .build();
         }
     }
