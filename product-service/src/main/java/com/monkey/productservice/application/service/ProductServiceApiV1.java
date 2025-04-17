@@ -10,8 +10,8 @@ import com.monkey.productservice.application.dto.response.ResProductPostDTOApiV1
 import com.monkey.productservice.application.dto.response.ResProductPutDTOApiV1;
 import com.monkey.productservice.domain.entity.ProductEntity;
 import com.monkey.productservice.domain.repository.ProductRepository;
-import com.monkey.productservice.infrastructure.feignclient.StoreClientApiV1;
-import com.monkey.productservice.infrastructure.feignclient.UserClientApiV1;
+import com.monkey.productservice.infrastructure.feignclient.StoreFeignClientApiV1;
+import com.monkey.productservice.infrastructure.feignclient.UserFeignClientApiV1;
 import com.monkey.productservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import com.monkey.productservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
 import lombok.RequiredArgsConstructor;
@@ -24,8 +24,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductServiceApiV1 {
     private final ProductRepository productRepository;
-    private final StoreClientApiV1 storeFeignClient;
-    private final UserClientApiV1 userFeignClient;
+    private final StoreFeignClientApiV1 storeClient;
+    private final UserFeignClientApiV1 userClient;
 
     // 상품 등록
     public ResProductPostDTOApiV1 postBy(ReqProductPostDTOApiV1 reqDto) {
@@ -55,10 +55,10 @@ public class ProductServiceApiV1 {
     public ResProductGetByIdDTOApiV1 getById(UUID productId) {
         ProductEntity productEntity = getActiveProductById(productId);
 
-        ResStoreClientGetByIdDTOApiV1 store = storeFeignClient.getStoreById(productEntity.getStoreId()).getData();
-        ResUserClientGetByIdDTOApiV1 user = userFeignClient.getUserById(productEntity.getCreatedBy()).getData();
+        ResStoreClientGetByIdDTOApiV1 resStore = storeClient.getStoreById(productEntity.getStoreId()).getData();
+        ResUserClientGetByIdDTOApiV1 resUser = userClient.getUserById(productEntity.getCreatedBy()).getData();
 
-        return ResProductGetByIdDTOApiV1.of(productEntity, store, user);
+        return ResProductGetByIdDTOApiV1.of(productEntity, resStore, resUser);
     }
 
     // 상품 삭제
