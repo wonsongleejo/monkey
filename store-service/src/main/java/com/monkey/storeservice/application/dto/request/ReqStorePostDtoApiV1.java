@@ -7,11 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
@@ -50,11 +46,10 @@ public class ReqStorePostDtoApiV1 {
     private LocalTime endTime;
 
     @NotNull(message = "팝업스토어 총 수용 인원을 입력해주세요.")
-    @Min(1)
+    @Min(value = 1, message = "최소 수용 인원은 1명 이상이어야 합니다.")
     private Integer totalPersonCount;
 
     public StoreEntity toEntity() {
-
       return StoreEntity.builder()
           .storeName(storeName)
           .description(description)
