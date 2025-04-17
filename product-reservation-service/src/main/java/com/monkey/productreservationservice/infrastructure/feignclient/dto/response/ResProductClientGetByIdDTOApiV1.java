@@ -14,4 +14,5 @@ import java.util.UUID;
 public class ResProductClientGetByIdDTOApiV1 {
     private UUID productId;
     private UUID storeId;
+    private String productName;
 }
