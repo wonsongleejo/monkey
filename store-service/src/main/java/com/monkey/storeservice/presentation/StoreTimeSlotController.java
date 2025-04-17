@@ -33,10 +33,11 @@ public class StoreTimeSlotController {
   public ResponseEntity<ResDTO<ResStoreTimeSlotPostDtoApiV1>> postBy(@RequestBody
       ReqStoreTimeSlotPostDtoApiV1 reqStoreTimeSlotPostDtoApiV1) {
     StoreTimeSlotEntity storeTimeSlotEntity = StoreTimeSlotEntity.builder()
-        .timeslotId(UUID.randomUUID())
+        .timeSlotId(UUID.randomUUID())
         .slotDate(LocalDate.parse("2025-04-14"))
         .entryTime(LocalTime.parse("00:00:00"))
         .exitTime(LocalTime.parse("00:00:00"))
+        .maxPerson(10)
         .build();
 
 //    // DB사용시에 저장하기 위한 메서드
@@ -51,9 +52,9 @@ public class StoreTimeSlotController {
   }
 
   //팝업스토어 시간대 수정
-  @PutMapping("/{timeslotId}")
+  @PutMapping("/{timeSlotId}")
   public ResponseEntity<ResDTO<ResStoreTimeSlotPutDtoApiV1>> putById(
-      @PathVariable UUID timeslotId,
+      @PathVariable UUID timeSlotId,
       @RequestBody ReqStoreTimeSlotPutDtoApiV1 reqStoreTimeSlotPutDtoApiV1) {
 
     StoreTimeSlotEntity storeTimeSlotEntity = StoreTimeSlotEntity.builder()
@@ -75,12 +76,12 @@ public class StoreTimeSlotController {
   }
 
   //팝업스토어 시간대 조회
-  @GetMapping("/{timeslotId}")
+  @GetMapping("/{timeSlotId}")
   public ResponseEntity<ResDTO<ResStoreTimeSlotGetDtoApiV1>> getById(
-      @PathVariable UUID timeslotId){
-    StoreTimeSlotEntity storeTimeSlotEntity=StoreTimeSlotEntity.builder()
+      @PathVariable UUID timeSlotId){
+    StoreTimeSlotEntity storeTimeSlotEntity = StoreTimeSlotEntity.builder()
         .storeId(UUID.randomUUID())
-        .timeslotId(timeslotId)
+        .timeSlotId(timeSlotId)
         .slotDate(LocalDate.parse("2025-04-14"))
         .entryTime(LocalTime.parse("00:00:00"))
         .exitTime(LocalTime.parse("00:00:00"))
@@ -104,7 +105,7 @@ public class StoreTimeSlotController {
     for (int i = 0; i < 5; i++) {
       storeTimeSlotEntityList.add(StoreTimeSlotEntity.builder()
           .storeId(UUID.randomUUID())
-          .timeslotId(UUID.randomUUID())
+          .timeSlotId(UUID.randomUUID())
           .slotDate(LocalDate.parse("2025-04-14"))
           .entryTime(LocalTime.parse("00:00:00"))
           .exitTime(LocalTime.parse("00:00:00"))
