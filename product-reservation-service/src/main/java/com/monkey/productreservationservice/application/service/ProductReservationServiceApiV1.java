@@ -3,6 +3,7 @@ package com.monkey.productreservationservice.application.service;
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
+import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetByIdDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostByIdCancelDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
@@ -12,6 +13,9 @@ import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
 import com.monkey.productreservationservice.infrastructure.feignclient.ProductFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.StoreFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.UserFeignClientApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +55,17 @@ public class ProductReservationServiceApiV1 {
     public ResProductReservationGetDTOApiV1 getBy() {
         List<ProductReservationEntity> productReservationList = productReservationRepository.findAllByIsDeletedFalse();
         return ResProductReservationGetDTOApiV1.of(productReservationList);
+    }
+
+    // 예약내역 단건 조회
+    public ResProductReservationGetByIdDTOApiV1 getById(UUID productReservationId) {
+        ProductReservationEntity productReservation = getActiveProductReservationById(productReservationId);
+
+        ResProductClientGetByIdDTOApiV1 resProduct = productClient.getProductById(productReservation.getProductId()).getData();
+        ResStoreClientGetByIdDTOApiV1 resStore = storeClient.getStoreById(productReservation.getStoreId()).getData();
+        ResUserClientGetByIdDTOApiV1 resUser = userClient.getUserById(productReservation.getCreatedBy()).getData();
+
+        return ResProductReservationGetByIdDTOApiV1.of(productReservation, resProduct, resStore, resUser);
     }
 
     // 존재하는 예약 검증 메서드
