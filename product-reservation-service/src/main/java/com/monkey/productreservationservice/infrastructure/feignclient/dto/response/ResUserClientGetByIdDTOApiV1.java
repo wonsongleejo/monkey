@@ -1,4 +1,4 @@
-package com.monkey.productservice.infrastructure.feignclient.dto;
+package com.monkey.productreservationservice.infrastructure.feignclient.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class UserDTO {
+public class ResUserClientGetByIdDTOApiV1 {
     private Long userId;
+    private String username;
 }

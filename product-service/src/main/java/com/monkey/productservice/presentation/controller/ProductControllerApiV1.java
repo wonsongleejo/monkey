@@ -8,7 +8,6 @@ import com.monkey.productservice.application.dto.response.ResProductGetDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductPutDTOApiV1;
 import com.monkey.productservice.application.service.ProductServiceApiV1;
-import com.monkey.productservice.domain.repository.ProductRepository;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,7 +20,6 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/v1/products")
 public class ProductControllerApiV1 {
-    private final ProductRepository productRepository; // 추후에 서비스로 이동
     private final ProductServiceApiV1 productServiceApiV1;
 
     // 상품 등록
