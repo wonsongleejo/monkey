@@ -18,6 +18,8 @@ public class ReqStoreTimeSlotPostDtoApiV1 {
   @NotNull
   private StoreTimeSlot storeTimeSlot;
 
+  @Getter
+  @Builder
   public static class StoreTimeSlot {
 
     @NotNull(message = "예약 날짜를 입력해주세요.")

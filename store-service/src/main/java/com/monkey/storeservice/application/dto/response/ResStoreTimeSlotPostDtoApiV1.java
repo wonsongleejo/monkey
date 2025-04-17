@@ -29,7 +29,7 @@ public class ResStoreTimeSlotPostDtoApiV1 {
 
     public static StoreTimeSlot from(StoreTimeSlotEntity storeTimeSlotEntity) {
       return StoreTimeSlot.builder()
-          .timeSlotId(storeTimeSlotEntity.getTimeslotId())
+          .timeSlotId(storeTimeSlotEntity.getTimeSlotId())
           .build();
     }
 

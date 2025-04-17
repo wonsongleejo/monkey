@@ -5,10 +5,10 @@ import com.monkey.storeservice.application.dto.request.ReqStorePostDtoApiV1;
 import com.monkey.storeservice.application.dto.request.ReqStorePutDtoApiV1;
 import com.monkey.storeservice.application.dto.response.ResStoreGetDtoApiV1;
 import com.monkey.storeservice.application.dto.response.ResStorePutDtoApiV1;
-import com.monkey.storeservice.application.service.StoreServiceApi;
 import com.monkey.storeservice.application.dto.response.ResStorePostDtoApiV1;
 import com.monkey.storeservice.domain.article.entity.StoreEntity;
 import com.monkey.storeservice.domain.article.entity.StoreEntity.OpenStatus;
+import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -25,11 +25,11 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class StoreController {
 
-  StoreServiceApi storeServiceApi;
+  //StoreServiceApi storeServiceApi;
 
   //  팝업스토어 생성
   @PostMapping
-  public ResponseEntity<ResDTO<ResStorePostDtoApiV1>> postBy(@RequestBody ReqStorePostDtoApiV1 reqStorePostDtoApiV1) {
+  public ResponseEntity<ResDTO<ResStorePostDtoApiV1>> postBy(@RequestBody @Valid ReqStorePostDtoApiV1 reqStorePostDtoApiV1) {
     StoreEntity storeEntity = StoreEntity.builder()
         .storeId(UUID.randomUUID())
         .storeName("루피팝업")
