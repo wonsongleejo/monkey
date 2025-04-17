@@ -53,12 +53,12 @@ public class ProductServiceApiV1 {
 
     // 상품 단건 조회
     public ResProductGetByIdDTOApiV1 getById(UUID productId) {
-        ProductEntity productEntity = getActiveProductById(productId);
+        ProductEntity product = getActiveProductById(productId);
 
-        ResStoreClientGetByIdDTOApiV1 resStore = storeClient.getStoreById(productEntity.getStoreId()).getData();
-        ResUserClientGetByIdDTOApiV1 resUser = userClient.getUserById(productEntity.getCreatedBy()).getData();
+        ResStoreClientGetByIdDTOApiV1 resStore = storeClient.getStoreById(product.getStoreId()).getData();
+        ResUserClientGetByIdDTOApiV1 resUser = userClient.getUserById(product.getCreatedBy()).getData();
 
-        return ResProductGetByIdDTOApiV1.of(productEntity, resStore, resUser);
+        return ResProductGetByIdDTOApiV1.of(product, resStore, resUser);
     }
 
     // 상품 삭제
