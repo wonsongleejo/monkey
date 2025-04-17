@@ -5,6 +5,7 @@ import com.monkey.storereservationservice.domain.storereservation.repository.Sto
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.UUID;
 
 @Repository
@@ -16,6 +17,11 @@ public class StoreReservationRepositoryImpl implements StoreReservationRepositor
     @Override
     public StoreReservationEntity save(StoreReservationEntity storeReservationEntity) {
         return storeReservationJpaRepository.save(storeReservationEntity);
+    }
+
+    @Override
+    public List<StoreReservationEntity> findAll() {
+        return storeReservationJpaRepository.findAll();
     }
 
     @Override
