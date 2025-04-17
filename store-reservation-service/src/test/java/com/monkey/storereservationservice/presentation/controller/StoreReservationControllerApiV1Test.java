@@ -3,7 +3,11 @@ package com.monkey.storereservationservice.presentation.controller;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.storereservationservice.application.dto.request.ReqStoreReservationPostDTOApiV1;
+import com.monkey.storereservationservice.domain.storereservation.entity.StoreReservationEntity;
+import com.monkey.storereservationservice.domain.storereservation.vo.StoreReservationStatus;
+import com.monkey.storereservationservice.infrastructure.persistence.storereservation.StoreReservationJpaRepository;
 import jakarta.transaction.Transactional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -24,6 +28,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 
 @SpringBootTest
 @AutoConfigureRestDocs
@@ -38,9 +43,46 @@ public class StoreReservationControllerApiV1Test {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private StoreReservationJpaRepository storeReservationJpaRepository;
+
+    private UUID savedId;
+
+    @BeforeEach
+    void setUp() {
+        savedId = storeReservationJpaRepository.save(StoreReservationEntity.builder()
+                .userId(1L)
+                .timeSlotId(UUID.randomUUID())
+                .personCount(1)
+                .status(StoreReservationStatus.SCHEDULED)
+                .build()).getStoreReservationId();
+
+        storeReservationJpaRepository.save(StoreReservationEntity.builder()
+                .userId(2L)
+                .timeSlotId(UUID.randomUUID())
+                .personCount(2)
+                .status(StoreReservationStatus.CANCELED)
+                .build());
+
+        storeReservationJpaRepository.save(StoreReservationEntity.builder()
+                .userId(3L)
+                .timeSlotId(UUID.randomUUID())
+                .personCount(3)
+                .status(StoreReservationStatus.VISITED)
+                .build());
+
+        storeReservationJpaRepository.save(StoreReservationEntity.builder()
+                .userId(4L)
+                .timeSlotId(UUID.randomUUID())
+                .personCount(4)
+                .status(StoreReservationStatus.NO_SHOW)
+                .build());
+    }
+
     // 예약 생성
     @Test
     public void testStoreReservationPostSuccess() throws Exception {
+
         ReqStoreReservationPostDTOApiV1 reqDto = ReqStoreReservationPostDTOApiV1.builder()
                 .storeReservation(
                         ReqStoreReservationPostDTOApiV1.StoreReservation.builder()
@@ -88,7 +130,7 @@ public class StoreReservationControllerApiV1Test {
     @Test
     public void testStoreReservationGetDetailSuccess() throws Exception {
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.get("/v1/store-reservations/{reservationId}", UUID.randomUUID())
+                        RestDocumentationRequestBuilders.get("/v1/store-reservations/{reservationId}", savedId)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -102,11 +144,19 @@ public class StoreReservationControllerApiV1Test {
                                 resource(ResourceSnippetParameters.builder()
                                         .tag("STORE-RESERVATION v1")
                                         .summary("팝업스토어 예약 상세 조회")
-                                        .description("""
-                                                ## 팝업스토어 예약 상세 조회 엔드포인트입니다.
-                                                
-                                                예약 ID로 예약 상세정보를 조회합니다.
-                                                """)
+                                        .description("예약 ID로 예약 상세정보를 조회합니다.")
+                                        .responseFields(
+                                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                                fieldWithPath("data.storeReservation.storeReservationId").type(JsonFieldType.STRING).description("예약 ID"),
+                                                fieldWithPath("data.storeReservation.status").type(JsonFieldType.STRING).description("예약 상태"),
+                                                fieldWithPath("data.storeReservation.timeSlot.store.storeId").type(JsonFieldType.STRING).description("스토어 ID"),
+                                                fieldWithPath("data.storeReservation.timeSlot.date").type(JsonFieldType.STRING).description("날짜"),
+                                                fieldWithPath("data.storeReservation.timeSlot.entryTime").type(JsonFieldType.STRING).description("입장 시간"),
+                                                fieldWithPath("data.storeReservation.timeSlot.exitTime").type(JsonFieldType.STRING).description("퇴장 시간"),
+                                                fieldWithPath("data.storeReservation.user.userId").type(JsonFieldType.NUMBER).description("유저 ID"),
+                                                fieldWithPath("data.storeReservation.user.userName").type(JsonFieldType.STRING).description("유저 이름")
+                                        )
                                         .build()
                                 )
                         )
@@ -133,11 +183,24 @@ public class StoreReservationControllerApiV1Test {
                                 resource(ResourceSnippetParameters.builder()
                                         .tag("STORE-RESERVATION v1")
                                         .summary("팝업스토어 예약 목록 조회")
-                                        .description("""
-                                                ## 팝업스토어 예약 목록 조회 엔드포인트입니다.
-                                                
-                                                userId, storeId로 예약 목록을 조회할 수 있습니다.
-                                                """)
+                                        .description("userId, storeId로 예약 목록을 조회할 수 있습니다.")
+                                        .queryParameters(
+                                                parameterWithName("userId").optional().description("유저 ID"),
+                                                parameterWithName("storeId").optional().description("스토어 ID")
+                                        )
+                                        .responseFields(
+                                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                                fieldWithPath("data.storeReservationList[]").type(JsonFieldType.ARRAY).description("예약 목록"),
+                                                fieldWithPath("data.storeReservationList[].storeReservationId").type(JsonFieldType.STRING).description("예약 ID"),
+                                                fieldWithPath("data.storeReservationList[].status").type(JsonFieldType.STRING).description("예약 상태"),
+                                                fieldWithPath("data.storeReservationList[].timeSlot.store.storeId").type(JsonFieldType.STRING).description("스토어 ID"),
+                                                fieldWithPath("data.storeReservationList[].timeSlot.date").type(JsonFieldType.STRING).description("날짜"),
+                                                fieldWithPath("data.storeReservationList[].timeSlot.entryTime").type(JsonFieldType.STRING).description("입장 시간"),
+                                                fieldWithPath("data.storeReservationList[].timeSlot.exitTime").type(JsonFieldType.STRING).description("퇴장 시간"),
+                                                fieldWithPath("data.storeReservationList[].user.userId").type(JsonFieldType.NUMBER).description("유저 ID"),
+                                                fieldWithPath("data.storeReservationList[].user.userName").type(JsonFieldType.STRING).description("유저 이름")
+                                        )
                                         .build()
                                 )
                         )
@@ -148,7 +211,7 @@ public class StoreReservationControllerApiV1Test {
     @Test
     public void testStoreReservationCancelSuccess() throws Exception {
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.post("/v1/store-reservations/{reservationId}/cancel", UUID.randomUUID())
+                        RestDocumentationRequestBuilders.post("/v1/store-reservations/{reservationId}/cancel", savedId)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -162,11 +225,13 @@ public class StoreReservationControllerApiV1Test {
                                 resource(ResourceSnippetParameters.builder()
                                         .tag("STORE-RESERVATION v1")
                                         .summary("팝업스토어 예약 취소")
-                                        .description("""
-                                                ## 팝업스토어 예약 취소 엔드포인트입니다.
-                                                
-                                                storeReservationID로 예약을 취소합니다.
-                                                """)
+                                        .description("storeReservationID로 예약을 취소합니다.")
+                                        .responseFields(
+                                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                                fieldWithPath("data.storeReservation.storeReservationId").type(JsonFieldType.STRING).description("예약 ID"),
+                                                fieldWithPath("data.storeReservation.status").type(JsonFieldType.STRING).description("변경된 예약 상태")
+                                        )
                                         .build()
                                 )
                         )
