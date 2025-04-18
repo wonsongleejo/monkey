@@ -28,4 +28,9 @@ public class ProductReservationRepositoryImpl implements ProductReservationRepos
     public List<ProductReservationEntity> findAllByIsDeletedFalse() {
         return productReservationJpaRepository.findAllByIsDeletedFalse();
     }
+
+    @Override
+    public boolean existsByUserIdAndProductIdAndIsDeletedFalse(long userId, UUID productId) {
+        return productReservationJpaRepository.existsByUserIdAndProductIdAndIsDeletedFalse(userId, productId);
+    }
 }
