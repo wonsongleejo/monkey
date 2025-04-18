@@ -46,11 +46,7 @@ public class ProductReservationControllerApiV1Test {
     @Test
     public void testProductReservationPostSuccess() throws Exception {
         ReqProductReservationPostDTOApiV1 reqDto = ReqProductReservationPostDTOApiV1.builder()
-                .productReservation(
-                        ReqProductReservationPostDTOApiV1.ProductReservation.builder()
-                                .quantity(1)
-                                .build()
-                )
+                .quantity(1)
                 .build();
         String reqDtoJson = objectMapper.writeValueAsString(reqDto);
         mockMvc.perform(
@@ -80,7 +76,7 @@ public class ProductReservationControllerApiV1Test {
                                                 parameterWithName("productId").type(SimpleType.STRING).description("상품 ID")
                                         )
                                         .requestFields(
-                                                fieldWithPath("productReservation.quantity").type(JsonFieldType.NUMBER).description("구매 수량")
+                                                fieldWithPath("quantity").type(JsonFieldType.NUMBER).description("구매 수량")
                                         )
                                         .responseFields(
                                                 fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
