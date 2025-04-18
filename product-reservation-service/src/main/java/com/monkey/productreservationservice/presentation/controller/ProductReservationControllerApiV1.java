@@ -24,11 +24,11 @@ public class ProductReservationControllerApiV1 {
     // 예약 등록
     @PostMapping("/{productId}")
     public ResponseEntity<ResDTO<ResProductReservationPostDTOApiV1>> postBy(
-            @PathVariable UUID productId,
-            @RequestBody @Valid ReqProductReservationPostDTOApiV1 reqDto
+            @RequestBody @Valid ReqProductReservationPostDTOApiV1 reqDto,
+            @PathVariable UUID productId
             ) {
         long userId = 123L; // 추후에 인증된 정보에서 받아오기
-        ResProductReservationPostDTOApiV1 resDto = productReservationService.postBy(productId, reqDto, userId);
+        ResProductReservationPostDTOApiV1 resDto = productReservationService.postBy(reqDto, productId, userId);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
