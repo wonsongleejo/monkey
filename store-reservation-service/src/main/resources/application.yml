@@ -3,7 +3,7 @@ spring:
     name: store-reservation-service
 
   datasource:
-    url: jdbc:postgresql://localhost:5432/test
+    url: jdbc:postgresql://localhost:5432/storereservation
     username: yeji
     password: 0708
     driver-class-name: org.postgresql.Driver
@@ -16,12 +16,15 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
 
-#  더미데이터용 환경설정 *배포시 삭제 필요*
+  #  더미데이터용 환경설정 *배포시 삭제 필요*
   profiles:
     active: dev
 
 server:
   port: 8083
+
+store-service:
+  url: http://localhost:8082
 
 eureka:
   client:
