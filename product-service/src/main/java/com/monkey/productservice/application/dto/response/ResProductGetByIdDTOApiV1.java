@@ -17,9 +17,9 @@ import java.util.UUID;
 public class ResProductGetByIdDTOApiV1 {
     private Product product;
 
-    public static ResProductGetByIdDTOApiV1 of(ProductEntity productEntity, ResStoreClientGetByIdDTOApiV1 storeDto, ResUserClientGetByIdDTOApiV1 userDto) {
+    public static ResProductGetByIdDTOApiV1 of(ProductEntity productEntity, ResStoreClientGetByIdDTOApiV1 storeDto) {
         return ResProductGetByIdDTOApiV1.builder()
-                .product(Product.from(productEntity, storeDto, userDto))
+                .product(Product.from(productEntity, storeDto))
                 .build();
     }
 
@@ -33,18 +33,18 @@ public class ResProductGetByIdDTOApiV1 {
         private Integer price;
         private Integer quantity;
         private Integer purchaseLimitPerUser;
-        private Store store;
-        private User user;
+        private Long createdBy;
+        private Store store; // feignClient
 
-        public static Product from(ProductEntity productEntity, ResStoreClientGetByIdDTOApiV1 storeDto, ResUserClientGetByIdDTOApiV1 userDto) {
+        public static Product from(ProductEntity productEntity, ResStoreClientGetByIdDTOApiV1 storeDto) {
             return Product.builder()
                     .productId(productEntity.getProductId())
                     .productName(productEntity.getProductName())
                     .price(productEntity.getPrice())
                     .quantity(productEntity.getQuantity())
                     .purchaseLimitPerUser(productEntity.getPurchaseLimitPerUser())
+                    .createdBy(productEntity.getCreatedBy())
                     .store(Store.from(storeDto))
-                    .user(User.from(userDto))
                     .build();
         }
 
@@ -60,20 +60,6 @@ public class ResProductGetByIdDTOApiV1 {
                 return Store.builder()
                         .storeId(storeDto.getStoreId())
                         .storeName(storeDto.getStoreName())
-                        .build();
-            }
-        }
-
-        @Getter
-        @Builder
-        @NoArgsConstructor
-        @AllArgsConstructor
-        public static class User {
-            private Long userId;
-
-            public static User from(ResUserClientGetByIdDTOApiV1 userDto) {
-                return User.builder()
-                        .userId(userDto.getUserId())
                         .build();
             }
         }

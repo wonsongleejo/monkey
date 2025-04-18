@@ -56,9 +56,8 @@ public class ProductServiceApiV1 {
         ProductEntity product = getActiveProductById(productId);
 
         ResStoreClientGetByIdDTOApiV1 resStore = storeClient.getStoreById(product.getStoreId()).getData();
-        ResUserClientGetByIdDTOApiV1 resUser = userClient.getUserById(product.getCreatedBy()).getData();
 
-        return ResProductGetByIdDTOApiV1.of(product, resStore, resUser);
+        return ResProductGetByIdDTOApiV1.of(product, resStore);
     }
 
     // 상품 삭제
