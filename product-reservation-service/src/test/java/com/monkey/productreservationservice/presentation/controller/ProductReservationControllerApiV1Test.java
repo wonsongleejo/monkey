@@ -9,7 +9,9 @@ import com.monkey.productreservationservice.application.dto.request.ReqProductRe
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
 import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
 import com.monkey.productreservationservice.infrastructure.feignclient.ProductFeignClientApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.StoreFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.StoreReservationFeignClientApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.UserFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreReservationClientGetDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.persistence.ProductReservationJpaRepository;
@@ -140,16 +142,7 @@ public class ProductReservationControllerApiV1Test {
     // 예약 취소
     @Test
     public void testProductReservationCancelPostSuccess() throws Exception {
-        // 테스트용 예약 생성 및 저장
-        ProductReservationEntity saved = productReservationJpaRepository.save(
-                ProductReservationEntity.builder()
-                        .productId(UUID.randomUUID())
-                        .userId(1L)
-                        .storeId(UUID.randomUUID())
-                        .quantity(1)
-                        .status(ProductReservationStatus.PENDING_PICKUP)
-                        .build()
-        );
+        ProductReservationEntity saved = createProductReservation(ProductReservationStatus.PENDING_PICKUP);
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/product-reservations/{productReservationId}/cancel", saved.getProductReservationId())
@@ -158,7 +151,9 @@ public class ProductReservationControllerApiV1Test {
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
-                        MockMvcResultMatchers.jsonPath("code").value("000")
+                        MockMvcResultMatchers.jsonPath("code").value("000"),
+                        MockMvcResultMatchers.jsonPath("data.productReservation.productReservationId").value(saved.getProductReservationId().toString()),
+                        MockMvcResultMatchers.jsonPath("data.productReservation.status").value("CANCELED")
                 )
                 .andDo(
                         document("상품 예약 취소 성공",
@@ -191,16 +186,7 @@ public class ProductReservationControllerApiV1Test {
     // 예약 상세 조회
     @Test
     public void testProductReservationGetByIdSuccess() throws Exception {
-        // 테스트용 예약 생성 및 저장
-        ProductReservationEntity saved = productReservationJpaRepository.save(
-                ProductReservationEntity.builder()
-                        .productId(UUID.randomUUID())
-                        .userId(1L)
-                        .storeId(UUID.randomUUID())
-                        .quantity(1)
-                        .status(ProductReservationStatus.PENDING_PICKUP)
-                        .build()
-        );
+        ProductReservationEntity saved = createProductReservation(ProductReservationStatus.PENDING_PICKUP);
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.get("/v1/product-reservations/{productReservationId}", saved.getProductReservationId())
@@ -246,6 +232,18 @@ public class ProductReservationControllerApiV1Test {
                                 )
                         )
                 );
+    }
+
+    private ProductReservationEntity createProductReservation(ProductReservationStatus status) {
+        return productReservationJpaRepository.save(
+                ProductReservationEntity.builder()
+                        .productId(testProductId)
+                        .userId(testUserId)
+                        .storeId(testStoreId)
+                        .quantity(1)
+                        .status(status)
+                        .build()
+        );
     }
 }
 
