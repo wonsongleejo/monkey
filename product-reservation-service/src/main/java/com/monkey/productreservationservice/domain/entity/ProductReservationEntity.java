@@ -1,6 +1,8 @@
 package com.monkey.productreservationservice.domain.entity;
 
+import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.entity.BaseEntity;
+import com.monkey.common_module.exception.CustomException;
 import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,4 +37,12 @@ public class ProductReservationEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ProductReservationStatus status;
+
+    public void cancel(long userId) {
+        if(this.getIsDeleted() || this.status == ProductReservationStatus.CANCELED || this.status == ProductReservationStatus.PICKED_UP) {
+            throw new CustomException(ResponseCode.DUPLICATED_REQUEST);
+        }
+        this.status = ProductReservationStatus.CANCELED;
+        this.delete(userId);
+    }
 }
