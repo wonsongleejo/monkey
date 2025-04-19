@@ -53,13 +53,11 @@ public class ProductReservationServiceApiV1 {
     }
 
     // 예약 취소
-    public ResProductReservationPostByIdCancelDTOApiV1 cancelBy(UUID productReservationId) {
+    public ResProductReservationPostByIdCancelDTOApiV1 cancelBy(UUID productReservationId, long userId) {
         ProductReservationEntity productReservationEntity = getActiveProductReservationById(productReservationId);
-        productReservationEntity.delete(123L);
+        productReservationEntity.cancel(userId);
 
-        ProductReservationEntity saved = productReservationRepository.save(productReservationEntity);
-
-        return ResProductReservationPostByIdCancelDTOApiV1.of(saved);
+        return ResProductReservationPostByIdCancelDTOApiV1.of(productReservationRepository.save(productReservationEntity));
     }
 
     // 예약내역 전체 조회
