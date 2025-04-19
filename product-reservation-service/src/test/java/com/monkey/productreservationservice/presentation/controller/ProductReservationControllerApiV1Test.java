@@ -13,6 +13,7 @@ import com.monkey.productreservationservice.infrastructure.feignclient.StoreRese
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreReservationClientGetDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.persistence.ProductReservationJpaRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -57,45 +58,46 @@ public class ProductReservationControllerApiV1Test {
     @MockBean
     private StoreReservationFeignClientApiV1 storeReservationClient;
 
+    private UUID testProductId = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+    private UUID testStoreId = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+    private long testUserId = 123L;
 
-    // 예약 생성
-    @Test
-    public void testProductReservationPostSuccess() throws Exception {
-        UUID testProductId = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
-        UUID testStoreId = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
-
-        ReqProductReservationPostDTOApiV1 reqDto = ReqProductReservationPostDTOApiV1.builder()
-                .quantity(1)
-                .build();
-        String reqDtoJson = objectMapper.writeValueAsString(reqDto);
-
-        // ProductFeignClient
+    @BeforeEach
+    void setUpFeignClientMocks() {
         given(productClient.getProductById(testProductId))
                 .willReturn(ResDTO.success(
                         ResProductClientGetByIdDTOApiV1.builder()
                                 .productId(testProductId)
                                 .storeId(testStoreId)
-                                .productName("예약 가능 상품")
+                                .productName("카카오프렌즈 라이언 바디필로우")
                                 .quantity(100)
                                 .purchaseLimitPerUser(3)
                                 .build()
                 ));
 
-        // StoreReservationFeignClient
-        given(storeReservationClient.getReservationsByUserId(123L))
+        given(storeReservationClient.getReservationsByUserId(testUserId))
                 .willReturn(ResDTO.success(
                         ResStoreReservationClientGetDTOApiV1.builder()
                                 .storeReservationList(List.of(
-                                        new ResStoreReservationClientGetDTOApiV1.StoreReservation(123L)
+                                        new ResStoreReservationClientGetDTOApiV1.StoreReservation(testUserId)
                                 ))
                                 .build()
                 ));
+    }
+
+
+    // 예약 생성
+    @Test
+    public void testProductReservationPostSuccess() throws Exception {
+        ReqProductReservationPostDTOApiV1 reqDto = ReqProductReservationPostDTOApiV1.builder()
+                .quantity(1)
+                .build();
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/product-reservations/{productId}", testProductId)
                         // .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(reqDtoJson)
+                        .content(objectMapper.writeValueAsString(reqDto))
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
