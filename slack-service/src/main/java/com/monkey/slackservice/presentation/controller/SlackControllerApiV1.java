@@ -1,6 +1,6 @@
 package com.monkey.slackservice.presentation.controller;
 
-import com.monkey.commonmodule.dto.ResDTO;
+import com.monkey.common_module.dto.ResDTO;
 import com.monkey.slackservice.application.dto.request.ReqSlackStoreReservationPostDTOApiV1;
 import com.monkey.slackservice.application.dto.response.ResSlackStoreReservationPostDTOApiV1;
 import jakarta.validation.Valid;

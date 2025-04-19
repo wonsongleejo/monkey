@@ -1,6 +1,6 @@
 package com.monkey.storereservationservice.domain.storereservation.entity;
 
-import com.monkey.commonmodule.entity.BaseEntity;
+import com.monkey.common_module.entity.BaseEntity;
 import com.monkey.storereservationservice.domain.storereservation.vo.StoreReservationStatus;
 import jakarta.persistence.*;
 import lombok.*;

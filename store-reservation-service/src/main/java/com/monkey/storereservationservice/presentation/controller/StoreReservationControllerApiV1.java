@@ -1,6 +1,6 @@
 package com.monkey.storereservationservice.presentation.controller;
 
-import com.monkey.commonmodule.dto.ResDTO;
+import com.monkey.common_module.dto.ResDTO;
 import com.monkey.storereservationservice.application.dto.request.ReqStoreReservationPostDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetByIdDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetDTOApiV1;
