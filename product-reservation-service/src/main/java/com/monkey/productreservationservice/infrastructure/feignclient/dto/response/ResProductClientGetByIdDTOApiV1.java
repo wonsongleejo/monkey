@@ -15,4 +15,6 @@ public class ResProductClientGetByIdDTOApiV1 {
     private UUID productId;
     private UUID storeId;
     private String productName;
+    private Integer quantity;
+    private Integer purchaseLimitPerUser;
 }

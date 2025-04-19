@@ -7,6 +7,7 @@ import com.monkey.productreservationservice.application.dto.response.ResProductR
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostByIdCancelDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
+import com.monkey.productreservationservice.application.validator.ProductReservationValidator;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
 import com.monkey.productreservationservice.domain.repository.ProductReservationRepository;
 import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
@@ -29,16 +30,26 @@ public class ProductReservationServiceApiV1 {
     private final StoreFeignClientApiV1 storeClient;
     private final UserFeignClientApiV1 userClient;
     private final ProductFeignClientApiV1 productClient;
+    private final ProductReservationValidator reservationValidator;
 
     // 예약 등록
-    public ResProductReservationPostDTOApiV1 postBy(UUID productId, ReqProductReservationPostDTOApiV1 reqDto, long userId) {
-        // FeignClient 상품 정보 조회
-        UUID storeId = productClient.getProductById(productId).getData().getStoreId();
+    public ResProductReservationPostDTOApiV1 postBy(ReqProductReservationPostDTOApiV1 reqDto, UUID productId, long userId) {
+        var product = reservationValidator.validateProduct(productId); // 유효한 상품 확인
 
-        ProductReservationEntity productReservationEntity = reqDto.getProductReservation().toEntity(productId, userId, storeId, ProductReservationStatus.PENDING_PICKUP);
-        ProductReservationEntity saved = productReservationRepository.save(productReservationEntity);
+        reservationValidator.validateStock(reqDto.getQuantity(), product.getQuantity()); // 재고 확인
+        reservationValidator.validatePurchaseLimit(reqDto.getQuantity(), product.getPurchaseLimitPerUser()); // 구매수량 제한
+        reservationValidator.validateStoreMember(userId); // 스토어 예약여부 확인
+        reservationValidator.validateNotDuplicate(userId, productId); // 중복 예약 확인
 
-        return ResProductReservationPostDTOApiV1.of(saved);
+        ProductReservationEntity productReservationEntity = ProductReservationEntity.builder()
+                .productId(productId)
+                .userId(userId)
+                .storeId(product.getStoreId())
+                .quantity(reqDto.getQuantity())
+                .status(ProductReservationStatus.PENDING_PICKUP) // 예약 생성 시 상태: 픽업 대기중으로 고정
+                .build();
+
+        return ResProductReservationPostDTOApiV1.of(productReservationRepository.save(productReservationEntity));
     }
 
     // 예약 취소
@@ -73,4 +84,5 @@ public class ProductReservationServiceApiV1 {
         return productReservationRepository.findByProductReservationIdAndIsDeletedFalse(productReservationId)
                 .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
     }
+
 }

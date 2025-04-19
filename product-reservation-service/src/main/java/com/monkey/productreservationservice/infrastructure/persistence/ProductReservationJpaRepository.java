@@ -10,4 +10,5 @@ import java.util.UUID;
 public interface ProductReservationJpaRepository extends JpaRepository<ProductReservationEntity, UUID> {
     Optional<ProductReservationEntity> findByProductReservationIdAndIsDeletedFalse(UUID productReservationId);
     List<ProductReservationEntity> findAllByIsDeletedFalse();
+    boolean existsByUserIdAndProductIdAndIsDeletedFalse(long userId, UUID productId);
 }

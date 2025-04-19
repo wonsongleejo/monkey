@@ -10,4 +10,5 @@ public interface ProductReservationRepository {
     ProductReservationEntity save(ProductReservationEntity entity);
     Optional<ProductReservationEntity> findByProductReservationIdAndIsDeletedFalse(UUID productReservationId);
     List<ProductReservationEntity> findAllByIsDeletedFalse();
+    boolean existsByUserIdAndProductIdAndIsDeletedFalse(long userId, UUID productId);
 }
