@@ -8,12 +8,14 @@ import com.monkey.storereservationservice.application.dto.response.ResStoreReser
 import com.monkey.storereservationservice.domain.storereservation.entity.StoreReservationEntity;
 import com.monkey.storereservationservice.domain.storereservation.repository.StoreReservationRepository;
 import com.monkey.storereservationservice.domain.storereservation.vo.StoreReservationStatus;
+import com.monkey.storereservationservice.infrastructure.client.SlackFeignClient;
+import com.monkey.storereservationservice.infrastructure.client.StoreClient;
+import com.monkey.storereservationservice.infrastructure.dto.request.ReqSlackStoreReservationPostDTOApiV1;
+import com.monkey.storereservationservice.infrastructure.dto.response.ResStoreTimeSlotDTOApiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +25,8 @@ import java.util.UUID;
 public class StoreReservationServiceImplApiV1 implements StoreReservationServiceApiV1 {
 
     private final StoreReservationRepository storeReservationRepository;
+    private final SlackFeignClient slackFeignClient;
+    private final StoreClient storeClient;
 
     @Override
     public ResStoreReservationPostDTOApiV1 create(ReqStoreReservationPostDTOApiV1 request) {
@@ -36,74 +40,92 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
         );
 
         StoreReservationEntity saved = storeReservationRepository.save(storeReservationEntity);
+
+        slackFeignClient.notifySlack(
+                ReqSlackStoreReservationPostDTOApiV1.builder()
+                        .slack(
+                                ReqSlackStoreReservationPostDTOApiV1.SlackMessage.builder()
+                                        .slackId("U0123456789")
+                                        .slackMessage("예약이 완료되었습니다. 예약번호: " + saved.getStoreReservationId())
+                                        .build()
+                        )
+                        .build()
+        );
+
         return ResStoreReservationPostDTOApiV1.from(saved);
     }
 
     @Override
     public ResStoreReservationPostByIdCancelDTOApiV1 cancel(UUID storeReservationId) {
-        StoreReservationEntity storeReservationEntity = storeReservationRepository.findById(storeReservationId);
-        storeReservationEntity.changeStatus(StoreReservationStatus.CANCELED);
-        storeReservationRepository.save(storeReservationEntity);
-        return ResStoreReservationPostByIdCancelDTOApiV1.from(storeReservationEntity);
+        StoreReservationEntity entity = storeReservationRepository.findById(storeReservationId);
+        entity.changeStatus(StoreReservationStatus.CANCELED);
+        storeReservationRepository.save(entity);
+        return ResStoreReservationPostByIdCancelDTOApiV1.from(entity);
     }
 
     @Override
     public ResStoreReservationGetDTOApiV1 getAll(Long userId, UUID storeId) {
         List<ResStoreReservationGetDTOApiV1.StoreReservation> list = storeReservationRepository.findAll().stream()
-                .map(storeReservationEntity -> ResStoreReservationGetDTOApiV1.StoreReservation.builder()
-                        .storeReservationId(storeReservationEntity.getStoreReservationId())
-                        .status(storeReservationEntity.getStatus())
-                        .timeSlot(
-                                ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.builder()
-                                        .store(
-                                                ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.Store.builder()
-                                                        .storeId(UUID.randomUUID())
-                                                        .build()
-                                        )
-                                        .date(LocalDate.parse("2025-04-19"))
-                                        .entryTime(LocalTime.parse("10:00:00"))
-                                        .exitTime(LocalTime.parse("11:00:00"))
-                                        .build()
-                        )
-                        .user(
-                                ResStoreReservationGetDTOApiV1.StoreReservation.User.builder()
-                                        .userId(storeReservationEntity.getUserId())
-                                        .userName("테스트유저")
-                                        .build()
-                        )
-                        .build()
-                )
+                .map(entity -> {
+                    ResStoreTimeSlotDTOApiV1 timeSlot = storeClient.getTimeSlotById(entity.getTimeSlotId());
+                    UUID resolvedStoreId = timeSlot.getStore() != null ? timeSlot.getStore().getStoreId() : null;
+
+                    return ResStoreReservationGetDTOApiV1.StoreReservation.builder()
+                            .storeReservationId(entity.getStoreReservationId())
+                            .status(entity.getStatus())
+                            .timeSlot(
+                                    ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.builder()
+                                            .store(
+                                                    ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.Store.builder()
+                                                            .storeId(resolvedStoreId)
+                                                            .build()
+                                            )
+                                            .date(timeSlot.getDate())
+                                            .entryTime(timeSlot.getEntryTime())
+                                            .exitTime(timeSlot.getExitTime())
+                                            .build()
+                            )
+                            .user(
+                                    ResStoreReservationGetDTOApiV1.StoreReservation.User.builder()
+                                            .userId(entity.getUserId())
+                                            .userName("테스트유저")
+                                            .build()
+                            )
+                            .build();
+                })
                 .toList();
 
         return ResStoreReservationGetDTOApiV1.builder()
                 .storeReservationList(list)
                 .build();
-
     }
 
     @Override
     public ResStoreReservationGetByIdDTOApiV1 getById(UUID storeReservationId) {
-        StoreReservationEntity storeReservationEntity = storeReservationRepository.findById(storeReservationId);
+        StoreReservationEntity entity = storeReservationRepository.findById(storeReservationId);
+        ResStoreTimeSlotDTOApiV1 timeSlot = storeClient.getTimeSlotById(entity.getTimeSlotId());
+        UUID resolvedStoreId = timeSlot.getStore() != null ? timeSlot.getStore().getStoreId() : null;
+
         return ResStoreReservationGetByIdDTOApiV1.builder()
                 .storeReservation(
                         ResStoreReservationGetByIdDTOApiV1.StoreReservation.builder()
-                                .storeReservationId(storeReservationEntity.getStoreReservationId())
-                                .status(storeReservationEntity.getStatus())
+                                .storeReservationId(entity.getStoreReservationId())
+                                .status(entity.getStatus())
                                 .timeSlot(
                                         ResStoreReservationGetByIdDTOApiV1.StoreReservation.TimeSlot.builder()
                                                 .store(
                                                         ResStoreReservationGetByIdDTOApiV1.StoreReservation.TimeSlot.Store.builder()
-                                                                .storeId(UUID.randomUUID())
+                                                                .storeId(resolvedStoreId)
                                                                 .build()
                                                 )
-                                                .date(LocalDate.parse("2025-04-19"))
-                                                .entryTime(LocalTime.parse("10:00:00"))
-                                                .exitTime(LocalTime.parse("11:00:00"))
+                                                .date(timeSlot.getDate())
+                                                .entryTime(timeSlot.getEntryTime())
+                                                .exitTime(timeSlot.getExitTime())
                                                 .build()
                                 )
                                 .user(
                                         ResStoreReservationGetByIdDTOApiV1.StoreReservation.User.builder()
-                                                .userId(1L)
+                                                .userId(entity.getUserId())
                                                 .userName("테스트유저")
                                                 .build()
                                 )
