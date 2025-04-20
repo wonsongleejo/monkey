@@ -12,9 +12,6 @@ import com.monkey.productreservationservice.application.validator.ProductReserva
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
 import com.monkey.productreservationservice.domain.repository.ProductReservationRepository;
 import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
-import com.monkey.productreservationservice.infrastructure.feignclient.ProductFeignClientApiV1;
-import com.monkey.productreservationservice.infrastructure.feignclient.StoreFeignClientApiV1;
-import com.monkey.productreservationservice.infrastructure.feignclient.UserFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
@@ -28,9 +25,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductReservationServiceApiV1 {
     private final ProductReservationRepository productReservationRepository;
-    private final StoreFeignClientApiV1 storeClient;
-    private final UserFeignClientApiV1 userClient;
-    private final ProductFeignClientApiV1 productClient;
     private final ProductReservationValidator reservationValidator;
     private final ProductReservationReadValidator readValidator;
 
