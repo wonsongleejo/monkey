@@ -1,7 +1,7 @@
 package com.monkey.storeservice.infrastructure.config;
 
-import com.monkey.storeservice.domain.article.entity.StoreTimeSlotEntity;
-import com.monkey.storeservice.domain.article.repository.StoreTimeSlotRepository;
+import com.monkey.storeservice.domain.entity.StoreTimeSlotEntity;
+import com.monkey.storeservice.domain.repository.StoreTimeSlotRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;

@@ -1,30 +1,30 @@
 package com.monkey.storeservice.application.dto.response;
 
-import com.monkey.storeservice.domain.article.entity.StoreEntity;
-import java.util.List;
+import com.monkey.storeservice.domain.entity.StoreEntity;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
+import org.springframework.data.domain.Page;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResStoreGetDtoApiV1 {
+public class ResStoreGetDTOApiV1 {
 
   private Store store;
-  private List<Store> storeList;
+  private Page<Store> storePage;
 
-  public static ResStoreGetDtoApiV1 of(StoreEntity storeEntity) {
-    return ResStoreGetDtoApiV1.builder()
+  public static ResStoreGetDTOApiV1 of(StoreEntity storeEntity) {
+    return ResStoreGetDTOApiV1.builder()
         .store(Store.from(storeEntity))
         .build();
   }
-  public static ResStoreGetDtoApiV1 of(List<StoreEntity> storeEntityList) {
-    return ResStoreGetDtoApiV1.builder()
-        .storeList(Store.from(storeEntityList))
+  public static ResStoreGetDTOApiV1 of(Page<StoreEntity> storeEntityPage) {
+    return ResStoreGetDTOApiV1.builder()
+        .storePage(Store.from(storeEntityPage))
         .build();
   }
 
@@ -56,11 +56,8 @@ public class ResStoreGetDtoApiV1 {
           .build();
     }
 
-    public static List<Store> from(List<StoreEntity> storeEntityList) {
-      return storeEntityList.stream()
-          .map(storeEntity -> Store.from(storeEntity))
-          .toList();
-
+    public static Page<Store> from(Page<StoreEntity> storeEntityPage) {
+      return storeEntityPage.map(Store::from);
     }
   }
 }

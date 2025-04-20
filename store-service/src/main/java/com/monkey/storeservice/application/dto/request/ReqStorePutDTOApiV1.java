@@ -1,6 +1,6 @@
 package com.monkey.storeservice.application.dto.request;
 
-import com.monkey.storeservice.domain.article.entity.StoreEntity;
+import com.monkey.storeservice.domain.entity.StoreEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -18,7 +18,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReqStorePutDtoApiV1 {
+public class ReqStorePutDTOApiV1 {
 
   @Valid
   @NotNull

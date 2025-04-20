@@ -1,18 +1,15 @@
 package com.monkey.storeservice.presentation;
 
-import com.monkey.commonmodule.dto.ResDTO;
-import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPostDtoApiV1;
-import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPutDtoApiV1;
-import com.monkey.storeservice.application.dto.response.ResStoreTimeSlotGetDtoApiV1;
-import com.monkey.storeservice.application.dto.response.ResStoreTimeSlotPostDtoApiV1;
-import com.monkey.storeservice.application.dto.response.ResStoreTimeSlotPutDtoApiV1;
-import com.monkey.storeservice.domain.article.entity.StoreTimeSlotEntity;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
+import com.monkey.common_module.dto.ResDTO;
+import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPostDTOApiV1;
+import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPutDTOApiV1;
+import com.monkey.storeservice.application.dto.response.ResStoreTimeSlotGetDTOApiV1;
+import com.monkey.storeservice.application.dto.response.ResStoreTimeSlotPostDTOApiV1;
+import com.monkey.storeservice.application.dto.response.ResStoreTimeSlotPutDTOApiV1;
+import com.monkey.storeservice.application.service.StoreTimeSlotServiceApiV1;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,22 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class StoreTimeSlotController {
 
-  //팝업스토어 시간대 생성
+  private final StoreTimeSlotServiceApiV1 storeTimeSlotServiceApiV1;
+
+  //  팝업스토어 시간대 생성
   @PostMapping("/{storeId}")
-  public ResponseEntity<ResDTO<ResStoreTimeSlotPostDtoApiV1>> postBy(@RequestBody
-      ReqStoreTimeSlotPostDtoApiV1 reqStoreTimeSlotPostDtoApiV1) {
-    StoreTimeSlotEntity storeTimeSlotEntity = StoreTimeSlotEntity.builder()
-        .timeSlotId(UUID.randomUUID())
-        .slotDate(LocalDate.parse("2025-04-14"))
-        .entryTime(LocalTime.parse("00:00:00"))
-        .exitTime(LocalTime.parse("00:00:00"))
-        .maxPerson(10)
-        .build();
+  public ResponseEntity<ResDTO<ResStoreTimeSlotPostDTOApiV1>> postById(
+      @PathVariable UUID storeId,
+      @RequestBody ReqStoreTimeSlotPostDTOApiV1 reqDto) {
 
-//    // DB사용시에 저장하기 위한 메서드
-//    StoreTimeSlotEntity storeTimeSlotEntity1 = reqStoreTimeSlotPostDtoApiV1.getStoreTimeSlot().toStoreTimeSlotEntity();
-
-    ResStoreTimeSlotPostDtoApiV1 resDto = ResStoreTimeSlotPostDtoApiV1.of(storeTimeSlotEntity);
+    ResStoreTimeSlotPostDTOApiV1 resDto = storeTimeSlotServiceApiV1.postById(storeId, reqDto);
 
     return new ResponseEntity<>(
         ResDTO.success(resDto),
@@ -53,42 +43,24 @@ public class StoreTimeSlotController {
 
   //팝업스토어 시간대 수정
   @PutMapping("/{timeSlotId}")
-  public ResponseEntity<ResDTO<ResStoreTimeSlotPutDtoApiV1>> putById(
+  public ResponseEntity<ResDTO<ResStoreTimeSlotPutDTOApiV1>> putById(
       @PathVariable UUID timeSlotId,
-      @RequestBody ReqStoreTimeSlotPutDtoApiV1 reqStoreTimeSlotPutDtoApiV1) {
+      @RequestBody ReqStoreTimeSlotPutDTOApiV1 reqDto) {
 
-    StoreTimeSlotEntity storeTimeSlotEntity = StoreTimeSlotEntity.builder()
-        .slotDate(LocalDate.parse("2025-04-14"))
-        .entryTime(LocalTime.parse("00:00:00"))
-        .exitTime(LocalTime.parse("00:00:00"))
-        .maxPerson(20)
-        .build();
-
-    //db에 저장하기위한 update 메서드
-    reqStoreTimeSlotPutDtoApiV1.getStoreTimeSlot().update(storeTimeSlotEntity);
-
-    ResStoreTimeSlotPutDtoApiV1 respDto = ResStoreTimeSlotPutDtoApiV1.of(storeTimeSlotEntity);
+    ResStoreTimeSlotPutDTOApiV1 resDto = storeTimeSlotServiceApiV1.putById(timeSlotId, reqDto);
 
     return new ResponseEntity<>(
-        ResDTO.success(respDto),
+        ResDTO.success(resDto),
         HttpStatus.OK
     );
   }
 
   //팝업스토어 시간대 조회
   @GetMapping("/{timeSlotId}")
-  public ResponseEntity<ResDTO<ResStoreTimeSlotGetDtoApiV1>> getById(
-      @PathVariable UUID timeSlotId){
-    StoreTimeSlotEntity storeTimeSlotEntity = StoreTimeSlotEntity.builder()
-        .storeId(UUID.randomUUID())
-        .timeSlotId(timeSlotId)
-        .slotDate(LocalDate.parse("2025-04-14"))
-        .entryTime(LocalTime.parse("00:00:00"))
-        .exitTime(LocalTime.parse("00:00:00"))
-        .maxPerson(20)
-        .build();
+  public ResponseEntity<ResDTO<ResStoreTimeSlotGetDTOApiV1>> getById(
+      @PathVariable UUID timeSlotId) {
 
-    ResStoreTimeSlotGetDtoApiV1 resDto = ResStoreTimeSlotGetDtoApiV1.of(storeTimeSlotEntity);
+    ResStoreTimeSlotGetDTOApiV1 resDto = storeTimeSlotServiceApiV1.getById(timeSlotId);
 
     return new ResponseEntity<>(
         ResDTO.success(resDto),
@@ -98,22 +70,9 @@ public class StoreTimeSlotController {
 
   //팝업스토어 시간대 전체 조회
   @GetMapping
-  public ResponseEntity<ResDTO<ResStoreTimeSlotGetDtoApiV1>> getBy() {
+  public ResponseEntity<ResDTO<ResStoreTimeSlotGetDTOApiV1>> getBy(Pageable pageable) {
 
-    List<StoreTimeSlotEntity> storeTimeSlotEntityList = new ArrayList<>();
-
-    for (int i = 0; i < 5; i++) {
-      storeTimeSlotEntityList.add(StoreTimeSlotEntity.builder()
-          .storeId(UUID.randomUUID())
-          .timeSlotId(UUID.randomUUID())
-          .slotDate(LocalDate.parse("2025-04-14"))
-          .entryTime(LocalTime.parse("00:00:00"))
-          .exitTime(LocalTime.parse("00:00:00"))
-          .maxPerson(20)
-          .build()
-      );
-    }
-    ResStoreTimeSlotGetDtoApiV1 resDto = ResStoreTimeSlotGetDtoApiV1.of(storeTimeSlotEntityList);
+    ResStoreTimeSlotGetDTOApiV1 resDto = storeTimeSlotServiceApiV1.getBy(pageable);
 
     return new ResponseEntity<>(
           ResDTO.success(resDto),

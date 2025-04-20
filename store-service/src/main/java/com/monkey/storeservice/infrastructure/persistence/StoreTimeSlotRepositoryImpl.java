@@ -1,11 +1,12 @@
 package com.monkey.storeservice.infrastructure.persistence;
 
-import com.monkey.storeservice.domain.article.entity.StoreTimeSlotEntity;
-import com.monkey.storeservice.domain.article.repository.StoreTimeSlotRepository;
+import com.monkey.storeservice.domain.entity.StoreTimeSlotEntity;
+import com.monkey.storeservice.domain.repository.StoreTimeSlotRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,12 +28,13 @@ public class StoreTimeSlotRepositoryImpl implements StoreTimeSlotRepository {
   }
 
   @Override
-  public List<StoreTimeSlotEntity> findAll() {
-    return jpaRepository.findAll();
+  public Page<StoreTimeSlotEntity> findAll(Pageable pageable) {
+    return jpaRepository.findAll(pageable);
   }
 
   @Override
   public long count() {
+
     return storeTimeSlotJpaRepository.count();
   }
 }

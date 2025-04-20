@@ -1,7 +1,8 @@
 package com.monkey.storeservice.infrastructure.config;
 
-import com.monkey.storeservice.domain.article.entity.StoreEntity;
-import com.monkey.storeservice.domain.article.repository.StoreRepository;
+import com.monkey.storeservice.domain.entity.StoreEntity;
+import com.monkey.storeservice.domain.entity.StoreEntity.OpenStatus;
+import com.monkey.storeservice.domain.repository.StoreRepository;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
@@ -17,7 +18,8 @@ public class StoreDataLoader {
     return args -> {
       if(storeRepository.count()==0){
         StoreEntity storeEntity = StoreEntity.builder()
-            .storeId(UUID.randomUUID())
+            .storeId(UUID.fromString("123e4567-e89b-12d3-a456-426614174000"))
+            .openStatus(OpenStatus.CLOSED)
             .storeName("팝업스토어")
             .description("팝업스토어 입니다")
             .startDate(LocalDate.parse("2025-04-17"))

@@ -2,8 +2,9 @@ package com.monkey.storeservice.presentaion.controller;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPostDtoApiV1;
-import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPutDtoApiV1;
+import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPostDTOApiV1;
+import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPutDTOApiV1;
+import com.monkey.storeservice.application.service.StoreTimeSlotServiceApiV1;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -19,7 +20,6 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.UUID;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
@@ -38,10 +38,13 @@ public class StoreTimeSlotControllerApiV1Test {
   @Autowired
   private ObjectMapper objectMapper;
 
+  @Autowired
+  private StoreTimeSlotServiceApiV1 storeTimeSlotServiceApiV1;
+
   @Test
   void postTimeSlotTest() throws Exception {
-    ReqStoreTimeSlotPostDtoApiV1 req = ReqStoreTimeSlotPostDtoApiV1.builder()
-        .storeTimeSlot(ReqStoreTimeSlotPostDtoApiV1.StoreTimeSlot.builder()
+    ReqStoreTimeSlotPostDTOApiV1 req = ReqStoreTimeSlotPostDTOApiV1.builder()
+        .storeTimeSlot(ReqStoreTimeSlotPostDTOApiV1.StoreTimeSlot.builder()
             .slotDate(LocalDate.of(2025, 4, 14))
             .entryTime(LocalTime.of(9, 0))
             .exitTime(LocalTime.of(18, 0))
@@ -82,8 +85,8 @@ public class StoreTimeSlotControllerApiV1Test {
 
   @Test
   void putByIdTimeSlotTest() throws Exception {
-    ReqStoreTimeSlotPutDtoApiV1 req = ReqStoreTimeSlotPutDtoApiV1.builder()
-        .storeTimeSlot(ReqStoreTimeSlotPutDtoApiV1.StoreTimeSlot.builder()
+    ReqStoreTimeSlotPutDTOApiV1 req = ReqStoreTimeSlotPutDTOApiV1.builder()
+        .storeTimeSlot(ReqStoreTimeSlotPutDTOApiV1.StoreTimeSlot.builder()
             .slotDate(LocalDate.of(2025, 4, 14))
             .entryTime(LocalTime.of(9, 30))
             .exitTime(LocalTime.of(18, 0))
