@@ -15,8 +15,19 @@ import java.util.UUID;
 @Getter
 @Setter
 @Table(name = "p_product_reservation")
-@Builder
 public class ProductReservationEntity extends BaseEntity {
+
+    @Builder
+    public ProductReservationEntity(UUID productId, Long userId, UUID storeId, Integer quantity,
+                                    ProductReservationStatus status, Long createdBy) {
+        super(createdBy); // 회원 기능 구현 전 임시로 해둠
+        this.productId = productId;
+        this.userId = userId;
+        this.storeId = storeId;
+        this.quantity = quantity;
+        this.status = status;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(nullable = false)

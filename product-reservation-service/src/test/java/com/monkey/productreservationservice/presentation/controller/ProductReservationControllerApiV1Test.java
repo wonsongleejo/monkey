@@ -13,7 +13,9 @@ import com.monkey.productreservationservice.infrastructure.feignclient.StoreFeig
 import com.monkey.productreservationservice.infrastructure.feignclient.StoreReservationFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.UserFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreReservationClientGetDTOApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.persistence.ProductReservationJpaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,6 +62,12 @@ public class ProductReservationControllerApiV1Test {
     @MockBean
     private StoreReservationFeignClientApiV1 storeReservationClient;
 
+    @MockBean
+    private UserFeignClientApiV1 userClient;
+
+    @MockBean
+    private StoreFeignClientApiV1 storeClient;
+
     private UUID testProductId = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
     private UUID testStoreId = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
     private long testUserId = 123L;
@@ -85,8 +93,23 @@ public class ProductReservationControllerApiV1Test {
                                 ))
                                 .build()
                 ));
-    }
 
+        given(storeClient.getStoreById(testStoreId))
+                .willReturn(ResDTO.success(
+                        ResStoreClientGetByIdDTOApiV1.builder()
+                                .storeId(testStoreId)
+                                .storeName("카카오프렌즈 팝업스토어 강남점")
+                                .build()
+                ));
+
+        given(userClient.getUserById(testUserId))
+                .willReturn(ResDTO.success(
+                        ResUserClientGetByIdDTOApiV1.builder()
+                                .userId(testUserId)
+                                .username("라이언")
+                                .build()
+                ));
+    }
 
     // 예약 생성
     @Test
@@ -242,6 +265,7 @@ public class ProductReservationControllerApiV1Test {
                         .storeId(testStoreId)
                         .quantity(1)
                         .status(status)
+                        .createdBy(testUserId) // 회원 기능 구현 전 임시로 해둠. 엔티티에서 생성자 나중에 수정 필요
                         .build()
         );
     }
