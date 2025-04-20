@@ -1,6 +1,5 @@
 package com.monkey.userservice.domain.entity;
 
-import com.monkey.commonmodule.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
@@ -35,9 +34,9 @@ public class UserEntity extends BaseEntity {
     @Getter
     @AllArgsConstructor
     public enum Role{
-        USER("user"),
-        MASTER("master"),
-        MANAGER("manager")
+        USER("USER"),
+        MASTER("MASTER"),
+        MANAGER("MANAGER")
         ;
 
         private final String value;

@@ -42,8 +42,8 @@ public class AuthControllerApiV1Test {
         ReqAuthPostSingUpDTOApiV1 reqDto = ReqAuthPostSingUpDTOApiV1.builder()
                 .user(
                         ReqAuthPostSingUpDTOApiV1.User.builder()
-                                .username("testUser0")
-                                .password("test1234")
+                                .username("testuser0")
+                                .password("Test1234!@")
                                 .slackId("slackID")
                                 .role(UserEntity.Role.USER)
                                 .build()
@@ -90,12 +90,14 @@ public class AuthControllerApiV1Test {
 
     // 로그인
     @Test
+    @Transactional
     public void testAuthPostSignInSuccess() throws Exception {
+
         ReqAuthPostSignInDTOApiV1 reqDto = ReqAuthPostSignInDTOApiV1.builder()
                 .user(
                         ReqAuthPostSignInDTOApiV1.User.builder()
-                                .username("testUser0")
-                                .password("test123")
+                                .username("testuser1")
+                                .password("Test1234!@")
                                 .build()
                 )
                 .build();

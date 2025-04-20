@@ -1,6 +1,5 @@
 package com.monkey.userservice.domain.entity;
 
-import com.monkey.commonmodule.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,17 +11,17 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="p_refreshToken")
-public class RefreshTokenEntity extends BaseEntity {
+public class RefreshTokenEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long refreshTokenId;
 
-    @Setter
     private String username;
-
-    @Setter
-    private String refresh;
-
-    @Setter
+    private String refreshToken;
     private LocalDateTime expiration;
+
+    public void updateRefreshToken(String refreshToken, LocalDateTime expiration) {
+        this.refreshToken = refreshToken;
+        this.expiration = expiration;
+    }
 }

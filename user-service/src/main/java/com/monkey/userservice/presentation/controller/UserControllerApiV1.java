@@ -1,12 +1,13 @@
 package com.monkey.userservice.presentation.controller;
 
-import com.monkey.commonmodule.dto.ResDTO;
+import com.monkey.common_module.dto.ResDTO;
 import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import com.monkey.userservice.application.dto.response.*;
+import com.monkey.userservice.application.service.UserServiceApiV1;
 import com.monkey.userservice.domain.entity.UserEntity;
-import com.monkey.userservice.domain.repository.UserRepository;
 import com.querydsl.core.types.Predicate;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,8 @@ import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -23,35 +26,50 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/users")
 @RequiredArgsConstructor
 public class UserControllerApiV1 {
 
-    private final UserRepository userRepository;
+    private final UserServiceApiV1 userService;
 
     //사용자 전체 조회
     @GetMapping
     public ResponseEntity<ResDTO<ResUserGetDTOApiV1>> getBy(
             @QuerydslPredicate(root = UserEntity.class) Predicate predicate,
-            @PageableDefault(sort="userId", size=10, direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(sort="userId", size=10, direction = Sort.Direction.DESC) Pageable pageable,
+            @RequestHeader("X-User-Role") String role,
+            @AuthenticationPrincipal UserDetails user
     ) {
-        Page<UserEntity> userListPage = userRepository.findAllByIsDeletedFalse(predicate, pageable);
-        ResUserGetDTOApiV1 response = ResUserGetDTOApiV1.of(userListPage);
+        Page<UserEntity> userListPage = userService.getBy(predicate, pageable);
 
         return new ResponseEntity<>(
-                ResDTO.success(response),
+                ResDTO.success(ResUserGetDTOApiV1.of(userListPage)),
                 HttpStatus.OK
         );
     }
 
     //사용자 정보 조회
-    @GetMapping("/{userId}")
-    public ResponseEntity<ResDTO<ResUserGetByIdDTOApiV1>> getBy(@PathVariable(name="userId") Long userId) {
+    @GetMapping("/details")
+    public ResponseEntity<ResDTO<ResUserGetByIdDTOApiV1>> getBy(
+            @RequestHeader("X-User-Id") Long userId
+    ) {
+        UserEntity user = userService.getByUserId(userId);
+        ResUserGetByIdDTOApiV1 resDto = ResUserGetByIdDTOApiV1.of(user);
 
-        UserEntity user = userRepository.findByIsDeletedFalse(userId)
-                .orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        return new ResponseEntity<>(
+                ResDTO.success(resDto),
+                HttpStatus.OK
+        );
+    }
 
+    //사용자 정보 조회(마스터 용)
+    @GetMapping("/master/{userId}")
+    public ResponseEntity<ResDTO<ResUserGetByIdDTOApiV1>> getUserBy(
+            @PathVariable(name="userId") Long userId
+    ) {
+        UserEntity user = userService.getByUserId(userId);
         ResUserGetByIdDTOApiV1 resDto = ResUserGetByIdDTOApiV1.of(user);
 
         return new ResponseEntity<>(
@@ -63,14 +81,11 @@ public class UserControllerApiV1 {
     //사용자 정보 수정
     @PutMapping("/{userId}")
     public ResponseEntity<ResDTO<ResUserPutDTOApiV1>> putBy(
-            @PathVariable(name="userId") Long userId, @RequestBody ReqUserPutDTOApiV1 reqDto
+            @RequestHeader("X-User-Id") Long userId,
+            @RequestBody ReqUserPutDTOApiV1 reqDto
     ) {
 
-        UserEntity user = userRepository.findByIsDeletedFalse(userId)
-                .orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다."));
-        reqDto.getUser().update(user);
-
-        UserEntity updatedUserEntity = userRepository.save(user);
+        UserEntity updatedUserEntity = userService.putByUserId(userId, reqDto);
         ResUserPutDTOApiV1 resDto = ResUserPutDTOApiV1.of(updatedUserEntity);
 
         return new ResponseEntity<>(
@@ -83,14 +98,10 @@ public class UserControllerApiV1 {
     @DeleteMapping("/{userId}")
     public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable(name="userId") Long userId) {
 
-        UserEntity user = userRepository.findByIsDeletedFalse(userId)
-                .orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다."));
-
-        user.setDeleted(true);
-        userRepository.save(user);
+        userService.deleteBy(userId);
 
         return new ResponseEntity<>(
-                ResDTO.success(),
+                ResDTO.success(null),
                 HttpStatus.OK
         );
     }

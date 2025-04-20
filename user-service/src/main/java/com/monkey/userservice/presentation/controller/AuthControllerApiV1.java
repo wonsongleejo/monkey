@@ -1,65 +1,69 @@
 package com.monkey.userservice.presentation.controller;
 
-import com.monkey.commonmodule.dto.ResDTO;
 import com.monkey.userservice.application.dto.request.ReqAuthPostSignInDTOApiV1;
 import com.monkey.userservice.application.dto.request.ReqAuthPostSingUpDTOApiV1;
+import com.monkey.userservice.application.dto.response.ResAuthPostRefreshDTOApiV1;
 import com.monkey.userservice.application.dto.response.ResAuthPostSignInDTOApiV1;
 import com.monkey.userservice.application.dto.response.ResAuthPostSignUpDTOApiV1;
-import com.monkey.userservice.domain.entity.RefreshTokenEntity;
-import com.monkey.userservice.domain.entity.UserEntity;
-import com.monkey.userservice.domain.repository.RefreshTokenRepository;
-import com.monkey.userservice.domain.repository.UserRepository;
+import com.monkey.userservice.application.service.AuthServiceApiV1;
+import com.monkey.common_module.dto.ResDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.time.LocalDateTime;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/auth")
 public class AuthControllerApiV1 {
-    //private final UserService userService;
-    private final UserRepository userRepository;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final AuthServiceApiV1 authService;
 
     // 회원가입
     @PostMapping("/sign-up")
-    public ResDTO<ResAuthPostSignUpDTOApiV1> signUp(@RequestBody ReqAuthPostSingUpDTOApiV1 request) {
+    public ResponseEntity<ResDTO<ResAuthPostSignUpDTOApiV1>> signUp(@RequestBody ReqAuthPostSingUpDTOApiV1 reqDto) {
 
-        //UserEntity userEntity = userService.saveUser(request);
-
-        UserEntity userEntity = UserEntity.builder()
-                .username(request.getUser().getUsername())
-                .password(request.getUser().getPassword())
-                .slackId(request.getUser().getSlackId())
-                .role(request.getUser().getRole())
-                .build();
-
-        userRepository.save(userEntity);
-
-        return ResDTO.success(ResAuthPostSignUpDTOApiV1.of(userEntity));
+        return new ResponseEntity<>(
+                ResDTO.success(ResAuthPostSignUpDTOApiV1.of(authService.signUp(reqDto))),
+                HttpStatus.OK
+        );
     }
 
     // 로그인
     @PostMapping("/sign-in")
-    public ResDTO<ResAuthPostSignInDTOApiV1> signIn(@RequestBody ReqAuthPostSignInDTOApiV1 request) {
+    public ResponseEntity<ResDTO<ResAuthPostSignInDTOApiV1>> signIn(@RequestBody ReqAuthPostSignInDTOApiV1 reqDto) {
 
-        String accessJwt = "access token";
-        String refreshJwt = "refresh token";
+        ResAuthPostSignInDTOApiV1 resAuthPostSignInDTOApiV1 = authService.signIn(reqDto);
 
-        RefreshTokenEntity refreshToken = RefreshTokenEntity.builder()
-                .username(request.getUser().getUsername())
-                .refresh(refreshJwt)
-                .expiration(LocalDateTime.now())
-                .build();
+        HttpHeaders httpHeaders = new HttpHeaders();
+        String AUTHORIZATION_PREFIX = "Bearer ";
+        httpHeaders.set(HttpHeaders.AUTHORIZATION, AUTHORIZATION_PREFIX + resAuthPostSignInDTOApiV1.getAccessJwt());
+        httpHeaders.set("refresh-token", resAuthPostSignInDTOApiV1.getRefreshJwt());
 
-        refreshTokenRepository.save(refreshToken);
+        return new ResponseEntity<>(
+                ResDTO.success(
+                        resAuthPostSignInDTOApiV1
+                ),
+                httpHeaders,
+                HttpStatus.OK
+        );
+    }
 
-        return ResDTO.success(ResAuthPostSignInDTOApiV1.of(accessJwt, refreshJwt));
+    // 토큰 재발급
+    @PostMapping("/refresh")
+    public ResponseEntity<ResDTO<ResAuthPostRefreshDTOApiV1>> refreshBy(
+            @RequestHeader("X-User-Name") String username
+    ) {
+
+        return new ResponseEntity<>(
+                ResDTO.<ResAuthPostRefreshDTOApiV1>builder()
+                        .code("000")
+                        .message("토큰이 재발급되었습니다.")
+                        .data(authService.refreshBy(username))
+                        .build(),
+                HttpStatus.OK
+        );
     }
 }

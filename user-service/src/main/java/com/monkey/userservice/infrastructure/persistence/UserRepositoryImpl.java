@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 
 @Repository
@@ -17,8 +18,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public UserEntity save(UserEntity userEntity) {
-        userJpaRepository.save(userEntity);
-        return userEntity;
+        return userJpaRepository.save(userEntity);
     }
 
     @Override
@@ -36,5 +36,10 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public long count() {
         return userJpaRepository.count();
+    }
+
+    @Override
+    public Optional<UserEntity> findByUsername(String username) {
+        return userJpaRepository.findByUsername(username);
     }
 }
