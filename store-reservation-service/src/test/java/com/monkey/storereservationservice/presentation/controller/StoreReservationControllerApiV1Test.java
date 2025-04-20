@@ -3,6 +3,7 @@ package com.monkey.storereservationservice.presentation.controller;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.storereservationservice.application.dto.request.ReqStoreReservationPostDTOApiV1;
+import com.monkey.storereservationservice.config.StoreFeignClientMockConfig;
 import com.monkey.storereservationservice.domain.storereservation.entity.StoreReservationEntity;
 import com.monkey.storereservationservice.domain.storereservation.vo.StoreReservationStatus;
 import com.monkey.storereservationservice.infrastructure.persistence.storereservation.StoreReservationJpaRepository;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -23,10 +25,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.UUID;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static com.monkey.storereservationservice.config.StoreFeignClientMockConfig.FIXED_STORE_ID;
+import static com.monkey.storereservationservice.config.StoreFeignClientMockConfig.FIXED_TIMESLOT_ID;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 
@@ -35,6 +37,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 @AutoConfigureMockMvc
 @Transactional
 @ActiveProfiles("test")
+@Import(StoreFeignClientMockConfig.class)
 public class StoreReservationControllerApiV1Test {
 
     @Autowired
@@ -52,7 +55,7 @@ public class StoreReservationControllerApiV1Test {
     void setUp() {
         savedId = storeReservationJpaRepository.save(StoreReservationEntity.builder()
                 .userId(1L)
-                .timeSlotId(UUID.randomUUID())
+                .timeSlotId(FIXED_TIMESLOT_ID)
                 .personCount(1)
                 .status(StoreReservationStatus.SCHEDULED)
                 .build()).getStoreReservationId();
@@ -86,7 +89,7 @@ public class StoreReservationControllerApiV1Test {
         ReqStoreReservationPostDTOApiV1 reqDto = ReqStoreReservationPostDTOApiV1.builder()
                 .storeReservation(
                         ReqStoreReservationPostDTOApiV1.StoreReservation.builder()
-                                .timeSlotId(UUID.randomUUID())
+                                .timeSlotId(FIXED_TIMESLOT_ID)
                                 .personCount(1)
                                 .build()
                 )
@@ -119,6 +122,12 @@ public class StoreReservationControllerApiV1Test {
                                         .requestFields(
                                                 fieldWithPath("storeReservation.timeSlotId").type(JsonFieldType.STRING).description("예약 시간대 ID"),
                                                 fieldWithPath("storeReservation.personCount").type(JsonFieldType.NUMBER).description("예약 인원 수")
+                                        )
+                                        .responseFields(
+                                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                                fieldWithPath("data.storeReservation.storeReservationId").type(JsonFieldType.STRING).description("예약 ID"),
+                                                fieldWithPath("data.storeReservation.status").type(JsonFieldType.STRING).description("예약 상태")
                                         )
                                         .build()
                                 )
@@ -169,7 +178,7 @@ public class StoreReservationControllerApiV1Test {
         mockMvc.perform(
                         RestDocumentationRequestBuilders.get("/v1/store-reservations")
                                 .param("userId", "1")
-                                .param("storeId", UUID.randomUUID().toString())
+                                .param("storeId", FIXED_STORE_ID.toString())
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
