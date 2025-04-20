@@ -1,9 +1,7 @@
 package com.monkey.storeservice.application.dto.response;
 
 
-import com.monkey.storeservice.domain.article.entity.StoreEntity;
-import java.util.List;
-import java.util.stream.Collectors;
+import com.monkey.storeservice.domain.entity.StoreEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -14,12 +12,12 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResStorePostDtoApiV1 {
+public class ResStorePostDTOApiV1 {
 
   private Store store;
 
-  public static ResStorePostDtoApiV1 of(StoreEntity storeEntity) {
-    return ResStorePostDtoApiV1.builder()
+  public static ResStorePostDTOApiV1 of(StoreEntity storeEntity) {
+    return ResStorePostDTOApiV1.builder()
         .store(Store.from(storeEntity))
         .build();
   }

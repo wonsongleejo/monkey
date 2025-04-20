@@ -1,6 +1,6 @@
 package com.monkey.storeservice.application.dto.response;
 
-import com.monkey.storeservice.domain.article.entity.StoreEntity;
+import com.monkey.storeservice.domain.entity.StoreEntity;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -11,7 +11,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResStorePutDtoApiV1 {
+public class ResStorePutDTOApiV1 {
 
   private UUID storeId;
   private String storeName;
@@ -23,8 +23,8 @@ public class ResStorePutDtoApiV1 {
   private LocalTime endTime;
   private Integer totalPersonCount;
 
-  public static ResStorePutDtoApiV1 of(StoreEntity storeEntity) {
-    return ResStorePutDtoApiV1.builder()
+  public static ResStorePutDTOApiV1 of(StoreEntity storeEntity) {
+    return ResStorePutDTOApiV1.builder()
         .storeName(storeEntity.getStoreName())
         .description(storeEntity.getDescription())
         .openStatus(storeEntity.getOpenStatus())
