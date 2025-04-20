@@ -4,8 +4,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.util.UUID;
-
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,7 +18,7 @@ public class ReqSlackStoreReservationPostDTOApiV1 {
     @Builder
     public static class SlackMessage {
         @NotNull(message = "Slack ID 입력은 필수입니다.")
-        private UUID slackId;
+        private String slackId;
 
         @NotNull(message = "Slack 메세지 입력은 필수입니다.")
         private String slackMessage;
