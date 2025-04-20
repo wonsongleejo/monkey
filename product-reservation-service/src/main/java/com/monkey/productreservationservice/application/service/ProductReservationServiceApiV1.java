@@ -7,13 +7,11 @@ import com.monkey.productreservationservice.application.dto.response.ResProductR
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostByIdCancelDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
+import com.monkey.productreservationservice.application.validator.ProductReservationReadValidator;
 import com.monkey.productreservationservice.application.validator.ProductReservationValidator;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
 import com.monkey.productreservationservice.domain.repository.ProductReservationRepository;
 import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
-import com.monkey.productreservationservice.infrastructure.feignclient.ProductFeignClientApiV1;
-import com.monkey.productreservationservice.infrastructure.feignclient.StoreFeignClientApiV1;
-import com.monkey.productreservationservice.infrastructure.feignclient.UserFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
@@ -27,10 +25,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductReservationServiceApiV1 {
     private final ProductReservationRepository productReservationRepository;
-    private final StoreFeignClientApiV1 storeClient;
-    private final UserFeignClientApiV1 userClient;
-    private final ProductFeignClientApiV1 productClient;
     private final ProductReservationValidator reservationValidator;
+    private final ProductReservationReadValidator readValidator;
 
     // 예약 등록
     public ResProductReservationPostDTOApiV1 postBy(ReqProductReservationPostDTOApiV1 reqDto, UUID productId, long userId) {
@@ -53,13 +49,11 @@ public class ProductReservationServiceApiV1 {
     }
 
     // 예약 취소
-    public ResProductReservationPostByIdCancelDTOApiV1 cancelBy(UUID productReservationId) {
+    public ResProductReservationPostByIdCancelDTOApiV1 cancelBy(UUID productReservationId, long userId) {
         ProductReservationEntity productReservationEntity = getActiveProductReservationById(productReservationId);
-        productReservationEntity.delete(123L);
+        productReservationEntity.cancel(userId);
 
-        ProductReservationEntity saved = productReservationRepository.save(productReservationEntity);
-
-        return ResProductReservationPostByIdCancelDTOApiV1.of(saved);
+        return ResProductReservationPostByIdCancelDTOApiV1.of(productReservationRepository.save(productReservationEntity));
     }
 
     // 예약내역 전체 조회
@@ -72,9 +66,9 @@ public class ProductReservationServiceApiV1 {
     public ResProductReservationGetByIdDTOApiV1 getById(UUID productReservationId) {
         ProductReservationEntity productReservation = getActiveProductReservationById(productReservationId);
 
-        ResProductClientGetByIdDTOApiV1 resProduct = productClient.getProductById(productReservation.getProductId()).getData();
-        ResStoreClientGetByIdDTOApiV1 resStore = storeClient.getStoreById(productReservation.getStoreId()).getData();
-        ResUserClientGetByIdDTOApiV1 resUser = userClient.getUserById(productReservation.getCreatedBy()).getData();
+        ResProductClientGetByIdDTOApiV1 resProduct = readValidator.validateProduct(productReservation.getProductId());
+        ResStoreClientGetByIdDTOApiV1 resStore = readValidator.validateStore(productReservation.getStoreId());
+        ResUserClientGetByIdDTOApiV1 resUser = readValidator.validateUser(productReservation.getCreatedBy());
 
         return ResProductReservationGetByIdDTOApiV1.of(productReservation, resProduct, resStore, resUser);
     }

@@ -9,10 +9,15 @@ import com.monkey.productreservationservice.application.dto.request.ReqProductRe
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
 import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
 import com.monkey.productreservationservice.infrastructure.feignclient.ProductFeignClientApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.StoreFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.StoreReservationFeignClientApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.UserFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreReservationClientGetDTOApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.persistence.ProductReservationJpaRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -57,45 +62,67 @@ public class ProductReservationControllerApiV1Test {
     @MockBean
     private StoreReservationFeignClientApiV1 storeReservationClient;
 
+    @MockBean
+    private UserFeignClientApiV1 userClient;
 
-    // 예약 생성
-    @Test
-    public void testProductReservationPostSuccess() throws Exception {
-        UUID testProductId = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
-        UUID testStoreId = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+    @MockBean
+    private StoreFeignClientApiV1 storeClient;
 
-        ReqProductReservationPostDTOApiV1 reqDto = ReqProductReservationPostDTOApiV1.builder()
-                .quantity(1)
-                .build();
-        String reqDtoJson = objectMapper.writeValueAsString(reqDto);
+    private UUID testProductId = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
+    private UUID testStoreId = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
+    private long testUserId = 123L;
 
-        // ProductFeignClient
+    @BeforeEach
+    void setUpFeignClientMocks() {
         given(productClient.getProductById(testProductId))
                 .willReturn(ResDTO.success(
                         ResProductClientGetByIdDTOApiV1.builder()
                                 .productId(testProductId)
                                 .storeId(testStoreId)
-                                .productName("예약 가능 상품")
+                                .productName("카카오프렌즈 라이언 바디필로우")
                                 .quantity(100)
                                 .purchaseLimitPerUser(3)
                                 .build()
                 ));
 
-        // StoreReservationFeignClient
-        given(storeReservationClient.getReservationsByUserId(123L))
+        given(storeReservationClient.getReservationsByUserId(testUserId))
                 .willReturn(ResDTO.success(
                         ResStoreReservationClientGetDTOApiV1.builder()
                                 .storeReservationList(List.of(
-                                        new ResStoreReservationClientGetDTOApiV1.StoreReservation(123L)
+                                        new ResStoreReservationClientGetDTOApiV1.StoreReservation(testUserId)
                                 ))
                                 .build()
                 ));
+
+        given(storeClient.getStoreById(testStoreId))
+                .willReturn(ResDTO.success(
+                        ResStoreClientGetByIdDTOApiV1.builder()
+                                .storeId(testStoreId)
+                                .storeName("카카오프렌즈 팝업스토어 강남점")
+                                .build()
+                ));
+
+        given(userClient.getUserById(testUserId))
+                .willReturn(ResDTO.success(
+                        ResUserClientGetByIdDTOApiV1.builder()
+                                .userId(testUserId)
+                                .username("라이언")
+                                .build()
+                ));
+    }
+
+    // 예약 생성
+    @Test
+    public void testProductReservationPostSuccess() throws Exception {
+        ReqProductReservationPostDTOApiV1 reqDto = ReqProductReservationPostDTOApiV1.builder()
+                .quantity(1)
+                .build();
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/product-reservations/{productId}", testProductId)
                         // .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(reqDtoJson)
+                        .content(objectMapper.writeValueAsString(reqDto))
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -138,16 +165,7 @@ public class ProductReservationControllerApiV1Test {
     // 예약 취소
     @Test
     public void testProductReservationCancelPostSuccess() throws Exception {
-        // 테스트용 예약 생성 및 저장
-        ProductReservationEntity saved = productReservationJpaRepository.save(
-                ProductReservationEntity.builder()
-                        .productId(UUID.randomUUID())
-                        .userId(1L)
-                        .storeId(UUID.randomUUID())
-                        .quantity(1)
-                        .status(ProductReservationStatus.PENDING_PICKUP)
-                        .build()
-        );
+        ProductReservationEntity saved = createProductReservation(ProductReservationStatus.PENDING_PICKUP);
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/product-reservations/{productReservationId}/cancel", saved.getProductReservationId())
@@ -156,7 +174,9 @@ public class ProductReservationControllerApiV1Test {
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
-                        MockMvcResultMatchers.jsonPath("code").value("000")
+                        MockMvcResultMatchers.jsonPath("code").value("000"),
+                        MockMvcResultMatchers.jsonPath("data.productReservation.productReservationId").value(saved.getProductReservationId().toString()),
+                        MockMvcResultMatchers.jsonPath("data.productReservation.status").value("CANCELED")
                 )
                 .andDo(
                         document("상품 예약 취소 성공",
@@ -189,16 +209,7 @@ public class ProductReservationControllerApiV1Test {
     // 예약 상세 조회
     @Test
     public void testProductReservationGetByIdSuccess() throws Exception {
-        // 테스트용 예약 생성 및 저장
-        ProductReservationEntity saved = productReservationJpaRepository.save(
-                ProductReservationEntity.builder()
-                        .productId(UUID.randomUUID())
-                        .userId(1L)
-                        .storeId(UUID.randomUUID())
-                        .quantity(1)
-                        .status(ProductReservationStatus.PENDING_PICKUP)
-                        .build()
-        );
+        ProductReservationEntity saved = createProductReservation(ProductReservationStatus.PENDING_PICKUP);
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.get("/v1/product-reservations/{productReservationId}", saved.getProductReservationId())
@@ -244,6 +255,19 @@ public class ProductReservationControllerApiV1Test {
                                 )
                         )
                 );
+    }
+
+    private ProductReservationEntity createProductReservation(ProductReservationStatus status) {
+        return productReservationJpaRepository.save(
+                ProductReservationEntity.builder()
+                        .productId(testProductId)
+                        .userId(testUserId)
+                        .storeId(testStoreId)
+                        .quantity(1)
+                        .status(status)
+                        .createdBy(testUserId) // 회원 기능 구현 전 임시로 해둠. 엔티티에서 생성자 나중에 수정 필요
+                        .build()
+        );
     }
 }
 

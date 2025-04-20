@@ -14,10 +14,9 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class ProductReservationValidator {
-
     private final ProductFeignClientApiV1 productClient;
+    private final StoreReservationFeignClientApiV1 storeReservationClient;
     private final ProductReservationRepository productReservationRepository;
-    private final StoreReservationFeignClientApiV1 storeReservationFeignClientApiV1;
 
     // 존재하는 상품 확인
     public ResProductClientGetByIdDTOApiV1 validateProduct(UUID productId) {
@@ -54,7 +53,7 @@ public class ProductReservationValidator {
     // 스토어 예약여부 확인
     public void validateStoreMember(long userId) {
         try {
-            var memberResponse = storeReservationFeignClientApiV1.getReservationsByUserId(userId);
+            var memberResponse = storeReservationClient.getReservationsByUserId(userId);
 
             if(memberResponse == null || memberResponse.getData() == null ||
                     memberResponse.getData().getStoreReservationList() == null ||
@@ -64,7 +63,7 @@ public class ProductReservationValidator {
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
-            throw new CustomException(ResponseCode.STORE_FEIGN_CLIENT_ERROR);
+            throw new CustomException(ResponseCode.STORE_RESERVATION_FEIGN_CLIENT_ERROR);
         }
     }
 

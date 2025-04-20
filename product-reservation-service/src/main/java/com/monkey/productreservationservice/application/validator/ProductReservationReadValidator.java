@@ -1,0 +1,67 @@
+package com.monkey.productreservationservice.application.validator;
+
+import com.monkey.common_module.dto.ResponseCode;
+import com.monkey.common_module.exception.CustomException;
+import com.monkey.productreservationservice.infrastructure.feignclient.ProductFeignClientApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.StoreFeignClientApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.UserFeignClientApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
+import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
+
+import java.util.UUID;
+
+@Component
+@RequiredArgsConstructor
+public class ProductReservationReadValidator {
+    private final ProductFeignClientApiV1 productClient;
+    private final StoreFeignClientApiV1 storeClient;
+    private final UserFeignClientApiV1 userClient;
+
+    // 상품 확인
+    public ResProductClientGetByIdDTOApiV1 validateProduct(UUID productId) {
+        try {
+            var productResponse = productClient.getProductById(productId);
+            var product = productResponse != null ? productResponse.getData() : null;
+
+            if (product == null) throw new CustomException(ResponseCode.PRODUCT_NOT_FOUND);
+            return product;
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException(ResponseCode.PRODUCT_FEIGN_CLIENT_ERROR);
+        }
+    }
+
+    // 스토어 확인
+    public ResStoreClientGetByIdDTOApiV1 validateStore(UUID storeId) {
+        try {
+            var storeResponse = storeClient.getStoreById(storeId);
+            var store = storeResponse != null ? storeResponse.getData() : null;
+
+            if (store == null) throw new CustomException(ResponseCode.STORE_NOT_FOUND);
+            return store;
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException(ResponseCode.STORE_FEIGN_CLIENT_ERROR);
+        }
+    }
+
+    // 유저 확인
+    public ResUserClientGetByIdDTOApiV1 validateUser(long userId) {
+        try {
+            var userResponse = userClient.getUserById(userId);
+            var user = userResponse != null ? userResponse.getData() : null;
+
+            if (user == null) throw new CustomException(ResponseCode.USER_NOT_FOUND);
+            return user;
+        } catch (CustomException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new CustomException(ResponseCode.USER_FEIGN_CLIENT_ERROR);
+        }
+    }
+}

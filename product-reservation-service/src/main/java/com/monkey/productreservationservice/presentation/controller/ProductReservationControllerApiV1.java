@@ -37,7 +37,8 @@ public class ProductReservationControllerApiV1 {
     public ResponseEntity<ResDTO<ResProductReservationPostByIdCancelDTOApiV1>> cancelBy(
             @PathVariable UUID productReservationId
     ) {
-        ResProductReservationPostByIdCancelDTOApiV1 resDto = productReservationService.cancelBy(productReservationId);
+        long userId = 123L; // 회원 기능 구현 전 임시
+        ResProductReservationPostByIdCancelDTOApiV1 resDto = productReservationService.cancelBy(productReservationId, userId);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
