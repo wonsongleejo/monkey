@@ -1,6 +1,6 @@
-package com.monkey.storeservice.domain.article.entity;
+package com.monkey.storeservice.domain.entity;
 
-import com.monkey.commonmodule.entity.BaseEntity;
+import com.monkey.common_module.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

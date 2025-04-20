@@ -1,11 +1,12 @@
 package com.monkey.storeservice.infrastructure.persistence;
 
-import com.monkey.storeservice.domain.article.entity.StoreEntity;
-import com.monkey.storeservice.domain.article.repository.StoreRepository;
+import com.monkey.storeservice.domain.entity.StoreEntity;
+import com.monkey.storeservice.domain.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,8 +27,8 @@ public class StoreRepositoryImpl implements StoreRepository {
   }
 
   @Override
-  public List<StoreEntity> findAll() {
-    return storeJpaRepository.findAll();
+  public Page<StoreEntity> findAll(Pageable pageable) {
+    return storeJpaRepository.findAll(pageable);
   }
 
   @Override
