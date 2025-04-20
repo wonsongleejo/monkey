@@ -28,9 +28,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class ProductReservationServiceApiV1 {
     private final ProductReservationRepository productReservationRepository;
-    private final StoreFeignClientApiV1 storeClient;
-    private final UserFeignClientApiV1 userClient;
-    private final ProductFeignClientApiV1 productClient;
     private final ProductReservationValidator reservationValidator;
     private final ProductReservationReadValidator readValidator;
 
