@@ -1,12 +1,13 @@
-package com.monkey.storeservice.presentation;
+package com.monkey.storeservice.presentaion.controller;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.monkey.storeservice.application.dto.request.ReqStorePostDtoApiV1;
-import com.monkey.storeservice.application.dto.request.ReqStorePutDtoApiV1;
-import com.monkey.storeservice.domain.article.entity.StoreEntity;
-import com.monkey.storeservice.domain.article.entity.StoreEntity.OpenStatus;
+import com.monkey.storeservice.application.dto.request.ReqStorePostDTOApiV1;
+import com.monkey.storeservice.application.dto.request.ReqStorePutDTOApiV1;
+import com.monkey.storeservice.application.service.StoreServiceApiV1;
+import com.monkey.storeservice.domain.entity.StoreEntity;
+import com.monkey.storeservice.domain.entity.StoreEntity.OpenStatus;
 import com.monkey.storeservice.infrastructure.persistence.StoreJpaRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class StoreControllerApiV1Test {
   private MockMvc mockMvc;
 
   @Autowired
+  private StoreServiceApiV1 storeServiceApiV1;
+
+  @Autowired
   private ObjectMapper objectMapper; // 👉 JSON 변환을 위한 객체
 
   @Autowired
@@ -50,8 +54,11 @@ public class StoreControllerApiV1Test {
   // 스토어 생성 테스트
   @Test
   public void postByStoreTest() throws Exception {
-    ReqStorePostDtoApiV1 reqDto = ReqStorePostDtoApiV1.builder()
-        .store(ReqStorePostDtoApiV1.Store.builder()
+
+    UUID storeId=UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+
+    ReqStorePostDTOApiV1 reqDto = ReqStorePostDTOApiV1.builder()
+        .store(ReqStorePostDTOApiV1.Store.builder()
             .storeName("루피 팝업")
             .description("루피 굿즈 팝업")
             .startDate(LocalDate.parse("2025-04-09"))
@@ -100,10 +107,11 @@ public class StoreControllerApiV1Test {
   // 스토어 수정 테스트
   @Test
   public void putByIdStoreTest() throws Exception {
+
+    UUID storeId=UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
     // 저장
     StoreEntity saved = storeJpaRepository.save(
         StoreEntity.builder()
-            .storeId(UUID.randomUUID())
             .storeName("루피 팝업")
             .description("루피 굿즈")
             .startDate(LocalDate.parse("2025-04-01"))
@@ -115,8 +123,8 @@ public class StoreControllerApiV1Test {
             .build()
     );
 
-    ReqStorePutDtoApiV1 reqDto = ReqStorePutDtoApiV1.builder()
-        .store(ReqStorePutDtoApiV1.Store.builder()
+    ReqStorePutDTOApiV1 reqDto = ReqStorePutDTOApiV1.builder()
+        .store(ReqStorePutDTOApiV1.Store.builder()
             .storeName("오징어게임 팝업")
             .description("오징어게임 굿즈")
             .startDate(LocalDate.parse("2025-04-11"))
