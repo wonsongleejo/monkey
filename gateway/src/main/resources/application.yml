@@ -2,6 +2,8 @@ server:
   port: 8080
 
 spring:
+  config:
+    import: optional:file:.env[.properties]
   main:
     web-application-type: reactive
   application:
@@ -9,11 +11,12 @@ spring:
   cloud:
     gateway:
       routes:
-        # User
         - id: user-service
+          filters:
+            - AuthorizationHeaderFilter
           uri: lb://user-service
           predicates:
-            - Path=/v1/users/**, /springdoc/openapi3-user-service.json
+            - Path=/v1/users/**, /v1/auth/**, /springdoc/openapi3-user-service.json
 
         # Store-service
         - id: store-service
@@ -47,10 +50,13 @@ spring:
 
       discovery:
         locator:
-          enabled: true # ??? ?????? ?? ???? ??? ??
+          enabled: true
 
-      loadbalancer:
-        enable: true
+      #loadbalancer:
+        #enable: true
+
+jwt:
+  secret: ${JWT_SECRET_KEY}
 
 eureka:
   client:

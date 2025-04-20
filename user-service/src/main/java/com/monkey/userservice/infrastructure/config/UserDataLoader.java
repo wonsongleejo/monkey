@@ -2,14 +2,19 @@ package com.monkey.userservice.infrastructure.config;
 
 import com.monkey.userservice.domain.entity.UserEntity;
 import com.monkey.userservice.domain.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
+@RequiredArgsConstructor
 @Profile("test")
 public class UserDataLoader {
+
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public CommandLineRunner loadData(UserRepository userRepository) {
@@ -17,7 +22,7 @@ public class UserDataLoader {
             if(userRepository.count() == 0){
                 UserEntity master = UserEntity.builder()
                         .username("testmaster")
-                        .password("test1234")
+                        .password(passwordEncoder.encode("Test1234!@"))
                         .slackId("slackIdMaster")
                         .role(UserEntity.Role.MASTER)
                         .build();
@@ -25,7 +30,7 @@ public class UserDataLoader {
 
                 UserEntity user1 = UserEntity.builder()
                         .username("testuser1")
-                        .password("test1234")
+                        .password(passwordEncoder.encode("Test1234!@"))
                         .slackId("slackId1")
                         .role(UserEntity.Role.USER)
                         .build();
@@ -33,7 +38,7 @@ public class UserDataLoader {
 
                 UserEntity user2 = UserEntity.builder()
                         .username("testuser2")
-                        .password("test1234")
+                        .password(passwordEncoder.encode("Test1234!@"))
                         .slackId("slackId1")
                         .role(UserEntity.Role.USER)
                         .build();
@@ -41,7 +46,7 @@ public class UserDataLoader {
 
                 UserEntity manager = UserEntity.builder()
                         .username("testmanager")
-                        .password("test1234")
+                        .password(passwordEncoder.encode("Test1234!@"))
                         .slackId("slackIdManager")
                         .role(UserEntity.Role.MANAGER)
                         .build();
