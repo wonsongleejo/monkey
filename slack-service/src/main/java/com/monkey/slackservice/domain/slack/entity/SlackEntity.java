@@ -1,6 +1,6 @@
 package com.monkey.slackservice.domain.slack.entity;
 
-import com.monkey.commonmodule.entity.BaseEntity;
+import com.monkey.common_module.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
@@ -21,12 +21,12 @@ public class SlackEntity extends BaseEntity {
     private UUID slackMessageId;
 
     @Column(nullable = false)
-    private UUID userSlackId;
+    private String userSlackId;
 
     @Column(nullable = false)
     private String slackMessage;
 
-    public static SlackEntity createSlackMessage(UUID slackId, String slackMessage) {
+    public static SlackEntity createSlackMessage(String slackId, String slackMessage) {
         return SlackEntity.builder()
                 .userSlackId(slackId)
                 .slackMessage(slackMessage)

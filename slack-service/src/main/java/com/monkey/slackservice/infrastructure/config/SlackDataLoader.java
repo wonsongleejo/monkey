@@ -18,7 +18,7 @@ public class SlackDataLoader {
         return args -> {
             if (slackRepository.count() == 0) { // 데이터가 없을 경우에만 더미 데이터 추가
                 SlackEntity slackEntity = SlackEntity.builder()
-                        .userSlackId(UUID.randomUUID())
+                        .userSlackId("D089A93Q285")
                         .slackMessage("예약이 완료되었습니다.")
                         .build();
                 slackRepository.save(slackEntity);
