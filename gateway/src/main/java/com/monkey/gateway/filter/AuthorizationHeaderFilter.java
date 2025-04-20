@@ -26,6 +26,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         super(Config.class);
     }
 
+    // JWT 시크릿 키 값
     @Value("${jwt.secret}")
     private String jwtSecret;
 
@@ -41,56 +42,37 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
                 return chain.filter(exchange);
             }
 
-            // Authorization 헤더 존재 여부 확인
+            // Authorization 헤더가 존재하는지 확인
             if (!request.getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                 return onError(exchange, "인증 헤더가 없습니다", HttpStatus.UNAUTHORIZED);
             }
 
-            // JWT 토큰 추출
+            // Authorization 헤더에서 토큰 추출
             String authorizationHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-            log.info("Authorization Header: {}", authorizationHeader);
 
             if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
                 return onError(exchange, "인증 헤더 형식이 잘못되었습니다", HttpStatus.UNAUTHORIZED);
             }
 
+            // "Bearer " 제거 후 JWT만 추출
             String jwt = authorizationHeader.substring(7);
-            log.info("JWT: {}", jwt);
 
             Claims claims;
 
             try {
+                // JWT 검증 및 클레임 추출
                 claims = validateAndExtractClaims(jwt);
             } catch (Exception e) {
                 log.error("JWT 파싱 에러: {}", e.getMessage());
                 return onError(exchange, "유효하지 않은 토큰입니다", HttpStatus.UNAUTHORIZED);
             }
 
+            // JWT의 클레임에서 사용자 정보를 꺼내서 새로운 요청 헤더에 담음
             ServerHttpRequest mutatedRequest = request.mutate()
                     .header("X-User-Id", String.valueOf(claims.get("userId")))
                     .header("X-User-Name", claims.get("username", String.class))
                     .header("X-User-Role", claims.get("role", String.class))
                     .build();
-
-            log.info("mutatedRequest: {}", claims.get("role", String.class));
-
-            // JWT 검증 및 claims 추출
-            /*Claims claims = validateAndExtractClaims(jwt);
-            if (claims == null) {
-                return onError(exchange, "유효하지 않은 JWT 토큰입니다", HttpStatus.UNAUTHORIZED);
-            }
-
-            // 사용자 정보를 요청 헤더에 추가
-            Integer id = claims.get("userId", Integer.class);
-            String username = claims.get("username", String.class);
-            String role = claims.get("role", String.class);
-
-            // 사용자 정보가 포함된 요청으로 변경
-            ServerHttpRequest mutatedRequest = request.mutate()
-                    .header("X-User-Id", String.valueOf(id))
-                    .header("X-User-Name", username)
-                    .header("X-User-Role", role)
-                    .build();*/
 
             // 변경된 요청으로 새 exchange 생성
             ServerWebExchange mutatedExchange = exchange.mutate().request(mutatedRequest).build();
@@ -100,30 +82,13 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         };
     }
 
+    // JWT를 검증하고 클레임을 반환하는 메서드
     private Claims validateAndExtractClaims(String jwt) {
         try {
-//            byte[] secretKeyBytes = Base64.getEncoder().encode(jwtSecret.getBytes());
-            //Key key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
-            //SecretKey secretKey = new SecretKeySpec(jwtSecret.getBytes(StandardCharsets.UTF_8), SignatureAlgorithm.HS256.getJcaName());
 
             byte[] decodedKey = Base64.getDecoder().decode(jwtSecret);
             SecretKey key = Keys.hmacShaKeyFor(decodedKey);
 
-            // JWT 파싱 및 검증
-            /*JwtParser parser = Jwts.parserBuilder()
-                    .setSigningKey(secretKey)
-                    .build();
-
-            // claims 추출 및 반환
-            return parser.parseClaimsJws(jwt).getBody();*/
-
-            /*return Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(jwt)
-                    .getBody();*/
-
-            //return Jwts.parser().verifyWith(key).build().parseSignedClaims(jwt).getBody();
             return Jwts.parser()
                     .verifyWith(key)
                     .build()
@@ -136,6 +101,7 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         }
     }
 
+    // 인증 실패 시 에러 메시지를 응답으로 반환하는 메서드
     private Mono<Void> onError(ServerWebExchange exchange, String errorMessage, HttpStatus httpStatus) {
         ServerHttpResponse response = exchange.getResponse();
         response.setStatusCode(httpStatus);
@@ -145,5 +111,6 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
         return response.writeWith(Mono.just(buffer));
     }
 
+    // 필터 설정을 위한 내부 클래스
     public static class Config {}
 }
