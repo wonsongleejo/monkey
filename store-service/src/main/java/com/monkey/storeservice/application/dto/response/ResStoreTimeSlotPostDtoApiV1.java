@@ -1,6 +1,6 @@
 package com.monkey.storeservice.application.dto.response;
 
-import com.monkey.storeservice.domain.article.entity.StoreTimeSlotEntity;
+import com.monkey.storeservice.domain.entity.StoreTimeSlotEntity;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResStoreTimeSlotPostDtoApiV1 {
+public class ResStoreTimeSlotPostDTOApiV1 {
 
   private StoreTimeSlot storeTimeSlot;
 
-  public static ResStoreTimeSlotPostDtoApiV1 of(StoreTimeSlotEntity storeTimeSlotEntity) {
-    return ResStoreTimeSlotPostDtoApiV1.builder()
+  public static ResStoreTimeSlotPostDTOApiV1 of(StoreTimeSlotEntity storeTimeSlotEntity) {
+    return ResStoreTimeSlotPostDTOApiV1.builder()
         .storeTimeSlot(StoreTimeSlot.from(storeTimeSlotEntity))
         .build();
   }

@@ -1,21 +1,18 @@
 package com.monkey.storeservice.application.dto.response;
 
-import com.monkey.storeservice.domain.article.entity.StoreTimeSlotEntity;
-import jakarta.validation.constraints.NotNull;
+import com.monkey.storeservice.domain.entity.StoreTimeSlotEntity;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class ResStoreTimeSlotPutDtoApiV1 {
+public class ResStoreTimeSlotPutDTOApiV1 {
 
   private LocalDate slotDate;
 
@@ -25,8 +22,8 @@ public class ResStoreTimeSlotPutDtoApiV1 {
 
   private Integer maxPerson;
 
-  public static ResStoreTimeSlotPutDtoApiV1 of(StoreTimeSlotEntity storeTimeSlotEntity) {
-    return ResStoreTimeSlotPutDtoApiV1.builder()
+  public static ResStoreTimeSlotPutDTOApiV1 of(StoreTimeSlotEntity storeTimeSlotEntity) {
+    return ResStoreTimeSlotPutDTOApiV1.builder()
         .slotDate(storeTimeSlotEntity.getSlotDate())
         .entryTime(storeTimeSlotEntity.getEntryTime())
         .exitTime(storeTimeSlotEntity.getExitTime())
