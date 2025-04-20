@@ -1,6 +1,7 @@
 package com.monkey.slackservice.application.dto.response;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
 
 import java.util.UUID;
 
@@ -8,11 +9,11 @@ import java.util.UUID;
 @Builder
 public class ResSlackStoreReservationPostDTOApiV1 {
 
-    private StoreReservation storeReservation;
+    private StoreReservation storeReservation; // ✅ 예약 정보 전체 포함
 
-    public static ResSlackStoreReservationPostDTOApiV1 of(UUID storeReservationId, String status) {
+    public static ResSlackStoreReservationPostDTOApiV1 of(StoreReservation reservation) {
         return ResSlackStoreReservationPostDTOApiV1.builder()
-                .storeReservation(StoreReservation.from(storeReservationId, status))
+                .storeReservation(reservation)
                 .build();
     }
 
@@ -21,12 +22,29 @@ public class ResSlackStoreReservationPostDTOApiV1 {
     public static class StoreReservation {
         private UUID storeReservationId;
         private String status;
+        private TimeSlot timeSlot;
+        private User user;
 
-        public static StoreReservation from(UUID storeReservationId, String status) {
-            return StoreReservation.builder()
-                    .storeReservationId(storeReservationId)
-                    .status(status)
-                    .build();
+        @Getter
+        @Builder
+        public static class TimeSlot {
+            private Store store;
+            private String date;
+            private String entryTime;
+            private String exitTime;
+
+            @Getter
+            @Builder
+            public static class Store {
+                private UUID storeId;
+            }
+        }
+
+        @Getter
+        @Builder
+        public static class User {
+            private Long userId;
+            private String userName;
         }
     }
 }
