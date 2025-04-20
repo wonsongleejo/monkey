@@ -38,48 +38,62 @@ public class SlackControllerApiV1Test {
 
     // 슬랙 메시지 생성
     @Test
-    public void testSlackPostSuccess() throws Exception {
+    void slackMessageSendSuccessAndSaveToDb() throws Exception {
+        String slackUserId = "D089A93Q285";
+
         ReqSlackStoreReservationPostDTOApiV1 reqDto = ReqSlackStoreReservationPostDTOApiV1.builder()
                 .slack(
                         ReqSlackStoreReservationPostDTOApiV1.SlackMessage.builder()
-                                .slackId(UUID.randomUUID())
-                                .slackMessage("테스트 슬랙 메세지입니다.")
+                                .slackId(slackUserId)
+                                .slackMessage("슬랙 메시지 연동 테스트입니다.")
                                 .build()
                 )
                 .build();
 
-        String reqDtoJson = objectMapper.writeValueAsString(reqDto);
+        String reqBody = objectMapper.writeValueAsString(reqDto);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders.post("/v1/slacks")
-                                .content(reqDtoJson)
+                                .content(reqBody)
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
-                .andExpectAll(
-                        MockMvcResultMatchers.status().isOk(),
-                        MockMvcResultMatchers.jsonPath("code").value("000")
-                )
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("code").value("000"))
                 .andDo(
                         document(
                                 "SLACK 메시지 생성 성공",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
-                                resource(
-                                        ResourceSnippetParameters.builder()
-                                                .tag("SLACK v1")
-                                                .summary("SLACK 메시지 생성")
-                                                .description("""
-                                                        ## SLACK 메시지 생성 엔드포인트 입니다.
-                                                        
-                                                        ---
-                                                        
-                                                        예약 생성 시 Slack 메시지를 생성합니다.
-                                                        """)
-                                                .requestFields(
-                                                        fieldWithPath("slack.slackId").type(JsonFieldType.STRING).description("Slack ID"),
-                                                        fieldWithPath("slack.slackMessage").type(JsonFieldType.STRING).description("Slack 메시지")
-                                                )
-                                                .build()
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("SLACK v1")
+                                        .summary("Slack 메시지 전송")
+                                        .description("""
+                                                예약 완료 또는 취소 시 Slack 메시지를 전송하는 API입니다.
+                                                
+                                                ---
+                                                
+                                                요청 시 Slack 메시지를 전송하고, DB에 로그를 저장합니다.
+                                                """)
+                                        .requestFields(
+                                                fieldWithPath("slack.slackId").type(JsonFieldType.STRING).description("Slack 사용자 ID"),
+                                                fieldWithPath("slack.slackMessage").type(JsonFieldType.STRING).description("보낼 메시지 내용")
+                                        )
+                                        .responseFields(
+                                                fieldWithPath("code").description("응답 코드"),
+                                                fieldWithPath("message").description("응답 메시지"),
+
+                                                fieldWithPath("data.storeReservation.storeReservationId").description("예약 ID"),
+                                                fieldWithPath("data.storeReservation.status").description("예약 상태"),
+
+                                                fieldWithPath("data.storeReservation.timeSlot.store.storeId").description("팝업스토어 ID"),
+                                                fieldWithPath("data.storeReservation.timeSlot.date").description("예약 날짜"),
+                                                fieldWithPath("data.storeReservation.timeSlot.entryTime").description("입장 시간"),
+                                                fieldWithPath("data.storeReservation.timeSlot.exitTime").description("퇴장 시간"),
+
+                                                fieldWithPath("data.storeReservation.user.userId").description("유저 ID"),
+                                                fieldWithPath("data.storeReservation.user.userName").description("유저 이름")
+                                        )
+                                        .build()
                                 )
                         )
                 );
