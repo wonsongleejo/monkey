@@ -1,4 +1,32 @@
-# Eureka를 실행하지 않고 테스트하기 위해 추가
+spring:
+  application:
+    name: user-service
+
+  datasource:
+    url: jdbc:h2:mem:testDB
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
+    jpa:
+      database-platform: org.hibernate.dialect.H2Dialect
+      hibernate.ddl-auto: update
+
+  h2:
+    console:
+      enabled: true # H2 콘솔 활성화
+      settings:
+        web-allow-others: false # 외부 접근 허용 여부
+      path: /h2-console # H2 콘솔 경로
+
+jwt: #임의값 적용
+  secret: bXlTdXBlclNlY3VyZVNlY3JldEtleVRoYXRJc0xvbmdlbm91Z2hUb0JlU2VjdXJlMTIzIQ==
+  access-token-expiration: 5000000
+  refresh-token-expiration: 85000000
+
+server:
+  port: 19090
+
 eureka:
   client:
     enabled: false
