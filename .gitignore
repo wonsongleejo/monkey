@@ -85,3 +85,4 @@ application-secret.yml
 *.pem
 *.crt
 *.pfx
+.env
