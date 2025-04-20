@@ -89,7 +89,8 @@ public class SecurityConfig {
                         "/v1/product-reservations/**",
                         "/v1/slacks/**",
                         "/v1/store-reservations/**",
-                        "/v1/stores/**"
+                        "/v1/stores/**",
+                            "v1/timeslots/**"
                         ).permitAll()
                         .requestMatchers("/admin").hasRole("MASTER")
                         .anyRequest().authenticated()
