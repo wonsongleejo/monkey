@@ -22,7 +22,7 @@ spring:
         - id: store-service
           uri: lb://store-service
           predicates:
-            - Path=/v1/stores/**, /springdoc/openapi3-store-service.json
+            - Path=/v1/stores/**,/v1/timeslots/**, /springdoc/openapi3-store-service.json
 
         # Store-reservation-service
         - id: store-reservation-service
