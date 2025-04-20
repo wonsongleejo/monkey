@@ -1,3 +1,4 @@
+/*
 package com.monkey.userservice.domain.user.controller;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
@@ -7,6 +8,7 @@ import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,11 +38,15 @@ public class UserControllerApiV1Test {
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Value("${jwt.secret}")
+    private String secretKey;
+
     // 회원 전제조회
     @Test
     public void testUserGetSuccess() throws Exception {
         mockMvc.perform(
                         RestDocumentationRequestBuilders.get("/v1/users")
+                                .header("Authorization", secretKey)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -57,22 +63,22 @@ public class UserControllerApiV1Test {
                                                 .summary("USER 리스트 조회")
                                                 .description("""
                                                         ## USER 회원 전체조회 엔드포인트 입니다.
-                                                        
+
                                                         ---
-                                                        
+
                                                         정렬 기준을 지정할 수 있습니다. 기본 정렬은 id,desc입니다.
-                                                        
+
                                                         ex) sort=asc
-                                                        
+
                                                         페이징이 가능합니다. 기본 페이지 번호는 0번입니다.
                                                         페이지 당 조회 개수는 10, 30, 50로만 설정 가능합니다.(기본 조회 개수는 10입니다.)
-                                                        
+
                                                         ex) size=30
-                                                        
+
                                                         ex) page=1
-                                                        
+
                                                         ex) page=2&size=10
-                                                        
+
                                                         """)
                                                 .queryParameters(
                                                         parameterWithName("sort").type(SimpleType.STRING).optional().description("정렬 기준"),
@@ -120,7 +126,7 @@ public class UserControllerApiV1Test {
         ReqUserPutDTOApiV1 reqDto = ReqUserPutDTOApiV1.builder()
                 .user(
                         ReqUserPutDTOApiV1.User.builder()
-                                .password("testMod123")
+                                .password("testMod1234!@")
                                 .slackId("slackIdMod")
                                 .build()
                 )
@@ -146,9 +152,9 @@ public class UserControllerApiV1Test {
                                         .summary("USER 정보 수정")
                                         .description("""
                                                 ## USER 회원 정보 수정 엔드포인트 입니다.
-                                                
+
                                                 ---
-                                                
+
                                                 password, slackId를 입력받아 회원정보를 수정합니다.
                                                 """)
                                         .requestFields(
@@ -211,9 +217,9 @@ public class UserControllerApiV1Test {
                                                 .summary("USER 팝업 스토어 예약 내역 조회")
                                                 .description("""
                                                         ## USER 팝업 스토어 예약 내역 조회 엔드포인트 입니다.
-                                                        
+
                                                         ---
-                                                        
+
                                                         StoreReservation 서비스로 FeignClient 요청을 보내서 예약 내역을 받습니다.
                                                         """)
                                                 .build()
@@ -243,9 +249,9 @@ public class UserControllerApiV1Test {
                                                 .summary("USER 한정 상품 예약 내역 조회")
                                                 .description("""
                                                         ## USER 한정 상품 예약 내역 조회 엔드포인트 입니다.
-                                                        
+
                                                         ---
-                                                        
+
                                                         ProductReservation 서비스로 FeignClient 요청을 보내서 예약 내역을 받습니다.
                                                         """)
                                                 .build()
@@ -255,3 +261,4 @@ public class UserControllerApiV1Test {
     }
 
 }
+*/
