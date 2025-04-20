@@ -42,7 +42,10 @@ public class StoreTimeSlotServiceImplApiV1 implements StoreTimeSlotServiceApiV1 
     StoreTimeSlotEntity storeTimeSlotEntity = storeTimeSlotRepository.findById(timeSlotId)
         .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
 
+    reqDto.getStoreTimeSlot().update(storeTimeSlotEntity);
+
     StoreTimeSlotEntity updated = storeTimeSlotRepository.save(storeTimeSlotEntity);
+
     return ResStoreTimeSlotPutDTOApiV1.of(updated);
   }
 
