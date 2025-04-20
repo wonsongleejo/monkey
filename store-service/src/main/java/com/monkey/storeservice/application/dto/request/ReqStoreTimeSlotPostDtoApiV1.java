@@ -1,6 +1,6 @@
 package com.monkey.storeservice.application.dto.request;
 
-import com.monkey.storeservice.domain.article.entity.StoreTimeSlotEntity;
+import com.monkey.storeservice.domain.entity.StoreTimeSlotEntity;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ReqStoreTimeSlotPostDtoApiV1 {
+public class ReqStoreTimeSlotPostDTOApiV1 {
 
   @Valid
   @NotNull
