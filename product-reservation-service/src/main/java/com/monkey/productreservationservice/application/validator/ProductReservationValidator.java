@@ -19,16 +19,16 @@ public class ProductReservationValidator {
     private final ProductReservationRepository productReservationRepository;
 
     // 존재하는 상품 확인
-    public ResProductClientGetByIdDTOApiV1 validateProduct(UUID productId) {
+    public ResProductClientGetByIdDTOApiV1.Product validateProduct(UUID productId) {
         try {
             var productResponse = productClient.getProductById(productId);
-            var product = productResponse != null ? productResponse.getData() : null;
+            var product = productResponse != null ? productResponse.getData().getProduct() : null;
 
             if (product == null) throw new CustomException(ResponseCode.PRODUCT_NOT_FOUND);
-            if (product.getStoreId() == null) throw new CustomException(ResponseCode.STORE_NOT_FOUND);
+            if (product.getStore() == null || product.getStore().getStoreId() == null)
+                throw new CustomException(ResponseCode.STORE_NOT_FOUND);
 
             return product;
-
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {
