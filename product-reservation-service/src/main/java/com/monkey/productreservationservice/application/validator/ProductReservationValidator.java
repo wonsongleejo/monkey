@@ -24,9 +24,9 @@ public class ProductReservationValidator {
             var productResponse = productClient.getProductById(productId);
             var product = productResponse != null ? productResponse.getData() : null;
 
-            if (product == null || product.getStoreId() == null) {
-                throw new CustomException(ResponseCode.PRODUCT_NOT_FOUND);
-            }
+            if (product == null) throw new CustomException(ResponseCode.PRODUCT_NOT_FOUND);
+            if (product.getStoreId() == null) throw new CustomException(ResponseCode.STORE_NOT_FOUND);
+
             return product;
 
         } catch (CustomException e) {
