@@ -195,8 +195,12 @@ public class ProductControllerApiV1Test {
                                 .message("성공")
                                 .data(
                                         ResStoreClientGetByIdDTOApiV1.builder()
-                                                .storeId(saved.getStoreId())
-                                                .storeName("테스트 스토어")
+                                                .store(
+                                                        ResStoreClientGetByIdDTOApiV1.Store.builder()
+                                                                .storeId(saved.getStoreId())
+                                                                .storeName("테스트 스토어")
+                                                                .build()
+                                                )
                                                 .build()
                                 )
                                 .build()

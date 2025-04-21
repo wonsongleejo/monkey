@@ -79,11 +79,20 @@ public class ProductReservationControllerApiV1Test {
         given(productClient.getProductById(testProductId))
                 .willReturn(ResDTO.success(
                         ResProductClientGetByIdDTOApiV1.builder()
-                                .productId(testProductId)
-                                .storeId(testStoreId)
-                                .productName("카카오프렌즈 라이언 바디필로우")
-                                .quantity(100)
-                                .purchaseLimitPerUser(3)
+                                .product(
+                                        ResProductClientGetByIdDTOApiV1.Product.builder()
+                                                .productId(testProductId)
+                                                .productName("카카오프렌즈 라이언 바디필로우")
+                                                .quantity(100)
+                                                .purchaseLimitPerUser(3)
+                                                .store(
+                                                        ResProductClientGetByIdDTOApiV1.Product.Store.builder()
+                                                                .storeId(testStoreId)
+                                                                .storeName("카카오프렌즈 팝업스토어 강남점")
+                                                                .build()
+                                                )
+                                                .build()
+                                )
                                 .build()
                 ));
 
@@ -99,8 +108,12 @@ public class ProductReservationControllerApiV1Test {
         given(storeClient.getStoreById(testStoreId))
                 .willReturn(ResDTO.success(
                         ResStoreClientGetByIdDTOApiV1.builder()
-                                .storeId(testStoreId)
-                                .storeName("카카오프렌즈 팝업스토어 강남점")
+                                .store(
+                                        ResStoreClientGetByIdDTOApiV1.Store.builder()
+                                                .storeId(testStoreId)
+                                                .storeName("카카오프렌즈 팝업스토어 강남점")
+                                                .build()
+                                )
                                 .build()
                 ));
 
