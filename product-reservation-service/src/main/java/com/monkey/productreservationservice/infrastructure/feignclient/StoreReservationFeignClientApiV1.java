@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "store-reservation-service", path = "v1/store-reservations")
+@FeignClient(name = "store-reservation-service", path = "/v1/store-reservations")
 @Profile("!test")
 public interface StoreReservationFeignClientApiV1 {
-    @GetMapping
+    @GetMapping("/{userId}")
     ResDTO<ResStoreReservationClientGetDTOApiV1> getReservationsByUserId(@RequestParam Long userId);
 }

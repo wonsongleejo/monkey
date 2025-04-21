@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.UUID;
 
-@FeignClient(name = "store-service", path = "v1/stores")
+@FeignClient(name = "store-service", path = "/v1/stores")
 @Profile("!test")
 public interface StoreFeignClientApiV1 {
-    @GetMapping
+    @GetMapping("/{storeId}")
     ResDTO<ResStoreClientGetByIdDTOApiV1> getStoreById(@PathVariable UUID storeId);
 }
