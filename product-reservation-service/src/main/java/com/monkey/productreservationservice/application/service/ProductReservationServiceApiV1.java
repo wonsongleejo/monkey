@@ -40,7 +40,7 @@ public class ProductReservationServiceApiV1 {
         ProductReservationEntity productReservationEntity = ProductReservationEntity.builder()
                 .productId(productId)
                 .userId(userId)
-                .storeId(product.getStoreId())
+                .storeId(product.getStore().getStoreId())
                 .quantity(reqDto.getQuantity())
                 .status(ProductReservationStatus.PENDING_PICKUP) // 예약 생성 시 상태: 픽업 대기중으로 고정
                 .build();
@@ -66,8 +66,8 @@ public class ProductReservationServiceApiV1 {
     public ResProductReservationGetByIdDTOApiV1 getById(UUID productReservationId) {
         ProductReservationEntity productReservation = getActiveProductReservationById(productReservationId);
 
-        ResProductClientGetByIdDTOApiV1 resProduct = readValidator.validateProduct(productReservation.getProductId());
-        ResStoreClientGetByIdDTOApiV1 resStore = readValidator.validateStore(productReservation.getStoreId());
+        ResProductClientGetByIdDTOApiV1.Product resProduct = readValidator.validateProduct(productReservation.getProductId());
+        ResStoreClientGetByIdDTOApiV1.Store resStore = readValidator.validateStore(productReservation.getStoreId());
         ResUserClientGetByIdDTOApiV1 resUser = readValidator.validateUser(productReservation.getCreatedBy());
 
         return ResProductReservationGetByIdDTOApiV1.of(productReservation, resProduct, resStore, resUser);

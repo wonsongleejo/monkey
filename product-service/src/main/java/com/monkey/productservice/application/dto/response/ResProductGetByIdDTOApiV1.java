@@ -2,7 +2,6 @@ package com.monkey.productservice.application.dto.response;
 
 import com.monkey.productservice.domain.entity.ProductEntity;
 import com.monkey.productservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
-import com.monkey.productservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +16,7 @@ import java.util.UUID;
 public class ResProductGetByIdDTOApiV1 {
     private Product product;
 
-    public static ResProductGetByIdDTOApiV1 of(ProductEntity productEntity, ResStoreClientGetByIdDTOApiV1 storeDto) {
+    public static ResProductGetByIdDTOApiV1 of(ProductEntity productEntity, ResStoreClientGetByIdDTOApiV1.Store storeDto) {
         return ResProductGetByIdDTOApiV1.builder()
                 .product(Product.from(productEntity, storeDto))
                 .build();
@@ -36,7 +35,7 @@ public class ResProductGetByIdDTOApiV1 {
         private Long createdBy;
         private Store store; // feignClient
 
-        public static Product from(ProductEntity productEntity, ResStoreClientGetByIdDTOApiV1 storeDto) {
+        public static Product from(ProductEntity productEntity, ResStoreClientGetByIdDTOApiV1.Store storeDto) {
             return Product.builder()
                     .productId(productEntity.getProductId())
                     .productName(productEntity.getProductName())
@@ -56,7 +55,7 @@ public class ResProductGetByIdDTOApiV1 {
             private UUID storeId;
             private String storeName;
 
-            public static Store from(ResStoreClientGetByIdDTOApiV1 storeDto) {
+            public static Store from(ResStoreClientGetByIdDTOApiV1.Store storeDto) {
                 return Store.builder()
                         .storeId(storeDto.getStoreId())
                         .storeName(storeDto.getStoreName())

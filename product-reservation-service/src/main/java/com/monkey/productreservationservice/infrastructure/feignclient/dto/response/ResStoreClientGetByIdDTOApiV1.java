@@ -12,6 +12,14 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class ResStoreClientGetByIdDTOApiV1 {
-    private UUID storeId;
-    private String storeName;
+    private ResStoreClientGetByIdDTOApiV1.Store store;
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Store {
+        private UUID storeId;
+        private String storeName;
+    }
 }

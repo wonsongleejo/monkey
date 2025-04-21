@@ -12,9 +12,27 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class ResProductClientGetByIdDTOApiV1 {
-    private UUID productId;
-    private UUID storeId;
-    private String productName;
-    private Integer quantity;
-    private Integer purchaseLimitPerUser;
+    private Product product;
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class Product {
+        private UUID productId;
+        private String productName;
+        private Integer quantity;
+        private Integer purchaseLimitPerUser;
+        private Store store;
+
+        @Getter
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
+        public static class Store {
+            private UUID storeId;
+            private String storeName;
+        }
+    }
 }
+

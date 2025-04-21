@@ -3,7 +3,6 @@ spring:
     name: product-service
   config:
     import: optional:file:.env[.properties]
-
   datasource:
     url: jdbc:postgresql://localhost:${POSTGRES_PRODUCT_DB_PORT}/${POSTGRES_PRODUCT_DB}
     username: ${POSTGRES_USER}
@@ -22,6 +21,10 @@ spring:
   sql:
     init:
       mode: always
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+    access-token-expiration: ${ACCESS_TOKEN_EXPIRATION}
+    refresh-token-expiration: ${REFRESH_TOKEN_EXPIRATION}
 
 server:
   port: 8084
