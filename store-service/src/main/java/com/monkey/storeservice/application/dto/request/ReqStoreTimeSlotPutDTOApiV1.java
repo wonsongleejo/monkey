@@ -39,10 +39,10 @@ public class ReqStoreTimeSlotPutDTOApiV1 {
     private Integer maxPerson;
 
     public void update(StoreTimeSlotEntity storeTimeSlotEntity) {
-      this.slotDate = storeTimeSlotEntity.getSlotDate();
-      this.entryTime = storeTimeSlotEntity.getEntryTime();
-      this.exitTime = storeTimeSlotEntity.getExitTime();
-      this.maxPerson = storeTimeSlotEntity.getMaxPerson();
+      storeTimeSlotEntity.setSlotDate(slotDate);
+      storeTimeSlotEntity.setEntryTime(entryTime);
+      storeTimeSlotEntity.setExitTime(exitTime);
+      storeTimeSlotEntity.setMaxPerson(maxPerson);
     }
   }
 }
