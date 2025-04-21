@@ -4,7 +4,6 @@ import com.monkey.common_module.dto.ResDTO;
 import com.monkey.storereservationservice.application.dto.request.ReqStoreReservationPostDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetByIdDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetDTOApiV1;
-import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPostByIdCancelDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPostDTOApiV1;
 import com.monkey.storereservationservice.application.service.StoreReservationServiceApiV1;
 import jakarta.validation.Valid;
@@ -27,18 +26,6 @@ public class StoreReservationControllerApiV1 {
     public ResponseEntity<ResDTO<ResStoreReservationPostDTOApiV1>> postBy(@Valid @RequestBody ReqStoreReservationPostDTOApiV1 request) {
 
         ResStoreReservationPostDTOApiV1 resDto = storeReservationServiceApiV1.create(request);
-
-        return new ResponseEntity<>(
-                ResDTO.success(resDto),
-                HttpStatus.OK
-        );
-    }
-
-    // 예약 취소
-    @PostMapping("/{storeReservationId}/cancel")
-    public ResponseEntity<ResDTO<ResStoreReservationPostByIdCancelDTOApiV1>> cancelBy(@PathVariable UUID storeReservationId) {
-
-        ResStoreReservationPostByIdCancelDTOApiV1 resDto = storeReservationServiceApiV1.cancel(storeReservationId);
 
         return new ResponseEntity<>(
                 ResDTO.success(resDto),
