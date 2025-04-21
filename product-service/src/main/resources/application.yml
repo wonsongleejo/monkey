@@ -1,11 +1,15 @@
 spring:
   application:
     name: product-service
+  config:
+    import: optional:file:.env[.properties]
+
   datasource:
-    url: jdbc:postgresql://localhost:5001/test_popup_store
-    username: jiyun
-    password: 19681205
+    url: jdbc:postgresql://localhost:${POSTGRES_PRODUCT_DB_PORT}/${POSTGRES_PRODUCT_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: create-drop
