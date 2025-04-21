@@ -1,12 +1,12 @@
 package com.monkey.productservice.presentation.controller;
 
-import static org.mockito.BDDMockito.given;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.common_module.dto.ResDTO;
 import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.request.ReqProductPutDTOApiV1;
+import com.monkey.productservice.config.TestFeignClientConfig;
 import com.monkey.productservice.domain.entity.ProductEntity;
 import com.monkey.productservice.infrastructure.feignclient.StoreFeignClientApiV1;
 import com.monkey.productservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -30,6 +30,7 @@ import java.util.UUID;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -38,6 +39,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @Transactional
+@Import(TestFeignClientConfig.class)
 @ActiveProfiles("test")
 public class ProductControllerApiV1Test {
     @Autowired
@@ -49,7 +51,7 @@ public class ProductControllerApiV1Test {
     @Autowired
     private ProductJpaRepository productJpaRepository;
 
-    @MockBean
+    @Autowired
     private StoreFeignClientApiV1 storeClient;
 
     // 상품 등록
