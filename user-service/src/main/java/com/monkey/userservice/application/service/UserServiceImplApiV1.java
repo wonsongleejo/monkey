@@ -1,5 +1,7 @@
 package com.monkey.userservice.application.service;
 
+import com.monkey.common_module.dto.ResponseCode;
+import com.monkey.common_module.exception.CustomException;
 import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import com.monkey.userservice.domain.entity.UserEntity;
 import com.monkey.userservice.domain.repository.UserRepository;
@@ -30,14 +32,14 @@ public class UserServiceImplApiV1 implements UserServiceApiV1 {
     public UserEntity getByUserId(Long userId) {
 
         return userRepository.findByIsDeletedFalse(userId)
-                .orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                .orElseThrow(()-> new CustomException(ResponseCode.USER_NOT_FOUND));
     }
 
     @Override
     @Transactional
     public UserEntity putByUserId(Long userId, ReqUserPutDTOApiV1 reqDto) {
         UserEntity user = userRepository.findByIsDeletedFalse(userId)
-                .orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                .orElseThrow(()-> new CustomException(ResponseCode.USER_NOT_FOUND));
 
         // 비밀번호 암호화
         String encryptedPassword = passwordEncoder.encode(reqDto.getUser().getPassword());
@@ -50,7 +52,7 @@ public class UserServiceImplApiV1 implements UserServiceApiV1 {
     @Transactional
     public void deleteBy(Long userId) {
         UserEntity user = userRepository.findByIsDeletedFalse(userId)
-                .orElseThrow(()-> new IllegalArgumentException("회원이 존재하지 않습니다."));
+                .orElseThrow(()-> new CustomException(ResponseCode.USER_NOT_FOUND));
 
         user.setDeleted(true);
     }
