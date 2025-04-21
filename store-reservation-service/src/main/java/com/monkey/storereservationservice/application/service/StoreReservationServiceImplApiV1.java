@@ -1,9 +1,12 @@
 package com.monkey.storereservationservice.application.service;
 
+import com.monkey.common_module.dto.ResponseCode;
+import com.monkey.common_module.exception.CustomException;
 import com.monkey.storereservationservice.application.dto.request.ReqStoreReservationPostDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetByIdDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPostDTOApiV1;
+import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPutByIdStatusDTOApiV1;
 import com.monkey.storereservationservice.domain.storereservation.entity.StoreReservationEntity;
 import com.monkey.storereservationservice.domain.storereservation.repository.StoreReservationRepository;
 import com.monkey.storereservationservice.domain.storereservation.vo.StoreReservationStatus;
@@ -123,5 +126,19 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
                                 .build()
                 )
                 .build();
+    }
+
+    @Override
+    public ResStoreReservationPutByIdStatusDTOApiV1 changeStatus(UUID storeReservationId, StoreReservationStatus storeReservationStatus) {
+        StoreReservationEntity storeReservationEntity = storeReservationRepository.findById(storeReservationId);
+
+        if (storeReservationEntity == null) {
+            throw new CustomException(ResponseCode.NOT_FOUND);
+        }
+
+        storeReservationEntity.changeStatus(storeReservationStatus);
+        storeReservationRepository.save(storeReservationEntity);
+
+        return ResStoreReservationPutByIdStatusDTOApiV1.from(storeReservationEntity);
     }
 }

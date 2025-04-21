@@ -2,9 +2,11 @@ package com.monkey.storereservationservice.presentation.controller;
 
 import com.monkey.common_module.dto.ResDTO;
 import com.monkey.storereservationservice.application.dto.request.ReqStoreReservationPostDTOApiV1;
+import com.monkey.storereservationservice.application.dto.request.ReqStoreReservationPutByIdStatusDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetByIdDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPostDTOApiV1;
+import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPutByIdStatusDTOApiV1;
 import com.monkey.storereservationservice.application.service.StoreReservationServiceApiV1;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -53,6 +55,23 @@ public class StoreReservationControllerApiV1 {
             @PathVariable UUID storeReservationId
     ) {
         ResStoreReservationGetByIdDTOApiV1 resDto = storeReservationServiceApiV1.getById(storeReservationId);
+
+        return new ResponseEntity<>(
+                ResDTO.success(resDto),
+                HttpStatus.OK
+        );
+    }
+
+    // 예약 상태 변경
+    @PutMapping("/{storeReservationId}/status")
+    public ResponseEntity<ResDTO<ResStoreReservationPutByIdStatusDTOApiV1>> putByStatus(
+            @PathVariable UUID storeReservationId,
+            @Valid @RequestBody ReqStoreReservationPutByIdStatusDTOApiV1 request
+    ) {
+        ResStoreReservationPutByIdStatusDTOApiV1 resDto = storeReservationServiceApiV1.changeStatus(
+                storeReservationId,
+                request.getStoreReservation().getStatus()
+        );
 
         return new ResponseEntity<>(
                 ResDTO.success(resDto),
