@@ -1,5 +1,6 @@
 package com.monkey.storereservationservice.application.service;
 
+import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.storereservationservice.application.dto.request.ReqStoreReservationPostDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetByIdDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetDTOApiV1;
@@ -15,6 +16,9 @@ import com.monkey.storereservationservice.infrastructure.dto.response.ResStoreTi
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.monkey.common_module.exception.CustomException;
+
+import feign.FeignException;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,8 +36,17 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
     public ResStoreReservationPostDTOApiV1 create(ReqStoreReservationPostDTOApiV1 request) {
         ReqStoreReservationPostDTOApiV1.StoreReservation storeReservation = request.getStoreReservation();
 
+        // 존재하는 타임슬롯인지 확인
+        UUID timeSlotId = storeReservation.getTimeSlotId();
+        ResStoreTimeSlotDTOApiV1 timeSlot;
+        try {
+            timeSlot = storeClient.getTimeSlotById(timeSlotId);
+        } catch (FeignException.NotFound e) {
+            throw new CustomException(ResponseCode.OUT_OF_RESERVATION_TIME);
+        }
+
         StoreReservationEntity storeReservationEntity = StoreReservationEntity.createStoreReservation(
-                storeReservation.getTimeSlotId(),
+                timeSlotId,
                 1L,
                 storeReservation.getPersonCount(),
                 StoreReservationStatus.SCHEDULED
