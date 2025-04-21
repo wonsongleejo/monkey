@@ -21,12 +21,15 @@ public class ProductReservationReadValidator {
     private final UserFeignClientApiV1 userClient;
 
     // 상품 확인
-    public ResProductClientGetByIdDTOApiV1 validateProduct(UUID productId) {
+    public ResProductClientGetByIdDTOApiV1.Product validateProduct(UUID productId) {
         try {
-            var productResponse = productClient.getProductById(productId);
-            var product = productResponse != null ? productResponse.getData() : null;
+            var productRes = productClient.getProductById(productId);
+            var product = productRes != null ? productRes.getData().getProduct() : null;
 
             if (product == null) throw new CustomException(ResponseCode.PRODUCT_NOT_FOUND);
+            if (product.getStore() == null || product.getStore().getStoreId() == null)
+                throw new CustomException(ResponseCode.STORE_NOT_FOUND);
+
             return product;
         } catch (CustomException e) {
             throw e;
@@ -36,13 +39,15 @@ public class ProductReservationReadValidator {
     }
 
     // 스토어 확인
-    public ResStoreClientGetByIdDTOApiV1 validateStore(UUID storeId) {
+    public ResStoreClientGetByIdDTOApiV1.Store validateStore(UUID storeId) {
         try {
-            var storeResponse = storeClient.getStoreById(storeId);
-            var store = storeResponse != null ? storeResponse.getData() : null;
+            var storeRes = storeClient.getStoreById(storeId);
+//            var store = storeResponse != null ? storeResponse.getData() : null;
+            var store = storeRes.getData() != null ? storeRes.getData().getStore() : null;
 
             if (store == null) throw new CustomException(ResponseCode.STORE_NOT_FOUND);
             return store;
+
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {

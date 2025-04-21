@@ -21,8 +21,8 @@ public class ResProductReservationGetByIdDTOApiV1 {
     private ProductReservation productReservation;
 
     public static ResProductReservationGetByIdDTOApiV1 of(ProductReservationEntity productReservationEntity,
-                                                          ResProductClientGetByIdDTOApiV1 productDto,
-                                                          ResStoreClientGetByIdDTOApiV1 storeDto,
+                                                          ResProductClientGetByIdDTOApiV1.Product productDto,
+                                                          ResStoreClientGetByIdDTOApiV1.Store storeDto,
                                                           ResUserClientGetByIdDTOApiV1 userDto
                                                           ) {
         return ResProductReservationGetByIdDTOApiV1.builder()
@@ -45,8 +45,8 @@ public class ResProductReservationGetByIdDTOApiV1 {
 
         public static ProductReservation from(
                 ProductReservationEntity productReservationEntity,
-                ResProductClientGetByIdDTOApiV1 productDto,
-                ResStoreClientGetByIdDTOApiV1 storeDto,
+                ResProductClientGetByIdDTOApiV1.Product productDto,
+                ResStoreClientGetByIdDTOApiV1.Store storeDto,
                 ResUserClientGetByIdDTOApiV1 userDto
                 ) {
             return ProductReservation.builder()
@@ -69,7 +69,7 @@ public class ResProductReservationGetByIdDTOApiV1 {
             private UUID productId;
             private String productName;
 
-            public static Product from(ResProductClientGetByIdDTOApiV1 productDto) {
+            public static Product from(ResProductClientGetByIdDTOApiV1.Product productDto) {
                 return Product.builder()
                         .productId(productDto.getProductId())
                         .productName(productDto.getProductName())
@@ -85,7 +85,7 @@ public class ResProductReservationGetByIdDTOApiV1 {
             private UUID storeId;
             private String storeName;
 
-            public static Store from(ResStoreClientGetByIdDTOApiV1 storeDto) {
+            public static Store from(ResStoreClientGetByIdDTOApiV1.Store storeDto) {
                 return Store.builder()
                         .storeId(storeDto.getStoreId())
                         .storeName(storeDto.getStoreName())

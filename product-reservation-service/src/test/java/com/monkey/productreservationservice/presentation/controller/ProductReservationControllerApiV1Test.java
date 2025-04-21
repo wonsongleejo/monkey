@@ -1,11 +1,11 @@
 package com.monkey.productreservationservice.presentation.controller;
 
-import static org.mockito.BDDMockito.given;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.common_module.dto.ResDTO;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
+import com.monkey.productreservationservice.config.TestFeignClientConfig;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
 import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
 import com.monkey.productreservationservice.infrastructure.feignclient.ProductFeignClientApiV1;
@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -37,6 +37,7 @@ import java.util.UUID;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -45,6 +46,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @Transactional
+@Import(TestFeignClientConfig.class)
 @ActiveProfiles("test")
 public class ProductReservationControllerApiV1Test {
     @Autowired
@@ -56,17 +58,17 @@ public class ProductReservationControllerApiV1Test {
     @Autowired
     private ProductReservationJpaRepository productReservationJpaRepository;
 
-    @MockBean
+    @Autowired
     private ProductFeignClientApiV1 productClient;
 
-    @MockBean
+    @Autowired
+    private StoreFeignClientApiV1 storeClient;
+
+    @Autowired
     private StoreReservationFeignClientApiV1 storeReservationClient;
 
-    @MockBean
+    @Autowired
     private UserFeignClientApiV1 userClient;
-
-    @MockBean
-    private StoreFeignClientApiV1 storeClient;
 
     private UUID testProductId = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
     private UUID testStoreId = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
@@ -77,11 +79,20 @@ public class ProductReservationControllerApiV1Test {
         given(productClient.getProductById(testProductId))
                 .willReturn(ResDTO.success(
                         ResProductClientGetByIdDTOApiV1.builder()
-                                .productId(testProductId)
-                                .storeId(testStoreId)
-                                .productName("카카오프렌즈 라이언 바디필로우")
-                                .quantity(100)
-                                .purchaseLimitPerUser(3)
+                                .product(
+                                        ResProductClientGetByIdDTOApiV1.Product.builder()
+                                                .productId(testProductId)
+                                                .productName("카카오프렌즈 라이언 바디필로우")
+                                                .quantity(100)
+                                                .purchaseLimitPerUser(3)
+                                                .store(
+                                                        ResProductClientGetByIdDTOApiV1.Product.Store.builder()
+                                                                .storeId(testStoreId)
+                                                                .storeName("카카오프렌즈 팝업스토어 강남점")
+                                                                .build()
+                                                )
+                                                .build()
+                                )
                                 .build()
                 ));
 
@@ -97,8 +108,12 @@ public class ProductReservationControllerApiV1Test {
         given(storeClient.getStoreById(testStoreId))
                 .willReturn(ResDTO.success(
                         ResStoreClientGetByIdDTOApiV1.builder()
-                                .storeId(testStoreId)
-                                .storeName("카카오프렌즈 팝업스토어 강남점")
+                                .store(
+                                        ResStoreClientGetByIdDTOApiV1.Store.builder()
+                                                .storeId(testStoreId)
+                                                .storeName("카카오프렌즈 팝업스토어 강남점")
+                                                .build()
+                                )
                                 .build()
                 ));
 
@@ -135,7 +150,7 @@ public class ProductReservationControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("PRODUCT Reservations v1")
+                                        .tag("Product Reservations v1")
                                         .summary("상품 예약")
                                         .description("""
                                                 ## 상품 예약 엔드포인트 입니다.
@@ -183,7 +198,7 @@ public class ProductReservationControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("PRODUCT Reservations v1")
+                                        .tag("Product Reservations v1")
                                         .summary("상품 예약 취소")
                                         .description("""
                                                 ## 상품 예약 취소 엔드포인트 입니다.
@@ -223,7 +238,7 @@ public class ProductReservationControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("PRODUCT Reservations v1")
+                                        .tag("Product Reservations v1")
                                         .summary("상품 예약 상세 조회")
                                         .description("""
                                                 ## 상품 예약 상세 조회 엔드포인트 입니다.
@@ -250,6 +265,55 @@ public class ProductReservationControllerApiV1Test {
 
                                                 fieldWithPath("data.productReservation.store.storeId").type(JsonFieldType.STRING).description("스토어 ID"),
                                                 fieldWithPath("data.productReservation.store.storeName").type(JsonFieldType.STRING).description("스토어 이름")
+                                        )
+                                        .build()
+                                )
+                        )
+                );
+    }
+
+    // 예약 전체 조회
+    @Test
+    public void testProductReservationGetSuccess() throws Exception {
+        List<ProductReservationEntity> savedList = productReservationJpaRepository.findAllByIsDeletedFalse();
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders.get("/v1/product-reservations")
+                                .param("page", "0")
+                                .param("size", "10")
+                )
+                .andExpectAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("code").value("000"),
+                        MockMvcResultMatchers.jsonPath("data.productReservationList").isArray(),
+                        MockMvcResultMatchers.jsonPath("data.productReservationList.length()").value(savedList.size())
+                )
+                .andDo(
+                        document("상품 예약 전체 조회 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("Product Reservations v1")
+                                        .summary("상품 예약 전체 조회")
+                                        .description("""
+                                            ## 상품 예약 전체 조회 엔드포인트입니다.
+                                            
+                                            ---
+                                            
+                                            """)
+                                        .queryParameters(
+                                                parameterWithName("page").description("페이지 번호 (0부터 시작)").optional(),
+                                                parameterWithName("size").description("페이지당 아이템 수").optional()
+                                        )
+                                        .responseFields(
+                                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                                fieldWithPath("data.productReservationList[].productReservationId").type(JsonFieldType.STRING).description("상품 예약 ID"),
+                                                fieldWithPath("data.productReservationList[].productId").type(JsonFieldType.STRING).description("상품 ID"),
+                                                fieldWithPath("data.productReservationList[].userId").type(JsonFieldType.NUMBER).description("유저 ID"),
+                                                fieldWithPath("data.productReservationList[].storeId").type(JsonFieldType.STRING).description("스토어 ID"),
+                                                fieldWithPath("data.productReservationList[].quantity").type(JsonFieldType.NUMBER).description("예약 수량"),
+                                                fieldWithPath("data.productReservationList[].status").type(JsonFieldType.STRING).description("예약 상태")
                                         )
                                         .build()
                                 )

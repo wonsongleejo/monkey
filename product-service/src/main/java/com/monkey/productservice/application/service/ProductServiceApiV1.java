@@ -11,9 +11,7 @@ import com.monkey.productservice.application.dto.response.ResProductPutDTOApiV1;
 import com.monkey.productservice.domain.entity.ProductEntity;
 import com.monkey.productservice.domain.repository.ProductRepository;
 import com.monkey.productservice.infrastructure.feignclient.StoreFeignClientApiV1;
-import com.monkey.productservice.infrastructure.feignclient.UserFeignClientApiV1;
 import com.monkey.productservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
-import com.monkey.productservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +23,6 @@ import java.util.UUID;
 public class ProductServiceApiV1 {
     private final ProductRepository productRepository;
     private final StoreFeignClientApiV1 storeClient;
-    private final UserFeignClientApiV1 userClient;
 
     // 상품 등록
     public ResProductPostDTOApiV1 postBy(ReqProductPostDTOApiV1 reqDto) {
@@ -55,9 +52,14 @@ public class ProductServiceApiV1 {
     public ResProductGetByIdDTOApiV1 getById(UUID productId) {
         ProductEntity product = getActiveProductById(productId);
 
-        ResStoreClientGetByIdDTOApiV1 resStore = storeClient.getStoreById(product.getStoreId()).getData();
-
-        return ResProductGetByIdDTOApiV1.of(product, resStore);
+        try {
+            var storeRes = storeClient.getStoreById(product.getStoreId());
+            ResStoreClientGetByIdDTOApiV1.Store storeDto = storeRes.getData().getStore();
+            return ResProductGetByIdDTOApiV1.of(product, storeDto);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException(ResponseCode.STORE_FEIGN_CLIENT_ERROR);
+        }
     }
 
     // 상품 삭제

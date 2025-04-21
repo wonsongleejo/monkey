@@ -1,12 +1,13 @@
 package com.monkey.userservice.presentation.controller;
 
+import com.monkey.common_module.dto.ResDTO;
 import com.monkey.userservice.application.dto.request.ReqAuthPostSignInDTOApiV1;
 import com.monkey.userservice.application.dto.request.ReqAuthPostSingUpDTOApiV1;
 import com.monkey.userservice.application.dto.response.ResAuthPostRefreshDTOApiV1;
 import com.monkey.userservice.application.dto.response.ResAuthPostSignInDTOApiV1;
 import com.monkey.userservice.application.dto.response.ResAuthPostSignUpDTOApiV1;
 import com.monkey.userservice.application.service.AuthServiceApiV1;
-import com.monkey.common_module.dto.ResDTO;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +24,7 @@ public class AuthControllerApiV1 {
 
     // 회원가입
     @PostMapping("/sign-up")
-    public ResponseEntity<ResDTO<ResAuthPostSignUpDTOApiV1>> signUp(@RequestBody ReqAuthPostSingUpDTOApiV1 reqDto) {
+    public ResponseEntity<ResDTO<ResAuthPostSignUpDTOApiV1>> signUp(@RequestBody @Valid ReqAuthPostSingUpDTOApiV1 reqDto) {
 
         return new ResponseEntity<>(
                 ResDTO.success(ResAuthPostSignUpDTOApiV1.of(authService.signUp(reqDto))),
@@ -33,7 +34,7 @@ public class AuthControllerApiV1 {
 
     // 로그인
     @PostMapping("/sign-in")
-    public ResponseEntity<ResDTO<ResAuthPostSignInDTOApiV1>> signIn(@RequestBody ReqAuthPostSignInDTOApiV1 reqDto) {
+    public ResponseEntity<ResDTO<ResAuthPostSignInDTOApiV1>> signIn(@RequestBody @Valid ReqAuthPostSignInDTOApiV1 reqDto) {
 
         ResAuthPostSignInDTOApiV1 resAuthPostSignInDTOApiV1 = authService.signIn(reqDto);
 

@@ -43,12 +43,11 @@ public class UserEntity extends BaseEntity {
     }
 
     // 회원 정보 수정
-    public void setPassword(String password) {
+    public void update(String password, String slackId) {
         this.password = password;
-    }
-    public void setSlackId(String slackId) {
         this.slackId = slackId;
     }
+
 
     // 회원 삭제 (soft-delete)
     public void setDeleted(boolean deleted) {
