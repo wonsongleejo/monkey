@@ -135,7 +135,7 @@ public class ProductReservationControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("PRODUCT Reservations v1")
+                                        .tag("Product Reservations v1")
                                         .summary("상품 예약")
                                         .description("""
                                                 ## 상품 예약 엔드포인트 입니다.
@@ -183,7 +183,7 @@ public class ProductReservationControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("PRODUCT Reservations v1")
+                                        .tag("Product Reservations v1")
                                         .summary("상품 예약 취소")
                                         .description("""
                                                 ## 상품 예약 취소 엔드포인트 입니다.
@@ -223,7 +223,7 @@ public class ProductReservationControllerApiV1Test {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
-                                        .tag("PRODUCT Reservations v1")
+                                        .tag("Product Reservations v1")
                                         .summary("상품 예약 상세 조회")
                                         .description("""
                                                 ## 상품 예약 상세 조회 엔드포인트 입니다.
@@ -250,6 +250,55 @@ public class ProductReservationControllerApiV1Test {
 
                                                 fieldWithPath("data.productReservation.store.storeId").type(JsonFieldType.STRING).description("스토어 ID"),
                                                 fieldWithPath("data.productReservation.store.storeName").type(JsonFieldType.STRING).description("스토어 이름")
+                                        )
+                                        .build()
+                                )
+                        )
+                );
+    }
+
+    // 예약 전체 조회
+    @Test
+    public void testProductReservationGetSuccess() throws Exception {
+        List<ProductReservationEntity> savedList = productReservationJpaRepository.findAllByIsDeletedFalse();
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders.get("/v1/product-reservations")
+                                .param("page", "0")
+                                .param("size", "10")
+                )
+                .andExpectAll(
+                        MockMvcResultMatchers.status().isOk(),
+                        MockMvcResultMatchers.jsonPath("code").value("000"),
+                        MockMvcResultMatchers.jsonPath("data.productReservationList").isArray(),
+                        MockMvcResultMatchers.jsonPath("data.productReservationList.length()").value(savedList.size())
+                )
+                .andDo(
+                        document("상품 예약 전체 조회 성공",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                resource(ResourceSnippetParameters.builder()
+                                        .tag("Product Reservations v1")
+                                        .summary("상품 예약 전체 조회")
+                                        .description("""
+                                            ## 상품 예약 전체 조회 엔드포인트입니다.
+                                            
+                                            ---
+                                            
+                                            """)
+                                        .queryParameters(
+                                                parameterWithName("page").description("페이지 번호 (0부터 시작)").optional(),
+                                                parameterWithName("size").description("페이지당 아이템 수").optional()
+                                        )
+                                        .responseFields(
+                                                fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
+                                                fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
+                                                fieldWithPath("data.productReservationList[].productReservationId").type(JsonFieldType.STRING).description("상품 예약 ID"),
+                                                fieldWithPath("data.productReservationList[].productId").type(JsonFieldType.STRING).description("상품 ID"),
+                                                fieldWithPath("data.productReservationList[].userId").type(JsonFieldType.NUMBER).description("유저 ID"),
+                                                fieldWithPath("data.productReservationList[].storeId").type(JsonFieldType.STRING).description("스토어 ID"),
+                                                fieldWithPath("data.productReservationList[].quantity").type(JsonFieldType.NUMBER).description("예약 수량"),
+                                                fieldWithPath("data.productReservationList[].status").type(JsonFieldType.STRING).description("예약 상태")
                                         )
                                         .build()
                                 )
