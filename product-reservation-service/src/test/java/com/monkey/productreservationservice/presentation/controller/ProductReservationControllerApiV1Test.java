@@ -1,11 +1,11 @@
 package com.monkey.productreservationservice.presentation.controller;
 
-import static org.mockito.BDDMockito.given;
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.common_module.dto.ResDTO;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
+import com.monkey.productreservationservice.config.TestFeignClientConfig;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
 import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
 import com.monkey.productreservationservice.infrastructure.feignclient.ProductFeignClientApiV1;
@@ -23,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -37,6 +37,7 @@ import java.util.UUID;
 
 import static com.epages.restdocs.apispec.ResourceDocumentation.parameterWithName;
 import static com.epages.restdocs.apispec.ResourceDocumentation.resource;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -45,6 +46,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @Transactional
+@Import(TestFeignClientConfig.class)
 @ActiveProfiles("test")
 public class ProductReservationControllerApiV1Test {
     @Autowired
@@ -56,17 +58,17 @@ public class ProductReservationControllerApiV1Test {
     @Autowired
     private ProductReservationJpaRepository productReservationJpaRepository;
 
-    @MockBean
+    @Autowired
     private ProductFeignClientApiV1 productClient;
 
-    @MockBean
+    @Autowired
+    private StoreFeignClientApiV1 storeClient;
+
+    @Autowired
     private StoreReservationFeignClientApiV1 storeReservationClient;
 
-    @MockBean
+    @Autowired
     private UserFeignClientApiV1 userClient;
-
-    @MockBean
-    private StoreFeignClientApiV1 storeClient;
 
     private UUID testProductId = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
     private UUID testStoreId = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
