@@ -8,13 +8,13 @@ import java.util.UUID;
 
 @Getter
 @Builder
-public class ResStoreReservationPostByIdCancelDTOApiV1 {
+public class ResStoreReservationPutByIdStatusDTOApiV1 {
 
     private StoreReservation storeReservation;
 
-    public static ResStoreReservationPostByIdCancelDTOApiV1 from(StoreReservationEntity storeReservationEntity) {
-        return ResStoreReservationPostByIdCancelDTOApiV1.builder()
-                .storeReservation(StoreReservation.from(storeReservationEntity))
+    public static ResStoreReservationPutByIdStatusDTOApiV1 from(StoreReservationEntity storeReservationentity) {
+        return ResStoreReservationPutByIdStatusDTOApiV1.builder()
+                .storeReservation(StoreReservation.from(storeReservationentity))
                 .build();
     }
 
@@ -27,10 +27,10 @@ public class ResStoreReservationPostByIdCancelDTOApiV1 {
         private UUID storeReservationId;
         private StoreReservationStatus status;
 
-        public static StoreReservation from(StoreReservationEntity storeReservationEntity) {
+        public static StoreReservation from(StoreReservationEntity storeReservationentity) {
             return StoreReservation.builder()
-                    .storeReservationId(storeReservationEntity.getStoreReservationId())
-                    .status(storeReservationEntity.getStatus())
+                    .storeReservationId(storeReservationentity.getStoreReservationId())
+                    .status(storeReservationentity.getStatus())
                     .build();
         }
     }
