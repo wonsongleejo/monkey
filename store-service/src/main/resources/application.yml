@@ -1,12 +1,15 @@
 spring:
   application:
     name: store-service
-  ####임시 DB
+  config:
+    import: optional:file:.env[.properties]
+
   datasource:
-    url: jdbc:h2:mem:testdb_T;DB_CLOSE_DELAY=-1
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    url: jdbc:postgresql://localhost:${POSTGRES_STORE_DB_PORT}/${POSTGRES_STORE_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
   jpa:
     hibernate:
       ddl-auto: create-drop
