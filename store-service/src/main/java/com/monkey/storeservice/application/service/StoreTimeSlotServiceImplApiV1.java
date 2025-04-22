@@ -31,7 +31,7 @@ public class StoreTimeSlotServiceImplApiV1 implements StoreTimeSlotServiceApiV1 
 
     // 헤더에서 role을 받아서 권한체크 ( 아무나 만들 수 없게 하기 위함)
     if(!"MANAGER".equals(role)) {
-      throw new CustomException(ResponseCode.TOKEN_MISMATCH);
+      throw new CustomException(ResponseCode.FORBIDDEN);
     }
 
     StoreTimeSlotEntity storeTimeSlotEntity = reqDto.getStoreTimeSlot().toStoreTimeSlotEntity();
@@ -57,12 +57,12 @@ public class StoreTimeSlotServiceImplApiV1 implements StoreTimeSlotServiceApiV1 
 
     // 헤더에서 role을 받아서 권한체크 (아무나 수정 x)
     if (!"MANAGER".equals(role)) {
-      throw new CustomException(ResponseCode.TOKEN_MISMATCH); // or ROLE_UNAUTHORIZED
+      throw new CustomException(ResponseCode.FORBIDDEN); // or ROLE_UNAUTHORIZED
     }
 
     // 헤더에서 storeManagerId를 받아서 자기의 스토어인지 확인
     if(!storeEntity.getStoreManagerId().equals(storeManagerId)) {
-      throw new CustomException(ResponseCode.TOKEN_MISMATCH);
+      throw new CustomException(ResponseCode.USER_NOT_FOUND);
     }
 
     reqDto.getStoreTimeSlot().update(storeTimeSlotEntity);
