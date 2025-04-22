@@ -10,9 +10,9 @@ import org.springframework.data.domain.Pageable;
 
 public interface StoreServiceApiV1 {
 
-  ResStorePostDTOApiV1 postBy(ReqStorePostDTOApiV1 reqDto);
+  ResStorePostDTOApiV1 postBy(ReqStorePostDTOApiV1 reqDto,Long storeManagerId,String role);
 
-  ResStorePutDTOApiV1 putById(UUID storeId, ReqStorePutDTOApiV1 reqDto);
+  ResStorePutDTOApiV1 putById(UUID storeId, ReqStorePutDTOApiV1 reqDto,Long storeManagerId,String role);
 
   ResStoreGetDTOApiV1 getById(UUID storeId);
 

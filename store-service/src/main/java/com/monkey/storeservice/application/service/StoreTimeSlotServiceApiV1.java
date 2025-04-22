@@ -10,11 +10,11 @@ import org.springframework.data.domain.Pageable;
 
 public interface StoreTimeSlotServiceApiV1 {
 
-  ResStoreTimeSlotPostDTOApiV1 postById(UUID storeId, ReqStoreTimeSlotPostDTOApiV1 reqDto);
+  ResStoreTimeSlotPostDTOApiV1 postById(UUID storeId, ReqStoreTimeSlotPostDTOApiV1 reqDto,Long storeManagerId,String role);
 
-  ResStoreTimeSlotPutDTOApiV1 putById(UUID timeSlotId, ReqStoreTimeSlotPutDTOApiV1 reqDto);
+  ResStoreTimeSlotPutDTOApiV1 putById(UUID timeSlotId, ReqStoreTimeSlotPutDTOApiV1 reqDto,Long storeManagerId,UUID storeId,String role);
 
   ResStoreTimeSlotGetDTOApiV1 getById(UUID timeSlotId);
 
-  ResStoreTimeSlotGetDTOApiV1 getBy(Pageable pageable);
+  ResStoreTimeSlotGetDTOApiV1 getBy(UUID storeId,Pageable pageable);
 }
