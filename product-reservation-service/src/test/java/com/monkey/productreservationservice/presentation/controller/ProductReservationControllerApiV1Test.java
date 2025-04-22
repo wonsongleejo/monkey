@@ -97,11 +97,17 @@ public class ProductReservationControllerApiV1Test {
                                 .build()
                 ));
 
-        given(storeReservationClient.getReservationsByUserId(testUserId))
+        given(storeReservationClient.getReservationsByUserIdAndStoreId(testUserId, testStoreId))
                 .willReturn(ResDTO.success(
                         ResStoreReservationClientGetDTOApiV1.builder()
                                 .storeReservationList(List.of(
-                                        new ResStoreReservationClientGetDTOApiV1.StoreReservation(testUserId)
+                                        ResStoreReservationClientGetDTOApiV1.StoreReservation.builder()
+                                                .user(
+                                                        ResStoreReservationClientGetDTOApiV1.StoreReservation.User.builder()
+                                                                .userId(testUserId)
+                                                                .build()
+                                                )
+                                                .build()
                                 ))
                                 .build()
                 ));
@@ -121,8 +127,10 @@ public class ProductReservationControllerApiV1Test {
         given(userClient.getUserById(testUserId))
                 .willReturn(ResDTO.success(
                         ResUserClientGetByIdDTOApiV1.builder()
-                                .userId(testUserId)
-                                .username("라이언")
+                                .user(ResUserClientGetByIdDTOApiV1.User.builder()
+                                        .userId(testUserId)
+                                        .username("라이언")
+                                        .build())
                                 .build()
                 ));
     }
@@ -136,7 +144,7 @@ public class ProductReservationControllerApiV1Test {
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/product-reservations/{productId}", testProductId)
-                        // .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
+                        .header("X-User-Id", testUserId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(reqDto))
                 )
@@ -185,7 +193,7 @@ public class ProductReservationControllerApiV1Test {
 
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/product-reservations/{productReservationId}/cancel", saved.getProductReservationId())
-                        // .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
+                        .header("X-User-Id", testUserId)
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpectAll(
@@ -243,9 +251,9 @@ public class ProductReservationControllerApiV1Test {
                                         .summary("상품 예약 상세 조회")
                                         .description("""
                                                 ## 상품 예약 상세 조회 엔드포인트 입니다.
-                                                
+
                                                 ---
-                                                
+
                                                 """)
                                         .pathParameters(
                                                 parameterWithName("productReservationId").type(SimpleType.STRING).description("상품 예약 ID")

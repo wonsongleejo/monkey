@@ -51,13 +51,20 @@ public class ProductReservationValidator {
     }
 
     // 스토어 예약여부 확인
-    public void validateStoreMember(long userId) {
+    public void validateStoreMember(long userId, UUID storeId) {
         try {
-            var memberResponse = storeReservationClient.getReservationsByUserId(userId);
+            var memberResponse = storeReservationClient.getReservationsByUserIdAndStoreId(userId, storeId);
 
-            if(memberResponse == null || memberResponse.getData() == null ||
+            if(memberResponse == null ||
+                    memberResponse.getData() == null ||
                     memberResponse.getData().getStoreReservationList() == null ||
                     memberResponse.getData().getStoreReservationList().isEmpty()) {
+                throw new CustomException(ResponseCode.NOT_STORE_MEMBER);
+            }
+            boolean hasValidUser = memberResponse.getData().getStoreReservationList().stream()
+                    .anyMatch(reservation -> reservation.getUser() != null && reservation.getUser().getUserId() == userId);
+
+            if (!hasValidUser) {
                 throw new CustomException(ResponseCode.NOT_STORE_MEMBER);
             }
         } catch (CustomException e) {

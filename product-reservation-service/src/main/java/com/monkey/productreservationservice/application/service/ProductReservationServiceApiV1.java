@@ -34,7 +34,7 @@ public class ProductReservationServiceApiV1 {
 
         reservationValidator.validateStock(reqDto.getQuantity(), product.getQuantity()); // 재고 확인
         reservationValidator.validatePurchaseLimit(reqDto.getQuantity(), product.getPurchaseLimitPerUser()); // 구매수량 제한
-        reservationValidator.validateStoreMember(userId); // 스토어 예약여부 확인
+        reservationValidator.validateStoreMember(userId, product.getStore().getStoreId()); // 스토어 예약여부 확인
         reservationValidator.validateNotDuplicate(userId, productId); // 중복 예약 확인
 
         ProductReservationEntity productReservationEntity = ProductReservationEntity.builder()
@@ -68,7 +68,7 @@ public class ProductReservationServiceApiV1 {
 
         ResProductClientGetByIdDTOApiV1.Product resProduct = readValidator.validateProduct(productReservation.getProductId());
         ResStoreClientGetByIdDTOApiV1.Store resStore = readValidator.validateStore(productReservation.getStoreId());
-        ResUserClientGetByIdDTOApiV1 resUser = readValidator.validateUser(productReservation.getCreatedBy());
+        ResUserClientGetByIdDTOApiV1.User resUser = readValidator.validateUser(productReservation.getUserId());
 
         return ResProductReservationGetByIdDTOApiV1.of(productReservation, resProduct, resStore, resUser);
     }
