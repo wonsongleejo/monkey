@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public interface StoreReservationServiceApiV1 {
     ResStoreReservationPostDTOApiV1 create(ReqStoreReservationPostDTOApiV1 request, UserContext userContext);
-    ResStoreReservationGetDTOApiV1 getAll(UserContext userContext, Long userId, UUID storeId);
+    ResStoreReservationGetDTOApiV1 getAll(UserContext userContext, UUID storeId);
     ResStoreReservationGetByIdDTOApiV1 getById(UserContext userContext, UUID storeReservationId);
     ResStoreReservationPutByIdStatusDTOApiV1 changeStatus(UserContext userContext, UUID storeReservationId, StoreReservationStatus status);
 }

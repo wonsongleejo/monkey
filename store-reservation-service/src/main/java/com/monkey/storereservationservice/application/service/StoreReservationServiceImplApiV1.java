@@ -63,9 +63,9 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
     }
 
     @Override
-    public ResStoreReservationGetDTOApiV1 getAll(UserContext userContext, Long userId, UUID storeId) {
+    public ResStoreReservationGetDTOApiV1 getAll(UserContext userContext, UUID storeId) {
         List<ResStoreReservationGetDTOApiV1.StoreReservation> list = storeReservationRepository.findAll().stream()
-                .filter(res -> res.getUserId().equals(userId))
+                .filter(res -> res.getUserId().equals(userContext.getUserId()))
                 .map(entity -> {
                     ResStoreTimeSlotDTOApiV1 timeSlotResponse = storeClient.getTimeSlotById(entity.getTimeSlotId());
                     ResStoreTimeSlotDTOApiV1.StoreTimeSlot timeSlot = timeSlotResponse.getData().getStoreTimeSlot();
@@ -81,7 +81,7 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
                                     .exitTime(timeSlot.getExitTime())
                                     .build())
                             .user(ResStoreReservationGetDTOApiV1.StoreReservation.User.builder()
-                                    .userId(userId)
+                                    .userId(userContext.getUserId())
                                     .userName(userContext.getUserName())
                                     .build())
                             .build();

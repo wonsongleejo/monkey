@@ -35,10 +35,9 @@ public class StoreReservationControllerApiV1 {
     // 예약 전체 목록 조회
     @GetMapping
     public ResponseEntity<ResDTO<ResStoreReservationGetDTOApiV1>> getAll(
-            @RequestParam(required = false) Long userId,
             @RequestParam(required = false) UUID storeId
     ) {
-        ResStoreReservationGetDTOApiV1 resDto = storeReservationServiceApiV1.getAll(userContext, userId, storeId);
+        ResStoreReservationGetDTOApiV1 resDto = storeReservationServiceApiV1.getAll(userContext, storeId);
         return ResponseEntity.ok(ResDTO.success(resDto));
     }
 
