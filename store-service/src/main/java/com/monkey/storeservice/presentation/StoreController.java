@@ -24,9 +24,13 @@ public class StoreController {
 
   //  팝업스토어 생성
   @PostMapping
-  public ResponseEntity<ResDTO<ResStorePostDTOApiV1>> postBy(@RequestBody @Valid ReqStorePostDTOApiV1 reqDto) {
+  public ResponseEntity<ResDTO<ResStorePostDTOApiV1>> postBy(
+      @RequestHeader("X-User-Id") Long storeManagerId,
+      @RequestHeader("X-User-Role") String role,
+      @RequestBody @Valid ReqStorePostDTOApiV1 reqDto
+  ) {
 
-    ResStorePostDTOApiV1 resDto = storeServiceApiV1.postBy(reqDto);
+    ResStorePostDTOApiV1 resDto = storeServiceApiV1.postBy(reqDto,storeManagerId,role);
 
     return new ResponseEntity<>(
         ResDTO.success(resDto),
@@ -38,13 +42,12 @@ public class StoreController {
   // 팝업스토어 수정
   @PutMapping("/{storeId}")
   public ResponseEntity<ResDTO<ResStorePutDTOApiV1>> putById(
+      @RequestHeader("X-User-Id") Long storeManagerId,
+      @RequestHeader("X-User-Role") String role,
       @PathVariable UUID storeId,
       @RequestBody @Valid ReqStorePutDTOApiV1 reqDto) {
 
-    //Put요청 Dto에 있는 update메서드로 db업데이트
-    //reqStorePutDtoApiV1.getStore().update(storeEntity);
-
-    ResStorePutDTOApiV1 resDto = storeServiceApiV1.putById(storeId,reqDto);
+    ResStorePutDTOApiV1 resDto = storeServiceApiV1.putById(storeId,reqDto,storeManagerId,role);
 
     return new ResponseEntity<>(
         ResDTO.success(resDto),
