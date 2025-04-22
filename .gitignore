@@ -81,6 +81,7 @@ $RECYCLE.BIN/
 
 # -------------------- SECRETS --------------------
 application-secret.yml
+docker-compose.yml
 *.key
 *.pem
 *.crt

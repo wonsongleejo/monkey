@@ -4,6 +4,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.common_module.dto.ResDTO;
+import com.monkey.productservice.ProductServiceApplication;
 import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.request.ReqProductPutDTOApiV1;
 import com.monkey.productservice.config.TestFeignClientConfig;
@@ -35,7 +36,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-@SpringBootTest
+@SpringBootTest(classes = {ProductServiceApplication.class, TestFeignClientConfig.class})
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @Transactional

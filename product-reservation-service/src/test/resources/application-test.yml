@@ -1,3 +1,24 @@
 eureka:
   client:
     enabled: false
+
+spring:
+  config:
+    import: ''
+  datasource:
+    url: jdbc:postgresql://localhost:5001/test_popup_store
+    username: jiyun
+    password: 19681205
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: always

@@ -21,6 +21,10 @@ spring:
   sql:
     init:
       mode: always
+  jwt:
+    secret: ${JWT_SECRET_KEY}
+    access-token-expiration: ${ACCESS_TOKEN_EXPIRATION}
+    refresh-token-expiration: ${REFRESH_TOKEN_EXPIRATION}
 
 server:
   port: 8085

@@ -4,6 +4,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.common_module.dto.ResDTO;
+import com.monkey.productreservationservice.ProductReservationServiceApplication;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
 import com.monkey.productreservationservice.config.TestFeignClientConfig;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
@@ -42,7 +43,7 @@ import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.docu
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-@SpringBootTest
+@SpringBootTest(classes = {ProductReservationServiceApplication.class, TestFeignClientConfig.class})
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
 @Transactional
