@@ -16,8 +16,6 @@ import org.springframework.data.querydsl.binding.QuerydslPredicate;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -38,9 +36,7 @@ public class UserControllerApiV1 {
     @GetMapping
     public ResponseEntity<ResDTO<ResUserGetDTOApiV1>> getBy(
             @QuerydslPredicate(root = UserEntity.class) Predicate predicate,
-            @PageableDefault(sort="userId", size=10, direction = Sort.Direction.DESC) Pageable pageable,
-            @RequestHeader("X-User-Role") String role,
-            @AuthenticationPrincipal UserDetails user
+            @PageableDefault(sort="userId", size=10, direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<UserEntity> userListPage = userService.getBy(predicate, pageable);
 
@@ -95,9 +91,11 @@ public class UserControllerApiV1 {
     }
 
     //회원 탈퇴
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable(name="userId") Long userId) {
-
+    @DeleteMapping("/delete")
+    public ResponseEntity<ResDTO<Object>> deleteBy(
+            @RequestHeader("X-User-Id") Long userId
+            //@PathVariable(name="userId") Long userId
+    ) {
         userService.deleteBy(userId);
 
         return new ResponseEntity<>(
@@ -131,10 +129,15 @@ public class UserControllerApiV1 {
                             .entryTime(LocalTime.of(12+i,0,0))
                             .exitTime(LocalTime.of(13+i,0,0))
                             .build();
+            ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation.User User =
+                    ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation.User.builder()
+                            .userId((long) i)
+                            .userName(UUID.randomUUID().toString())
+                            .build();
             //최상단 데이터 조합
             ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation reservation =
                     ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation.builder()
-                            .userId(userId)
+                            .user(User)
                             .storeReservationId(UUID.randomUUID())
                             .visitStatus("SCHEDULED")
                             .timeSlot(timeSlot)
