@@ -54,7 +54,7 @@ public class ResStoreReservationGetDTOApiV1 {
                     ResStoreReservationClientGetDTOApiV1.ModelData.StoreReservation storeReservation
             ) {
                 return StoreReservation.builder()
-                        .userId(storeReservation.getUserId())
+                        .userId(storeReservation.getUser().getUserId())
                         .storeReservationId(storeReservation.getStoreReservationId())
                         .visitStatus(storeReservation.getVisitStatus())
                         .timeSlot(TimeSlot.from(storeReservation.getTimeSlot()))
