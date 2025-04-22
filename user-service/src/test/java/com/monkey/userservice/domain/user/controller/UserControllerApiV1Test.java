@@ -1,4 +1,3 @@
-/*
 package com.monkey.userservice.domain.user.controller;
 
 import com.epages.restdocs.apispec.ResourceSnippetParameters;
@@ -8,7 +7,6 @@ import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,15 +36,14 @@ public class UserControllerApiV1Test {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @Value("${jwt.secret}")
-    private String secretKey;
-
     // 회원 전제조회
     @Test
     public void testUserGetSuccess() throws Exception {
         mockMvc.perform(
                         RestDocumentationRequestBuilders.get("/v1/users")
-                                .header("Authorization", secretKey)
+                                .header("X-User-Id", "1")
+                                .header("X-User-Role", "MASTER")
+                                .header("X-User-Name", "testuser")
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -95,9 +92,11 @@ public class UserControllerApiV1Test {
     @Test
     public void testUserGetByIdSuccess() throws Exception {
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.get("/v1/users/{id}", 1)
-
-                )
+                        RestDocumentationRequestBuilders.get("/v1/users/master/{id}", 1)
+                                .header("X-User-Id", "1")
+                                .header("X-User-Role", "MASTER")
+                                .header("X-User-Name", "testuser")
+                ) //
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
                         MockMvcResultMatchers.jsonPath("code").value("000")
@@ -133,9 +132,12 @@ public class UserControllerApiV1Test {
                 .build();
 
         String reqDtoJson = objectMapper.writeValueAsString(reqDto);
-
+//
         mockMvc.perform(
                         RestDocumentationRequestBuilders.put("/v1/users/{id}", 1)
+                                .header("X-User-Id", "1")
+                                .header("X-User-Role", "MASTER")
+                                .header("X-User-Name", "testuser")
                                 .content(reqDtoJson)
                                 .contentType(MediaType.APPLICATION_JSON)
                 )
@@ -172,6 +174,9 @@ public class UserControllerApiV1Test {
     public void testUserDeleteByIdSuccess() throws Exception {
         mockMvc.perform(
                         RestDocumentationRequestBuilders.delete("/v1/users/{id}", 1)
+                                .header("X-User-Id", "1")
+                                .header("X-User-Role", "MASTER")
+                                .header("X-User-Name", "testuser")
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -201,6 +206,9 @@ public class UserControllerApiV1Test {
     public void tesStoreReservationGetByIdSuccess() throws Exception {
         mockMvc.perform(
                         RestDocumentationRequestBuilders.get("/v1/users/{id}/store-reservation",1)
+                                .header("X-User-Id", "1")
+                                .header("X-User-Role", "MASTER")
+                                .header("X-User-Name", "testuser")
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -233,6 +241,9 @@ public class UserControllerApiV1Test {
     public void tesProductReservationGetByIdSuccess() throws Exception {
         mockMvc.perform(
                         RestDocumentationRequestBuilders.get("/v1/users/{id}/product-reservation",1)
+                                .header("X-User-Id", "1")
+                                .header("X-User-Role", "MASTER")
+                                .header("X-User-Name", "testuser")
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -261,4 +272,3 @@ public class UserControllerApiV1Test {
     }
 
 }
-*/
