@@ -338,7 +338,6 @@ public class ProductReservationControllerApiV1Test {
                         .storeId(testStoreId)
                         .quantity(1)
                         .status(status)
-                        .createdBy(testUserId) // 회원 기능 구현 전 임시로 해둠. 엔티티에서 생성자 나중에 수정 필요
                         .build()
         );
     }

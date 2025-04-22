@@ -19,7 +19,7 @@ public class ProductReservationEntity extends BaseEntity {
 
     @Builder
     public ProductReservationEntity(UUID productId, Long userId, UUID storeId, Integer quantity,
-                                    ProductReservationStatus status, Long createdBy) {
+                                    ProductReservationStatus status) {
         this.productId = productId;
         this.userId = userId;
         this.storeId = storeId;

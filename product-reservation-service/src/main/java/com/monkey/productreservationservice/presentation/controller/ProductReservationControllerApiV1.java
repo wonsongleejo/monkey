@@ -35,9 +35,9 @@ public class ProductReservationControllerApiV1 {
     // 예약 취소
     @PostMapping("/{productReservationId}/cancel")
     public ResponseEntity<ResDTO<ResProductReservationPostByIdCancelDTOApiV1>> cancelBy(
-            @PathVariable UUID productReservationId
+            @PathVariable UUID productReservationId,
+            @RequestHeader("X-User-Id") long userId
     ) {
-        long userId = 123L; // 회원 기능 구현 전 임시
         ResProductReservationPostByIdCancelDTOApiV1 resDto = productReservationService.cancelBy(productReservationId, userId);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
