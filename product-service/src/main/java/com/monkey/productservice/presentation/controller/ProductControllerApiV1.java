@@ -25,6 +25,7 @@ public class ProductControllerApiV1 {
     // 상품 등록
     @PostMapping
     public ResponseEntity<ResDTO<ResProductPostDTOApiV1>> postBy(
+            @RequestHeader("X-User-Id") Long userId,
             @RequestBody @Valid ReqProductPostDTOApiV1 reqDto
             ) {
         ResProductPostDTOApiV1 resDto = productServiceApiV1.postBy(reqDto);
@@ -35,6 +36,7 @@ public class ProductControllerApiV1 {
     @PutMapping("/{productId}")
     public ResponseEntity<ResDTO<ResProductPutDTOApiV1>> putBy(
             @PathVariable UUID productId,
+            @RequestHeader("X-User-Id") Long userId,
             @RequestBody @Valid ReqProductPutDTOApiV1 reqDto
     ) {
         ResProductPutDTOApiV1 resDto = productServiceApiV1.putBy(productId, reqDto);
@@ -57,8 +59,8 @@ public class ProductControllerApiV1 {
 
     // 상품 삭제
     @DeleteMapping("/{productId}")
-    public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID productId) {
-        productServiceApiV1.deleteById(productId);
+    public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID productId, @RequestHeader("X-User-Id") Long userId) {
+        productServiceApiV1.deleteById(productId, userId);
         return new ResponseEntity<>(ResDTO.success(null), HttpStatus.OK);
     }
 }
