@@ -33,6 +33,7 @@ public class ResStoreGetDTOApiV1 {
   public static class Store {
 
     private UUID storeId;
+    private Long storeManagerId;
     private String storeName;
     private String description;
     private StoreEntity.OpenStatus openStatus;
@@ -44,6 +45,7 @@ public class ResStoreGetDTOApiV1 {
 
     public static Store from(StoreEntity storeEntity) {
       return Store.builder()
+          .storeManagerId(storeEntity.getStoreManagerId())
           .storeId(storeEntity.getStoreId())
           .storeName(storeEntity.getStoreName())
           .description(storeEntity.getDescription())
