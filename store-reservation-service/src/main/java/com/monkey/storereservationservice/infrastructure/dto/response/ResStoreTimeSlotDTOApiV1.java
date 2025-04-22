@@ -14,18 +14,26 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class ResStoreTimeSlotDTOApiV1 {
-    private UUID timeSlotId;
-    private StoreInfo store;
-    private LocalDate date;
-    private LocalTime entryTime;
-    private LocalTime exitTime;
+    private Data data;
 
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
-    public static class StoreInfo {
+    public static class Data {
+        private StoreTimeSlot storeTimeSlot;
+    }
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class StoreTimeSlot {
+        private UUID timeSlotId;
         private UUID storeId;
-        private String storeName;
+        private LocalDate slotDate;
+        private LocalTime entryTime;
+        private LocalTime exitTime;
+        private Integer maxPerson;
     }
 }
