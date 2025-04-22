@@ -35,4 +35,4 @@ eureka:
     prefer-ip-address: true
 
 slack:
-  bot-token:
+  bot-token: ${SLACK_BOT_TOKEN}

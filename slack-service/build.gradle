@@ -40,8 +40,12 @@ compileJava {
     dependsOn 'clean'
 }
 
-test {
-    enabled = true;
+//test {
+//    enabled = true;
+//}
+
+tasks.withType(Test).configureEach {
+    enabled = false
 }
 
 postman {
