@@ -65,6 +65,11 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
         UserEntity userEntity = userRepository.findByUsername(reqDto.getUser().getUsername())
                 .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
 
+        // 탈퇴한 회원 체크
+        if(userEntity.isDeleted()){
+            throw new CustomException(ResponseCode.USER_NOT_FOUND);
+        }
+
         // 비밀번호가 일치하는지 확인
         if(!passwordEncoder.matches(reqDto.getUser().getPassword(), userEntity.getPassword())) {
             throw new CustomException(ResponseCode.PASSWORD_MISMATCH);
@@ -92,7 +97,6 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
                 .build();
 
         if (refreshTokenRepository.existRefreshTokenByUsername(userEntity.getUsername())) {
-
             RefreshTokenEntity userRefreshToken = refreshTokenRepository
                     .findByUsername(userEntity.getUsername())
                     .orElse(null);
@@ -102,7 +106,6 @@ public class AuthServiceImplApiV1 implements AuthServiceApiV1 {
         } else {
             refreshTokenRepository.save(refreshEntity);
         }
-
 
         return ResAuthPostSignInDTOApiV1.of(accessToken, refreshToken);
     }
