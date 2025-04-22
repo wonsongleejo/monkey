@@ -19,6 +19,14 @@ public class ResStoreReservationClientGetDTOApiV1 {
     @AllArgsConstructor
     @Builder
     public static class StoreReservation {
-        private Long userId;
+        private User user;
+
+        @Getter
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
+        public static class User {
+            private long userId;
+        }
     }
 }
