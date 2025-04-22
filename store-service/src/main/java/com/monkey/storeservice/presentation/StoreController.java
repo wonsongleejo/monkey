@@ -27,8 +27,7 @@ public class StoreController {
   public ResponseEntity<ResDTO<ResStorePostDTOApiV1>> postBy(
       @RequestHeader("X-User-Id") Long storeManagerId,
       @RequestHeader("X-User-Role") String role,
-      @RequestBody @Valid ReqStorePostDTOApiV1 reqDto
-  ) {
+      @RequestBody @Valid ReqStorePostDTOApiV1 reqDto) {
 
     ResStorePostDTOApiV1 resDto = storeServiceApiV1.postBy(reqDto,storeManagerId,role);
 
