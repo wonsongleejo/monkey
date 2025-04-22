@@ -8,6 +8,7 @@ import com.monkey.storereservationservice.application.dto.response.ResStoreReser
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPostDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPutByIdStatusDTOApiV1;
 import com.monkey.storereservationservice.application.service.StoreReservationServiceApiV1;
+import com.monkey.storereservationservice.infrastructure.security.UserContext;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,44 +23,29 @@ import java.util.UUID;
 public class StoreReservationControllerApiV1 {
 
     private final StoreReservationServiceApiV1 storeReservationServiceApiV1;
+    private final UserContext userContext;
 
     // 예약 생성
     @PostMapping
     public ResponseEntity<ResDTO<ResStoreReservationPostDTOApiV1>> postBy(@Valid @RequestBody ReqStoreReservationPostDTOApiV1 request) {
-
-        ResStoreReservationPostDTOApiV1 resDto = storeReservationServiceApiV1.create(request);
-
-        return new ResponseEntity<>(
-                ResDTO.success(resDto),
-                HttpStatus.OK
-        );
+        ResStoreReservationPostDTOApiV1 resDto = storeReservationServiceApiV1.create(request, userContext);
+        return ResponseEntity.ok(ResDTO.success(resDto));
     }
 
     // 예약 전체 목록 조회
     @GetMapping
     public ResponseEntity<ResDTO<ResStoreReservationGetDTOApiV1>> getAll(
-            @RequestParam(required = false) Long userId,
             @RequestParam(required = false) UUID storeId
     ) {
-        ResStoreReservationGetDTOApiV1 resDto = storeReservationServiceApiV1.getAll(userId, storeId);
-
-        return new ResponseEntity<>(
-                ResDTO.success(resDto),
-                HttpStatus.OK
-        );
+        ResStoreReservationGetDTOApiV1 resDto = storeReservationServiceApiV1.getAll(userContext, storeId);
+        return ResponseEntity.ok(ResDTO.success(resDto));
     }
 
     // 예약 단건 상세 조회
     @GetMapping("/{storeReservationId}")
-    public ResponseEntity<ResDTO<ResStoreReservationGetByIdDTOApiV1>> getById(
-            @PathVariable UUID storeReservationId
-    ) {
-        ResStoreReservationGetByIdDTOApiV1 resDto = storeReservationServiceApiV1.getById(storeReservationId);
-
-        return new ResponseEntity<>(
-                ResDTO.success(resDto),
-                HttpStatus.OK
-        );
+    public ResponseEntity<ResDTO<ResStoreReservationGetByIdDTOApiV1>> getById(@PathVariable UUID storeReservationId) {
+        ResStoreReservationGetByIdDTOApiV1 resDto = storeReservationServiceApiV1.getById(userContext, storeReservationId);
+        return ResponseEntity.ok(ResDTO.success(resDto));
     }
 
     // 예약 상태 변경
@@ -69,13 +55,10 @@ public class StoreReservationControllerApiV1 {
             @Valid @RequestBody ReqStoreReservationPutByIdStatusDTOApiV1 request
     ) {
         ResStoreReservationPutByIdStatusDTOApiV1 resDto = storeReservationServiceApiV1.changeStatus(
+                userContext,
                 storeReservationId,
                 request.getStoreReservation().getStatus()
         );
-
-        return new ResponseEntity<>(
-                ResDTO.success(resDto),
-                HttpStatus.OK
-        );
+        return ResponseEntity.ok(ResDTO.success(resDto));
     }
 }
