@@ -1,6 +1,7 @@
 package com.monkey.gateway.filter;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -89,11 +90,19 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
             byte[] decodedKey = Base64.getDecoder().decode(jwtSecret);
             SecretKey key = Keys.hmacShaKeyFor(decodedKey);
 
-            return Jwts.parser()
+            Claims claims = Jwts.parser()
                     .verifyWith(key)
                     .build()
                     .parseSignedClaims(jwt)
                     .getPayload();
+
+            // Access 토큰인지 확인
+            String tokenType = claims.get("type", String.class);
+            if (!"ACCESS".equals(tokenType)) {
+                throw new JwtException("유효하지 않은 토큰 타입입니다.");
+            }
+
+            return claims;
 
         } catch (Exception e) {
             log.error("JWT 검증 오류: {}", e.getMessage());

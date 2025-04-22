@@ -57,13 +57,21 @@ public class AuthControllerApiV1 {
     public ResponseEntity<ResDTO<ResAuthPostRefreshDTOApiV1>> refreshBy(
             @RequestHeader("X-User-Name") String username
     ) {
+        // refresh 토큰 검증 및 새 access 토큰 발급
+        ResAuthPostRefreshDTOApiV1 resDto = authService.refreshBy(username);
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        String AUTHORIZATION_PREFIX = "Bearer ";
+        httpHeaders.set(HttpHeaders.AUTHORIZATION, AUTHORIZATION_PREFIX + resDto.getAccessJwt());
+        httpHeaders.set("refresh-token", resDto.getRefreshJwt());
 
         return new ResponseEntity<>(
                 ResDTO.<ResAuthPostRefreshDTOApiV1>builder()
                         .code("000")
                         .message("토큰이 재발급되었습니다.")
-                        .data(authService.refreshBy(username))
+                        .data(resDto)
                         .build(),
+                httpHeaders,
                 HttpStatus.OK
         );
     }
