@@ -33,12 +33,4 @@ public class ProductEntity extends BaseEntity {
 
     @Column(nullable = false)
     private Integer purchaseLimitPerUser;
-
-    // 엔티티는 DTO랑 직접적으로 연결되면 안됨. 도메인 계층은 순수해야 함
-//    public ProductEntity(ReqProductPostDTOApiV1.Product productDto) {
-//        this.storeId = productDto.getStoreId();
-//        this.productName = productDto.getProductName();
-//        this.price = productDto.getPrice();
-//        this.quantity = productDto.getQuantity();
-//    }
 }

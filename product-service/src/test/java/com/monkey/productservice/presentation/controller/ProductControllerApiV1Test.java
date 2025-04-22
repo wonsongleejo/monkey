@@ -4,6 +4,7 @@ import com.epages.restdocs.apispec.ResourceSnippetParameters;
 import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.common_module.dto.ResDTO;
+import com.monkey.common_module.entity.AuditorAwareImpl;
 import com.monkey.productservice.ProductServiceApplication;
 import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.request.ReqProductPutDTOApiV1;
@@ -12,6 +13,7 @@ import com.monkey.productservice.domain.entity.ProductEntity;
 import com.monkey.productservice.infrastructure.feignclient.StoreFeignClientApiV1;
 import com.monkey.productservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import com.monkey.productservice.infrastructure.persistence.ProductJpaRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
@@ -55,6 +57,11 @@ public class ProductControllerApiV1Test {
     @Autowired
     private StoreFeignClientApiV1 storeClient;
 
+    @BeforeEach
+    void setupUserId() {
+        AuditorAwareImpl.setCurrentAuditor(123L);
+    }
+
     // 상품 등록
     @Test
     public void testProductPostSuccess() throws Exception {
@@ -75,6 +82,7 @@ public class ProductControllerApiV1Test {
         mockMvc.perform(
                         RestDocumentationRequestBuilders.post("/v1/products")
 //                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
+                                .header("X-User-Id", 123L)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(reqDtoJson)
                 )
@@ -141,6 +149,7 @@ public class ProductControllerApiV1Test {
         mockMvc.perform(
                 RestDocumentationRequestBuilders.put("/v1/products/{productId}", saved.getProductId())
 //                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
+                        .header("X-User-Id", 123L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(reqDtoJson)
                 )

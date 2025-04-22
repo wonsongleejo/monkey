@@ -27,9 +27,7 @@ public class ProductServiceApiV1 {
     // 상품 등록
     public ResProductPostDTOApiV1 postBy(ReqProductPostDTOApiV1 reqDto) {
         ProductEntity productEntity = reqDto.getProduct().toEntity();
-        ProductEntity savedProductEntity = productRepository.save(productEntity);
-
-        return ResProductPostDTOApiV1.of(savedProductEntity);
+        return ResProductPostDTOApiV1.of(productRepository.save(productEntity));
     }
 
     // 상품 수정
@@ -63,9 +61,9 @@ public class ProductServiceApiV1 {
     }
 
     // 상품 삭제
-    public void deleteById(UUID productId) {
+    public void deleteById(UUID productId, Long userId) {
         ProductEntity productEntity = getActiveProductById(productId);
-        productEntity.delete(123L); // 추후에 인증 유저 ID로 교체해야됨
+        productEntity.delete(userId);
         productRepository.save(productEntity);
     }
 
