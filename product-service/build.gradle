@@ -39,6 +39,8 @@ compileJava {
 
 test {
     enabled = true;
+    useJUnitPlatform()
+    systemProperty 'spring.profiles.active', 'test'
 }
 
 postman {
