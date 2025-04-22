@@ -216,11 +216,22 @@ public class StoreReservationControllerApiV1Test {
                 );
     }
 
-    // 예약 취소
     @Test
-    public void testStoreReservationCancelSuccess() throws Exception {
+    public void testStoreReservationStatusUpdateSuccess() throws Exception {
+        // given
+        StoreReservationStatus newStatus = StoreReservationStatus.VISITED;
+        String requestJson = """
+        {
+            "storeReservation": {
+                "status": "%s"
+            }
+        }
+        """.formatted(newStatus.name());
+
         mockMvc.perform(
-                        RestDocumentationRequestBuilders.post("/v1/store-reservations/{reservationId}/cancel", savedId)
+                        RestDocumentationRequestBuilders.put("/v1/store-reservations/{reservationId}/status", savedId)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(requestJson)
                 )
                 .andExpectAll(
                         MockMvcResultMatchers.status().isOk(),
@@ -228,13 +239,16 @@ public class StoreReservationControllerApiV1Test {
                 )
                 .andDo(
                         document(
-                                "STORE-RESERVATION 예약 취소 성공",
+                                "STORE-RESERVATION 예약 상태 변경 성공",
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 resource(ResourceSnippetParameters.builder()
                                         .tag("STORE-RESERVATION v1")
-                                        .summary("팝업스토어 예약 취소")
-                                        .description("storeReservationID로 예약을 취소합니다.")
+                                        .summary("팝업스토어 예약 상태 변경")
+                                        .description("storeReservationID로 예약 상태를 변경합니다.")
+                                        .requestFields(
+                                                fieldWithPath("storeReservation.status").type(JsonFieldType.STRING).description("변경할 예약 상태 (예: SCHEDULED, CANCELED, VISITED, NO_SHOW)")
+                                        )
                                         .responseFields(
                                                 fieldWithPath("code").type(JsonFieldType.STRING).description("응답 코드"),
                                                 fieldWithPath("message").type(JsonFieldType.STRING).description("응답 메시지"),
