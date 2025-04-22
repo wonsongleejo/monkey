@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 @Service
 @RequiredArgsConstructor
@@ -23,9 +24,17 @@ public class StoreServiceImplApiV1 implements StoreServiceApiV1{
 
   // 팝업스토어 등록
   @Override
-  public ResStorePostDTOApiV1 postBy(ReqStorePostDTOApiV1 reqDto) {
+  public ResStorePostDTOApiV1 postBy(ReqStorePostDTOApiV1 reqDto,Long storeManagerId,String role) {
+
+    // 헤더에서 role을 받아서 권한체크 ( 아무나 만들 수 없게 하기 위함)
+    if(!"MANAGER".equals(role)) {
+      throw new CustomException(ResponseCode.TOKEN_MISMATCH);
+    }
 
     StoreEntity storeEntity = reqDto.getStore().toEntity();
+
+    // 헤더에서 storeManagerId를 받아서 등록
+    storeEntity.setStoreManagerId(storeManagerId);
 
     StoreEntity saved = storeRepository.save(storeEntity);
 
@@ -34,10 +43,21 @@ public class StoreServiceImplApiV1 implements StoreServiceApiV1{
 
   //팝업스토어 수정
   @Override
-  public ResStorePutDTOApiV1 putById(UUID storeId, ReqStorePutDTOApiV1 reqDto) {
+  public ResStorePutDTOApiV1 putById(UUID storeId, ReqStorePutDTOApiV1 reqDto,Long storeManagerId,String role) {
 
+    // 수정할 수 있는 storeId가 존재 하는지
     StoreEntity storeEntity = storeRepository.findById(storeId)
-            .orElseThrow(()->new CustomException(ResponseCode.NOT_FOUND));
+            .orElseThrow(()->new CustomException(ResponseCode.STORE_NOT_FOUND));
+
+    // 헤더에서 role을 받아서 권한체크 (아무나 수정 x)
+    if (!"MANAGER".equals(role)) {
+      throw new CustomException(ResponseCode.TOKEN_MISMATCH); // or ROLE_UNAUTHORIZED
+    }
+
+    // 헤더에서 storeManagerId를 받아서 자기의 스토어인지 확인
+    if(!storeEntity.getStoreManagerId().equals(storeManagerId)) {
+      throw new CustomException(ResponseCode.TOKEN_MISMATCH);
+    }
 
     reqDto.getStore().update(storeEntity);
 

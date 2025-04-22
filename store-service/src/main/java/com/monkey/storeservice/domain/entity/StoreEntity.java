@@ -28,6 +28,9 @@ public class StoreEntity extends BaseEntity {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID storeId;
 
+  @Column(name = "store_manager_id")
+  private Long storeManagerId;
+
   @Column(name = "store_name", length = 255, nullable = false)
   private String storeName;
 
