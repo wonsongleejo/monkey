@@ -56,13 +56,15 @@ public class ProductReservationReadValidator {
     }
 
     // 유저 확인
-    public ResUserClientGetByIdDTOApiV1 validateUser(long userId) {
+    public ResUserClientGetByIdDTOApiV1.User validateUser(long userId) {
         try {
             var userResponse = userClient.getUserById(userId);
             var user = userResponse != null ? userResponse.getData() : null;
 
-            if (user == null) throw new CustomException(ResponseCode.USER_NOT_FOUND);
-            return user;
+            if (user == null || user.getUser() == null) {
+                throw new CustomException(ResponseCode.USER_NOT_FOUND);
+            }
+            return user.getUser();
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {

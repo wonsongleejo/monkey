@@ -25,9 +25,9 @@ public class ProductReservationControllerApiV1 {
     @PostMapping("/{productId}")
     public ResponseEntity<ResDTO<ResProductReservationPostDTOApiV1>> postBy(
             @RequestBody @Valid ReqProductReservationPostDTOApiV1 reqDto,
-            @PathVariable UUID productId
+            @PathVariable UUID productId,
+            @RequestHeader("X-User-Id") long userId
             ) {
-        long userId = 123L; // 추후에 인증된 정보에서 받아오기
         ResProductReservationPostDTOApiV1 resDto = productReservationService.postBy(reqDto, productId, userId);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
@@ -35,9 +35,9 @@ public class ProductReservationControllerApiV1 {
     // 예약 취소
     @PostMapping("/{productReservationId}/cancel")
     public ResponseEntity<ResDTO<ResProductReservationPostByIdCancelDTOApiV1>> cancelBy(
-            @PathVariable UUID productReservationId
+            @PathVariable UUID productReservationId,
+            @RequestHeader("X-User-Id") long userId
     ) {
-        long userId = 123L; // 회원 기능 구현 전 임시
         ResProductReservationPostByIdCancelDTOApiV1 resDto = productReservationService.cancelBy(productReservationId, userId);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }

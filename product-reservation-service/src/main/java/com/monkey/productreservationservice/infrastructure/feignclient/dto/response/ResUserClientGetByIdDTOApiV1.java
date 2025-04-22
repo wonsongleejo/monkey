@@ -10,6 +10,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class ResUserClientGetByIdDTOApiV1 {
-    private Long userId;
-    private String username;
+    private User user;
+
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    public static class User {
+        private Long userId;
+        private String username;
+    }
 }

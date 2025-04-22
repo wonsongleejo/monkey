@@ -23,7 +23,7 @@ public class ResProductReservationGetByIdDTOApiV1 {
     public static ResProductReservationGetByIdDTOApiV1 of(ProductReservationEntity productReservationEntity,
                                                           ResProductClientGetByIdDTOApiV1.Product productDto,
                                                           ResStoreClientGetByIdDTOApiV1.Store storeDto,
-                                                          ResUserClientGetByIdDTOApiV1 userDto
+                                                          ResUserClientGetByIdDTOApiV1.User userDto
                                                           ) {
         return ResProductReservationGetByIdDTOApiV1.builder()
                 .productReservation(ProductReservation.from(productReservationEntity, productDto, storeDto, userDto))
@@ -47,7 +47,7 @@ public class ResProductReservationGetByIdDTOApiV1 {
                 ProductReservationEntity productReservationEntity,
                 ResProductClientGetByIdDTOApiV1.Product productDto,
                 ResStoreClientGetByIdDTOApiV1.Store storeDto,
-                ResUserClientGetByIdDTOApiV1 userDto
+                ResUserClientGetByIdDTOApiV1.User userDto
                 ) {
             return ProductReservation.builder()
                     .productReservationId(productReservationEntity.getProductReservationId())
@@ -101,7 +101,7 @@ public class ResProductReservationGetByIdDTOApiV1 {
             private long userId;
             private String userName;
 
-            public static User from(ResUserClientGetByIdDTOApiV1 userDto) {
+            public static User from(ResUserClientGetByIdDTOApiV1.User userDto) {
                 return User.builder()
                         .userId(userDto.getUserId())
                         .userName(userDto.getUsername())
