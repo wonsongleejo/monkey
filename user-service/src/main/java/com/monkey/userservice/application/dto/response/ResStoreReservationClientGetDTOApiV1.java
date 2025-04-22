@@ -24,10 +24,10 @@ public class ResStoreReservationClientGetDTOApiV1 {
         @Getter
         @Builder
         public static class StoreReservation {
-            private Long userId;
             private UUID storeReservationId;
             private String visitStatus;
             private TimeSlot timeSlot;
+            private User user;
 
             @Getter
             @Builder
@@ -42,6 +42,13 @@ public class ResStoreReservationClientGetDTOApiV1 {
                 public static class Store {
                     private UUID storeId;
                 }
+            }
+
+            @Getter
+            @Builder
+            public static class User {
+                private Long userId;
+                private String userName;
             }
         }
     }
