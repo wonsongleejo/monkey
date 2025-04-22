@@ -20,30 +20,40 @@ spring:
 
         # Store-service
         - id: store-service
+          filters:
+            - AuthorizationHeaderFilter
           uri: lb://store-service
           predicates:
             - Path=/v1/stores/**,/v1/timeslots/**, /springdoc/openapi3-store-service.json
 
         # Store-reservation-service
         - id: store-reservation-service
+          filters:
+            - AuthorizationHeaderFilter
           uri: lb://store-reservation-service
           predicates:
             - Path=/v1/store-reservations/**, /springdoc/openapi3-store-reservation-service.json
 
         # Product
         - id: product-service
+          filters:
+            - AuthorizationHeaderFilter
           uri: lb://product-service
           predicates:
             - Path=/v1/products/**, /springdoc/openapi3-product-service.json
 
         # Product-reservation-service
         - id: product-reservation-service
+          filters:
+            - AuthorizationHeaderFilter
           uri: lb://product-reservation-service
           predicates:
             - Path=/v1/product-reservations/**, /springdoc/openapi3-product-reservation-service.json
 
         # Slack
         - id: slack-service
+          filters:
+            - AuthorizationHeaderFilter
           uri: lb://slack-service
           predicates:
             - Path=/v1/slacks/**, /springdoc/openapi3-slack-service.json
