@@ -122,4 +122,59 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
         entity.changeStatus(status);
         return ResStoreReservationPutByIdStatusDTOApiV1.from(storeReservationRepository.save(entity));
     }
+
+    // feignClient: 상품 예약 시 스토어 예약내역 전체 조회 -> 스토어 예약한 회원인지 확인
+    @Override
+    public ResStoreReservationGetDTOApiV1 getAllByUserIdAndStoreId(Long userId, UUID storeId) {
+        List<ResStoreReservationGetDTOApiV1.StoreReservation> list = storeReservationRepository.findAll().stream()
+                .filter(res -> res.getUserId().equals(userId)) // userId 기준 필터링
+                .map(entity -> {
+                    try {
+                        ResStoreTimeSlotDTOApiV1 timeSlotResponse = storeClient.getTimeSlotById(entity.getTimeSlotId());
+                        if (timeSlotResponse == null || timeSlotResponse.getData() == null) {
+                            throw new RuntimeException("TimeSlot not found: " + entity.getTimeSlotId());
+                        }
+
+                        ResStoreTimeSlotDTOApiV1.StoreTimeSlot timeSlot = timeSlotResponse.getData().getStoreTimeSlot();
+
+                        return ResStoreReservationGetDTOApiV1.StoreReservation.builder()
+                                .storeReservationId(entity.getStoreReservationId())
+                                .status(entity.getStatus())
+                                .timeSlot(
+                                        ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.builder()
+                                                .store(
+                                                        ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.Store.builder()
+                                                                .storeId(timeSlot.getStoreId())
+                                                                .build()
+                                                )
+                                                .date(timeSlot.getSlotDate())
+                                                .entryTime(timeSlot.getEntryTime())
+                                                .exitTime(timeSlot.getExitTime())
+                                                .build()
+                                )
+                                .user(
+                                        ResStoreReservationGetDTOApiV1.StoreReservation.User.builder()
+                                                .userId(userId)
+                                                .userName("unknown") // 필요시 FeignClient로 조회 가능
+                                                .build()
+                                )
+                                .build();
+                    } catch (Exception e) {
+                        return null;
+                    }
+                })
+                .filter(res ->
+                        res != null &&
+                                res.getTimeSlot() != null &&
+                                res.getTimeSlot().getStore() != null &&
+                                res.getTimeSlot().getStore().getStoreId().equals(storeId)
+                )
+                .toList();
+
+        return ResStoreReservationGetDTOApiV1.builder()
+                .storeReservationList(list)
+                .build();
+    }
+
+
 }

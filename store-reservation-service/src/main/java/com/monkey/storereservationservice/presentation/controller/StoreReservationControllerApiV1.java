@@ -61,4 +61,14 @@ public class StoreReservationControllerApiV1 {
         );
         return ResponseEntity.ok(ResDTO.success(resDto));
     }
+
+    // feignClient: 상품 예약 시 스토어 예약내역 전체 조회 -> 스토어 예약한 회원인지 확인
+    @GetMapping("/feign")
+    public ResponseEntity<ResDTO<ResStoreReservationGetDTOApiV1>> getAllByUserIdAndStoreId(
+            @RequestParam UUID storeId,
+            @RequestParam Long userId
+    ) {
+        ResStoreReservationGetDTOApiV1 resDto = storeReservationServiceApiV1.getAllByUserIdAndStoreId(userId, storeId);
+        return ResponseEntity.ok(ResDTO.success(resDto));
+    }
 }

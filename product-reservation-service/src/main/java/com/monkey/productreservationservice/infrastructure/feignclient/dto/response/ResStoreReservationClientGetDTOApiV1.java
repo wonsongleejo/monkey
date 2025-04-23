@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @NoArgsConstructor
@@ -19,14 +20,32 @@ public class ResStoreReservationClientGetDTOApiV1 {
     @AllArgsConstructor
     @Builder
     public static class StoreReservation {
+        private UUID storeReservationId;
+        private TimeSlot timeSlot;
         private User user;
 
         @Getter
         @NoArgsConstructor
         @AllArgsConstructor
         @Builder
+        public static class TimeSlot {
+            private Store store;
+
+            @Getter
+            @NoArgsConstructor
+            @AllArgsConstructor
+            @Builder
+            public static class Store {
+                private UUID storeId;
+            }
+        }
+
+        @Getter
+        @NoArgsConstructor
+        @AllArgsConstructor
+        @Builder
         public static class User {
-            private long userId;
+            private Long userId;
         }
     }
 }
