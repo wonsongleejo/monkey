@@ -3,6 +3,8 @@ package com.monkey.productservice.infrastructure.persistence;
 import com.monkey.productservice.domain.entity.ProductEntity;
 import com.monkey.productservice.domain.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,5 +29,10 @@ public class ProductRepositoryImpl implements ProductRepository {
     @Override
     public List<ProductEntity> findAllByIsDeletedFalse() {
         return productJpaRepository.findAllByIsDeletedFalse();
+    }
+
+    @Override
+    public Page<ProductEntity> findAllByIsDeletedFalse(Pageable pageable) {
+        return productJpaRepository.findAllByIsDeletedFalse(pageable);
     }
 }

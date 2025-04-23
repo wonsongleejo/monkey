@@ -13,9 +13,10 @@ import com.monkey.productservice.domain.repository.ProductRepository;
 import com.monkey.productservice.infrastructure.feignclient.StoreFeignClientApiV1;
 import com.monkey.productservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -41,9 +42,9 @@ public class ProductServiceApiV1 {
     }
 
     // 상품 전체 조회
-    public ResProductGetDTOApiV1 getBy() {
-        List<ProductEntity> productList = productRepository.findAllByIsDeletedFalse();
-        return ResProductGetDTOApiV1.of(productList);
+    public ResProductGetDTOApiV1 getBy(Pageable pageable) {
+        Page<ProductEntity> productPage = productRepository.findAllByIsDeletedFalse(pageable);
+        return ResProductGetDTOApiV1.of(productPage);
     }
 
     // 상품 단건 조회

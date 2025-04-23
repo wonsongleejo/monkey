@@ -16,9 +16,10 @@ import com.monkey.productreservationservice.infrastructure.feignclient.dto.respo
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -57,9 +58,9 @@ public class ProductReservationServiceApiV1 {
     }
 
     // 예약내역 전체 조회
-    public ResProductReservationGetDTOApiV1 getBy() {
-        List<ProductReservationEntity> productReservationList = productReservationRepository.findAllByIsDeletedFalse();
-        return ResProductReservationGetDTOApiV1.of(productReservationList);
+    public ResProductReservationGetDTOApiV1 getBy(Pageable pageable) {
+        Page<ProductReservationEntity> productReservationPage = productReservationRepository.findAllByIsDeletedFalse(pageable);
+        return ResProductReservationGetDTOApiV1.of(productReservationPage);
     }
 
     // 예약내역 단건 조회

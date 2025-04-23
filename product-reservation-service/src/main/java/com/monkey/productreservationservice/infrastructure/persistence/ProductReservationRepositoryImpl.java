@@ -3,6 +3,8 @@ package com.monkey.productreservationservice.infrastructure.persistence;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
 import com.monkey.productreservationservice.domain.repository.ProductReservationRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,6 +29,11 @@ public class ProductReservationRepositoryImpl implements ProductReservationRepos
     @Override
     public List<ProductReservationEntity> findAllByIsDeletedFalse() {
         return productReservationJpaRepository.findAllByIsDeletedFalse();
+    }
+
+    @Override
+    public Page<ProductReservationEntity> findAllByIsDeletedFalse(Pageable pageable) {
+        return productReservationJpaRepository.findAllByIsDeletedFalse(pageable);
     }
 
     @Override
