@@ -5,7 +5,6 @@ import com.monkey.productreservationservice.infrastructure.feignclient.dto.respo
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 @FeignClient(name = "user-service", path = "v1/users")

@@ -27,14 +27,15 @@ public class ProductReservationRepositoryImpl implements ProductReservationRepos
     }
 
     @Override
-    public List<ProductReservationEntity> findAllByIsDeletedFalse() {
-        return productReservationJpaRepository.findAllByIsDeletedFalse();
-    }
-
-    @Override
     public Page<ProductReservationEntity> findAllByIsDeletedFalse(Pageable pageable) {
         return productReservationJpaRepository.findAllByIsDeletedFalse(pageable);
     }
+
+    @Override
+    public Page<ProductReservationEntity> findByUserIdAndIsDeletedFalse(long userId, Pageable pageable) {
+        return productReservationJpaRepository.findByUserIdAndIsDeletedFalse(userId, pageable);
+    }
+
 
     @Override
     public boolean existsByUserIdAndProductIdAndIsDeletedFalse(long userId, UUID productId) {

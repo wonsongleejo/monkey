@@ -74,6 +74,13 @@ public class ProductReservationServiceApiV1 {
         return ResProductReservationGetByIdDTOApiV1.of(productReservation, resProduct, resStore, resUser);
     }
 
+    // 개인 예약내역 조회
+    public ResProductReservationGetDTOApiV1 getByUserId(long userId, Pageable pageable) {
+        Page<ProductReservationEntity> productReservationPage =
+                productReservationRepository.findByUserIdAndIsDeletedFalse(userId, pageable);
+        return ResProductReservationGetDTOApiV1.of(productReservationPage);
+    }
+
     // 존재하는 예약 검증 메서드
     private ProductReservationEntity getActiveProductReservationById(UUID productReservationId) {
         return productReservationRepository.findByProductReservationIdAndIsDeletedFalse(productReservationId)

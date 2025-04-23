@@ -56,4 +56,16 @@ public class ProductReservationControllerApiV1 {
         ResProductReservationGetByIdDTOApiV1 resDto = productReservationService.getById(productReservationId);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
+
+    // 개인 예약내역 조회
+    @GetMapping("/my")
+    public ResponseEntity<ResDTO<ResProductReservationGetDTOApiV1>> getMyProductReservations(
+            @RequestHeader("X-User-Id") long userId,
+            Pageable pageable
+    ) {
+        ResProductReservationGetDTOApiV1 resDto = productReservationService.getByUserId(userId, pageable);
+        return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
+    }
+
+
 }
