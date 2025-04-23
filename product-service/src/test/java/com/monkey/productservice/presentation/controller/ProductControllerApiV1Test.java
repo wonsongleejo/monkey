@@ -271,6 +271,7 @@ public class ProductControllerApiV1Test {
                         MockMvcResultMatchers.status().isOk(),
                         MockMvcResultMatchers.jsonPath("code").value("000"),
                         MockMvcResultMatchers.jsonPath("data.productList").isArray(),
+                        MockMvcResultMatchers.jsonPath("data.pageInfo").exists(),
                         MockMvcResultMatchers.jsonPath("data.productList.length()").value(savedList.size())
                 )
                 .andDo(
@@ -298,7 +299,12 @@ public class ProductControllerApiV1Test {
                                                 fieldWithPath("data.productList[].productName").type(JsonFieldType.STRING).description("상품명"),
                                                 fieldWithPath("data.productList[].price").type(JsonFieldType.NUMBER).description("가격"),
                                                 fieldWithPath("data.productList[].quantity").type(JsonFieldType.NUMBER).description("수량"),
-                                                fieldWithPath("data.productList[].purchaseLimitPerUser").type(JsonFieldType.NUMBER).description("1인당 구매 제한")
+                                                fieldWithPath("data.productList[].purchaseLimitPerUser").type(JsonFieldType.NUMBER).description("1인당 구매 제한"),
+
+                                                fieldWithPath("data.pageInfo.page").type(JsonFieldType.NUMBER).description("현재 페이지 번호"),
+                                                fieldWithPath("data.pageInfo.size").type(JsonFieldType.NUMBER).description("요청한 페이지 사이즈"),
+                                                fieldWithPath("data.pageInfo.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수"),
+                                                fieldWithPath("data.pageInfo.totalElements").type(JsonFieldType.NUMBER).description("전체 상품 개수")
                                         )
                                         .build()
                                 )
