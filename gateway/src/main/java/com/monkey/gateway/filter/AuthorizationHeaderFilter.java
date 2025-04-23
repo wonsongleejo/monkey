@@ -39,7 +39,8 @@ public class AuthorizationHeaderFilter extends AbstractGatewayFilterFactory<Auth
 
             // 특정 경로에 대한 인증 우회
             if (path.equals("/v1/auth/sign-up") || path.equals("/v1/auth/sign-in")
-                    || path.contains("/v3/api-docs")) {
+                    || path.contains("/v3/api-docs") || path.contains("/springdoc")
+            ) {
                 return chain.filter(exchange);
             }
 

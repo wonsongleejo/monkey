@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,7 +25,9 @@ public class JWTFilter extends OncePerRequestFilter {
 
         // 회원가입, 로그인, API 문서 요청은 필터링 대상에서 제외
         String path = request.getRequestURI();
-        if (path.equals("/v1/auth/sign-up") || path.equals("/v1/auth/sign-in") || path.contains("/v3/api-docs")) {
+        if (path.equals("/v1/auth/sign-up") || path.equals("/v1/auth/sign-in")
+                || path.contains("/v3/api-docs") || path.contains("/springdoc")
+        ) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -39,6 +42,19 @@ public class JWTFilter extends OncePerRequestFilter {
             log.warn("인증 헤더 누락 - userId: {}, username: {}, role: {}", userId, username, role);
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "인증 정보가 누락되었습니다.");
             return;
+        }
+
+        // 게이트웨이에서 추가적인 검증을 위해 Authorization 헤더 체크
+        String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            String token = authorizationHeader.substring(7);
+
+            // 명시적인 토큰 만료 체크
+            if (jwtUtil.isExpired(token)) {
+                log.warn("만료된 토큰으로 접근 시도 - userId: {}, username: {}", userId, username);
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "토큰이 만료되었습니다. 재로그인이 필요합니다.");
+                return;
+            }
         }
 
         UserEntity userEntity = UserEntity.builder()
