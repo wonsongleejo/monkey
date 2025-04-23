@@ -50,13 +50,6 @@ public class ProductReservationControllerApiV1 {
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
-    // 예약내역 단건 조회
-    @GetMapping("/{productReservationId}")
-    public ResponseEntity<ResDTO<ResProductReservationGetByIdDTOApiV1>> getById(@PathVariable UUID productReservationId) {
-        ResProductReservationGetByIdDTOApiV1 resDto = productReservationService.getById(productReservationId);
-        return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
-    }
-
     // 개인 예약내역 조회
     @GetMapping("/my")
     public ResponseEntity<ResDTO<ResProductReservationGetDTOApiV1>> getMyProductReservations(
@@ -67,5 +60,10 @@ public class ProductReservationControllerApiV1 {
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
-
+    // 예약내역 단건 조회
+    @GetMapping("/{productReservationId}")
+    public ResponseEntity<ResDTO<ResProductReservationGetByIdDTOApiV1>> getById(@PathVariable UUID productReservationId) {
+        ResProductReservationGetByIdDTOApiV1 resDto = productReservationService.getById(productReservationId);
+        return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
+    }
 }
