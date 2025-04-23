@@ -15,4 +15,5 @@ public interface StoreReservationServiceApiV1 {
     ResStoreReservationGetDTOApiV1 getAll(UserContext userContext, UUID storeId);
     ResStoreReservationGetByIdDTOApiV1 getById(UserContext userContext, UUID storeReservationId);
     ResStoreReservationPutByIdStatusDTOApiV1 changeStatus(UserContext userContext, UUID storeReservationId, StoreReservationStatus status);
+    ResStoreReservationGetDTOApiV1 getAllByUserIdAndStoreId(Long userId, UUID storeId);
 }

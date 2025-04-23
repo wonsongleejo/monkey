@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.UUID;
 
-@FeignClient(name = "store-reservation-service", path = "/v1/store-reservations")
+@FeignClient(name = "store-reservation-service", path = "/v1/store-reservations/feign")
 @Profile("!test")
 public interface StoreReservationFeignClientApiV1 {
     @GetMapping
-    ResDTO<ResStoreReservationClientGetDTOApiV1> getReservationsByUserIdAndStoreId(@RequestParam Long userId, @RequestParam UUID storeId);
+    ResDTO<ResStoreReservationClientGetDTOApiV1> getReservationsByStoreId(@RequestParam UUID storeId, @RequestParam long userId);
 }
