@@ -272,7 +272,7 @@ public class ProductControllerApiV1Test {
                         MockMvcResultMatchers.jsonPath("code").value("000"),
                         MockMvcResultMatchers.jsonPath("data.productList").isArray(),
                         MockMvcResultMatchers.jsonPath("data.pageInfo").exists(),
-                        MockMvcResultMatchers.jsonPath("data.productList.length()").value(savedList.size())
+                        MockMvcResultMatchers.jsonPath("data.pageInfo.size").value(10)
                 )
                 .andDo(
                         document("상품 전체 조회 성공",

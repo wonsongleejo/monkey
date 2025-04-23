@@ -9,6 +9,7 @@ import com.monkey.productreservationservice.application.dto.response.ResProductR
 import com.monkey.productreservationservice.application.service.ProductReservationServiceApiV1;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,8 +45,8 @@ public class ProductReservationControllerApiV1 {
 
     // 예약내역 전체 조회
     @GetMapping
-    public ResponseEntity<ResDTO<ResProductReservationGetDTOApiV1>> getBy() {
-        ResProductReservationGetDTOApiV1 resDto = productReservationService.getBy();
+    public ResponseEntity<ResDTO<ResProductReservationGetDTOApiV1>> getBy(Pageable pageable) {
+        ResProductReservationGetDTOApiV1 resDto = productReservationService.getBy(pageable);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 

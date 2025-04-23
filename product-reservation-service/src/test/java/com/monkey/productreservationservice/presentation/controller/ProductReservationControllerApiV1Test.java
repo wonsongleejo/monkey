@@ -293,7 +293,7 @@ public class ProductReservationControllerApiV1Test {
     // 예약 전체 조회
     @Test
     public void testProductReservationGetSuccess() throws Exception {
-        List<ProductReservationEntity> savedList = productReservationJpaRepository.findAllByIsDeletedFalse();
+        createProductReservation(ProductReservationStatus.PENDING_PICKUP);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders.get("/v1/product-reservations")
@@ -304,7 +304,8 @@ public class ProductReservationControllerApiV1Test {
                         MockMvcResultMatchers.status().isOk(),
                         MockMvcResultMatchers.jsonPath("code").value("000"),
                         MockMvcResultMatchers.jsonPath("data.productReservationList").isArray(),
-                        MockMvcResultMatchers.jsonPath("data.productReservationList.length()").value(savedList.size())
+                        MockMvcResultMatchers.jsonPath("data.pageInfo").exists(),
+                        MockMvcResultMatchers.jsonPath("data.pageInfo.size").value(10)
                 )
                 .andDo(
                         document("상품 예약 전체 조회 성공",
@@ -331,7 +332,12 @@ public class ProductReservationControllerApiV1Test {
                                                 fieldWithPath("data.productReservationList[].userId").type(JsonFieldType.NUMBER).description("유저 ID"),
                                                 fieldWithPath("data.productReservationList[].storeId").type(JsonFieldType.STRING).description("스토어 ID"),
                                                 fieldWithPath("data.productReservationList[].quantity").type(JsonFieldType.NUMBER).description("예약 수량"),
-                                                fieldWithPath("data.productReservationList[].status").type(JsonFieldType.STRING).description("예약 상태")
+                                                fieldWithPath("data.productReservationList[].status").type(JsonFieldType.STRING).description("예약 상태"),
+
+                                                fieldWithPath("data.pageInfo.page").type(JsonFieldType.NUMBER).description("현재 페이지 번호"),
+                                                fieldWithPath("data.pageInfo.size").type(JsonFieldType.NUMBER).description("요청한 페이지 사이즈"),
+                                                fieldWithPath("data.pageInfo.totalPages").type(JsonFieldType.NUMBER).description("총 페이지 수"),
+                                                fieldWithPath("data.pageInfo.totalElements").type(JsonFieldType.NUMBER).description("전체 예약 수")
                                         )
                                         .build()
                                 )
