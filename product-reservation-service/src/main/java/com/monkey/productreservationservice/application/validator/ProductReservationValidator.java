@@ -53,20 +53,26 @@ public class ProductReservationValidator {
     // 스토어 예약여부 확인
     public void validateStoreMember(long userId, UUID storeId) {
         try {
-            var memberResponse = storeReservationClient.getReservationsByUserIdAndStoreId(userId, storeId);
+            var storeResponse = storeReservationClient.getReservationsByStoreId(storeId, userId);
 
-            if(memberResponse == null ||
-                    memberResponse.getData() == null ||
-                    memberResponse.getData().getStoreReservationList() == null ||
-                    memberResponse.getData().getStoreReservationList().isEmpty()) {
+            if (storeResponse == null || storeResponse.getData() == null ||
+                    storeResponse.getData().getStoreReservationList() == null) {
                 throw new CustomException(ResponseCode.NOT_STORE_MEMBER);
             }
-            boolean hasValidUser = memberResponse.getData().getStoreReservationList().stream()
-                    .anyMatch(reservation -> reservation.getUser() != null && reservation.getUser().getUserId() == userId);
 
-            if (!hasValidUser) {
+            boolean matched = storeResponse.getData().getStoreReservationList().stream()
+                    .anyMatch(res ->
+                            res.getUser() != null &&
+                                    res.getUser().getUserId() == userId &&
+                                    res.getTimeSlot() != null &&
+                                    res.getTimeSlot().getStore() != null &&
+                                    res.getTimeSlot().getStore().getStoreId().equals(storeId)
+                    );
+
+            if (!matched) {
                 throw new CustomException(ResponseCode.NOT_STORE_MEMBER);
             }
+
         } catch (CustomException e) {
             throw e;
         } catch (Exception e) {

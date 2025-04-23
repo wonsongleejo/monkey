@@ -97,7 +97,7 @@ public class ProductReservationControllerApiV1Test {
                                 .build()
                 ));
 
-        given(storeReservationClient.getReservationsByUserIdAndStoreId(testUserId, testStoreId))
+        given(storeReservationClient.getReservationsByStoreId(testStoreId, testUserId))
                 .willReturn(ResDTO.success(
                         ResStoreReservationClientGetDTOApiV1.builder()
                                 .storeReservationList(List.of(
@@ -105,6 +105,15 @@ public class ProductReservationControllerApiV1Test {
                                                 .user(
                                                         ResStoreReservationClientGetDTOApiV1.StoreReservation.User.builder()
                                                                 .userId(testUserId)
+                                                                .build()
+                                                )
+                                                .timeSlot(
+                                                        ResStoreReservationClientGetDTOApiV1.StoreReservation.TimeSlot.builder()
+                                                                .store(
+                                                                        ResStoreReservationClientGetDTOApiV1.StoreReservation.TimeSlot.Store.builder()
+                                                                                .storeId(testStoreId)
+                                                                                .build()
+                                                                )
                                                                 .build()
                                                 )
                                                 .build()
