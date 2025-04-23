@@ -80,9 +80,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET,"/v1/users/{userId}/store-reservations").hasAuthority("USER")
                         .requestMatchers(HttpMethod.GET,"/v1/users/{userId}/product-reservations").hasAuthority("USER")
                         .requestMatchers(
-                        "/swagger-ui/**",
-                        "/swagger-resources/**",
                         "/v3/api-docs/**",
+                        "/swagger-ui/**",
+                        "/springdoc/**",
                         "/v1/auth/**",
                         "/v1/users/**",
                         "/v1/products/**",
@@ -90,7 +90,7 @@ public class SecurityConfig {
                         "/v1/slacks/**",
                         "/v1/store-reservations/**",
                         "/v1/stores/**",
-                            "v1/timeslots/**"
+                        "/v1/timeslots/**"
                         ).permitAll()
                         .requestMatchers("/admin").hasRole("MASTER")
                         .anyRequest().authenticated()

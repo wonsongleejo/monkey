@@ -10,6 +10,7 @@ import com.monkey.productservice.application.dto.response.ResProductPutDTOApiV1;
 import com.monkey.productservice.application.service.ProductServiceApiV1;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -45,8 +46,8 @@ public class ProductControllerApiV1 {
 
     // 상품 전체 조회
     @GetMapping
-    public ResponseEntity<ResDTO<ResProductGetDTOApiV1>> getBy() {
-        ResProductGetDTOApiV1 resDto = productServiceApiV1.getBy();
+    public ResponseEntity<ResDTO<ResProductGetDTOApiV1>> getBy(Pageable pageable) {
+        ResProductGetDTOApiV1 resDto = productServiceApiV1.getBy(pageable);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 

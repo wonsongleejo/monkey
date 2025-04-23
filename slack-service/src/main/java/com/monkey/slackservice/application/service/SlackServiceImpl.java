@@ -6,7 +6,6 @@ import com.monkey.slackservice.application.dto.response.ResSlackStoreReservation
 import com.monkey.slackservice.application.dto.response.ResSlackProductReservationPostDTOApiV1;
 import com.monkey.slackservice.domain.slack.entity.SlackEntity;
 import com.monkey.slackservice.domain.slack.repository.SlackRepository;
-import com.monkey.slackservice.domain.slack.vo.SlackMessageType;
 import com.monkey.slackservice.infrastructure.slack.SlackClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
