@@ -8,14 +8,10 @@ import java.util.UUID;
 @Getter
 @Builder
 public class ResSlackStoreReservationPostDTOApiV1 {
-
+    private UUID slackMessageId;
+    private String slackMessage;
+    private String slackMessageType;
     private StoreReservation storeReservation;
-
-    public static ResSlackStoreReservationPostDTOApiV1 of(StoreReservation reservation) {
-        return ResSlackStoreReservationPostDTOApiV1.builder()
-                .storeReservation(reservation)
-                .build();
-    }
 
     @Getter
     @Builder
@@ -46,5 +42,17 @@ public class ResSlackStoreReservationPostDTOApiV1 {
             private Long userId;
             private String userName;
         }
+    }
+
+    public static ResSlackStoreReservationPostDTOApiV1 of(
+            String message, String type, UUID messageId,
+            StoreReservation reservation
+    ) {
+        return ResSlackStoreReservationPostDTOApiV1.builder()
+                .slackMessage(message)
+                .slackMessageType(type)
+                .slackMessageId(messageId)
+                .storeReservation(reservation)
+                .build();
     }
 }
