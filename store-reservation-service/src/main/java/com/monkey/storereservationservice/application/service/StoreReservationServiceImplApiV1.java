@@ -10,9 +10,7 @@ import com.monkey.storereservationservice.application.dto.response.ResStoreReser
 import com.monkey.storereservationservice.domain.storereservation.entity.StoreReservationEntity;
 import com.monkey.storereservationservice.domain.storereservation.repository.StoreReservationRepository;
 import com.monkey.storereservationservice.domain.storereservation.vo.StoreReservationStatus;
-import com.monkey.storereservationservice.infrastructure.client.SlackFeignClient;
 import com.monkey.storereservationservice.infrastructure.client.StoreClient;
-import com.monkey.storereservationservice.infrastructure.dto.request.ReqSlackStoreReservationPostDTOApiV1;
 import com.monkey.storereservationservice.infrastructure.dto.response.ResStoreTimeSlotDTOApiV1;
 import com.monkey.storereservationservice.infrastructure.security.UserContext;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +27,6 @@ import java.util.UUID;
 public class StoreReservationServiceImplApiV1 implements StoreReservationServiceApiV1 {
 
     private final StoreReservationRepository storeReservationRepository;
-    private final SlackFeignClient slackFeignClient;
     private final StoreClient storeClient;
 
     @Override
@@ -48,16 +45,6 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
         );
 
         StoreReservationEntity saved = storeReservationRepository.save(entity);
-
-        slackFeignClient.notifySlack(
-                ReqSlackStoreReservationPostDTOApiV1.builder()
-                        .slack(
-                                ReqSlackStoreReservationPostDTOApiV1.SlackMessage.builder()
-                                        .slackId("U0123456789")
-                                        .slackMessage("예약이 완료되었습니다. 예약번호: " + saved.getStoreReservationId())
-                                        .build()
-                        ).build()
-        );
 
         return ResStoreReservationPostDTOApiV1.from(saved);
     }
