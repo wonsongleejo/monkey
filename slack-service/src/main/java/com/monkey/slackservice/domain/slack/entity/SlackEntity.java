@@ -21,14 +21,14 @@ public class SlackEntity extends BaseEntity {
     private UUID slackMessageId;
 
     @Column(nullable = false)
-    private String userSlackId;
+    private String slackId;
 
     @Column(nullable = false)
     private String slackMessage;
 
     public static SlackEntity createSlackMessage(String slackId, String slackMessage) {
         return SlackEntity.builder()
-                .userSlackId(slackId)
+                .slackId(slackId)
                 .slackMessage(slackMessage)
                 .build();
     }
