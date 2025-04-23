@@ -1,5 +1,7 @@
 package com.monkey.productreservationservice.application.service;
 
+import com.monkey.common_module.aop.AccessLevel;
+import com.monkey.common_module.aop.CheckUserRole;
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
@@ -30,6 +32,7 @@ public class ProductReservationServiceApiV1 {
     private final ProductReservationReadValidator readValidator;
 
     // 예약 등록
+    @CheckUserRole(AccessLevel.USER)
     public ResProductReservationPostDTOApiV1 postBy(ReqProductReservationPostDTOApiV1 reqDto, UUID productId, long userId) {
         var product = reservationValidator.validateProduct(productId); // 유효한 상품 확인
 
@@ -50,6 +53,7 @@ public class ProductReservationServiceApiV1 {
     }
 
     // 예약 취소
+    @CheckUserRole(AccessLevel.USER)
     public ResProductReservationPostByIdCancelDTOApiV1 cancelBy(UUID productReservationId, long userId) {
         ProductReservationEntity productReservationEntity = getActiveProductReservationById(productReservationId);
         productReservationEntity.cancel(userId);
@@ -58,12 +62,14 @@ public class ProductReservationServiceApiV1 {
     }
 
     // 예약내역 전체 조회
+    @CheckUserRole(AccessLevel.ALL)
     public ResProductReservationGetDTOApiV1 getBy(Pageable pageable) {
         Page<ProductReservationEntity> productReservationPage = productReservationRepository.findAllByIsDeletedFalse(pageable);
         return ResProductReservationGetDTOApiV1.of(productReservationPage);
     }
 
     // 예약내역 단건 조회
+    @CheckUserRole(AccessLevel.ALL)
     public ResProductReservationGetByIdDTOApiV1 getById(UUID productReservationId) {
         ProductReservationEntity productReservation = getActiveProductReservationById(productReservationId);
 
@@ -75,6 +81,7 @@ public class ProductReservationServiceApiV1 {
     }
 
     // 개인 예약내역 조회
+    @CheckUserRole(AccessLevel.USER)
     public ResProductReservationGetDTOApiV1 getByUserId(long userId, Pageable pageable) {
         Page<ProductReservationEntity> productReservationPage =
                 productReservationRepository.findByUserIdAndIsDeletedFalse(userId, pageable);
