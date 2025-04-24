@@ -6,7 +6,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -74,11 +73,6 @@ public class SecurityConfig {
         //경로별 인가 설정
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers(HttpMethod.GET,"/v1/users").hasAuthority("MASTER")
-                        .requestMatchers(HttpMethod.GET,"/v1/users/master/{userId}").hasAuthority("MASTER")
-                        .requestMatchers(HttpMethod.GET,"/v1/users/details").hasAnyAuthority("USER","MASTER")
-                        .requestMatchers(HttpMethod.GET,"/v1/users/{userId}/store-reservations").hasAuthority("USER")
-                        .requestMatchers(HttpMethod.GET,"/v1/users/{userId}/product-reservations").hasAuthority("USER")
                         .requestMatchers(
                         "/v3/api-docs/**",
                         "/swagger-ui/**",
