@@ -1,5 +1,6 @@
 package com.monkey.slackservice.application.dto.request;
 
+import com.monkey.slackservice.domain.slack.vo.SlackMessageType;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -22,5 +23,8 @@ public class ReqSlackStoreReservationPostDTOApiV1 {
 
         @NotNull(message = "Slack 메세지 입력은 필수입니다.")
         private String slackMessage;
+
+        @NotNull(message = "Slack 상태 값은 필수입니다.")
+        private SlackMessageType slackMessageType;
     }
 }
