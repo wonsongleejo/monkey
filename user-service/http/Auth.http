@@ -1,11 +1,11 @@
 ### USER SIGN-UP
-POST http://localhost:8081/v1/auth/sign-up
+POST http://localhost:8080/v1/auth/sign-up
 Content-Type: application/json
 
 {
   "user": {
-    "username": "testUser",
-    "password": "testtest",
+    "username": "testuser2",
+    "password": "Test1234!@",
     "slackId": "testslack",
     "role": "USER"
   }
@@ -13,10 +13,12 @@ Content-Type: application/json
 
 
 ### USER SIGN-IN
-POST http://localhost:8081/v1/auth/sign-in
+POST http://localhost:8080/v1/auth/sign-in
 Content-Type: application/json
 
 {
-  "username": "testUser",
-  "password": "testtest"
+  "user": {
+    "username": "testuser2",
+    "password": "Test1234!@"
+  }
 }
