@@ -19,5 +19,6 @@ public class ResUserClientGetByIdDTOApiV1 {
     public static class User {
         private Long userId;
         private String username;
+        private String slackId;
     }
 }

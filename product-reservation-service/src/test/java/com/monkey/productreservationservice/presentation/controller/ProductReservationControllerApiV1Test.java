@@ -74,6 +74,7 @@ public class ProductReservationControllerApiV1Test {
     private UUID testProductId = UUID.fromString("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa");
     private UUID testStoreId = UUID.fromString("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb");
     private long testUserId = 123L;
+    private String testSlackId = "cccccccc-cccc-cccc-cccc-cccccccccccc";
 
     @BeforeEach
     void setUpFeignClientMocks() {
@@ -139,6 +140,7 @@ public class ProductReservationControllerApiV1Test {
                                 .user(ResUserClientGetByIdDTOApiV1.User.builder()
                                         .userId(testUserId)
                                         .username("라이언")
+                                        .slackId(testSlackId)
                                         .build())
                                 .build()
                 ));
@@ -282,6 +284,7 @@ public class ProductReservationControllerApiV1Test {
 
                                                 fieldWithPath("data.productReservation.user.userId").type(JsonFieldType.NUMBER).description("유저 ID"),
                                                 fieldWithPath("data.productReservation.user.userName").type(JsonFieldType.STRING).description("유저 이름"),
+                                                fieldWithPath("data.productReservation.user.slackId").type(JsonFieldType.STRING).description("유저 슬랙 ID"),
 
                                                 fieldWithPath("data.productReservation.store.storeId").type(JsonFieldType.STRING).description("스토어 ID"),
                                                 fieldWithPath("data.productReservation.store.storeName").type(JsonFieldType.STRING).description("스토어 이름")
