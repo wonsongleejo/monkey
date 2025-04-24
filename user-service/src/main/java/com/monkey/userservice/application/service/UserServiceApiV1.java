@@ -10,7 +10,9 @@ public interface UserServiceApiV1 {
 
     Page<UserEntity> getBy(Predicate predicate, Pageable pageable);
 
-    UserEntity getByUserId(Long userId);
+    UserEntity getMyDetails(Long userId);
+
+    UserEntity getUserByUserId(Long userId);
 
     UserEntity putByUserId(Long userId, ReqUserPutDTOApiV1 reqDto);
 

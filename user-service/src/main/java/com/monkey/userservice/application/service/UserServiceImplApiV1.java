@@ -1,5 +1,7 @@
 package com.monkey.userservice.application.service;
 
+import com.monkey.common_module.aop.AccessLevel;
+import com.monkey.common_module.aop.CheckUserRole;
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;
 import com.monkey.userservice.application.dto.request.ReqUserPutDTOApiV1;
@@ -23,16 +25,30 @@ public class UserServiceImplApiV1 implements UserServiceApiV1 {
     private final PasswordEncoder passwordEncoder;
     private final StoreReservationFeignClientApiV1 storeReservationFeignClientApiV1;
 
+    @CheckUserRole(AccessLevel.MASTER)
     @Override
     public Page<UserEntity> getBy(Predicate predicate, Pageable pageable) {
         return userRepository.findAllByIsDeletedFalse(predicate, pageable);
     }
 
+    // 사용자 본인 정보 조회 (USER 권한)
+    @CheckUserRole(AccessLevel.USER)
     @Override
-    public UserEntity getByUserId(Long userId) {
+    public UserEntity getMyDetails(Long userId) {
+        return findUserById(userId);
+    }
 
+    // 관리자용 사용자 정보 조회 (MASTER 권한)
+    @CheckUserRole(AccessLevel.MASTER)
+    @Override
+    public UserEntity getUserByUserId(Long userId) {
+        return findUserById(userId);
+    }
+
+    // 사용자 정보 조회 공통 메서드
+    private UserEntity findUserById(Long userId) {
         return userRepository.findByIsDeletedFalse(userId)
-                .orElseThrow(()-> new CustomException(ResponseCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new CustomException(ResponseCode.USER_NOT_FOUND));
     }
 
     @Override
