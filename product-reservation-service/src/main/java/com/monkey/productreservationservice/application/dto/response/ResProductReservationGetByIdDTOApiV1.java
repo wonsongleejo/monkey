@@ -77,6 +77,7 @@ public class ResProductReservationGetByIdDTOApiV1 {
             }
         }
 
+        // Store
         @Getter
         @Builder
         @NoArgsConstructor
@@ -93,6 +94,7 @@ public class ResProductReservationGetByIdDTOApiV1 {
             }
         }
 
+        // User
         @Getter
         @Builder
         @NoArgsConstructor

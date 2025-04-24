@@ -42,7 +42,6 @@ public class ProductReservationReadValidator {
     public ResStoreClientGetByIdDTOApiV1.Store validateStore(UUID storeId) {
         try {
             var storeRes = storeClient.getStoreById(storeId);
-//            var store = storeResponse != null ? storeResponse.getData() : null;
             var store = storeRes.getData() != null ? storeRes.getData().getStore() : null;
 
             if (store == null) throw new CustomException(ResponseCode.STORE_NOT_FOUND);
