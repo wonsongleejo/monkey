@@ -102,11 +102,13 @@ public class ResProductReservationGetByIdDTOApiV1 {
         public static class User {
             private long userId;
             private String userName;
+            private String slackId;
 
             public static User from(ResUserClientGetByIdDTOApiV1.User userDto) {
                 return User.builder()
                         .userId(userDto.getUserId())
                         .userName(userDto.getUsername())
+                        .slackId(userDto.getSlackId())
                         .build();
             }
         }
