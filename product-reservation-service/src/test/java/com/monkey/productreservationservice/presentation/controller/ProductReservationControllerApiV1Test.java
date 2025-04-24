@@ -154,6 +154,7 @@ public class ProductReservationControllerApiV1Test {
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/product-reservations/{productId}", testProductId)
                         .header("X-User-Id", testUserId)
+                        .header("X-User-Role", "USER")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(reqDto))
                 )
@@ -203,6 +204,7 @@ public class ProductReservationControllerApiV1Test {
         mockMvc.perform(
                 RestDocumentationRequestBuilders.post("/v1/product-reservations/{productReservationId}/cancel", saved.getProductReservationId())
                         .header("X-User-Id", testUserId)
+                        .header("X-User-Role", "USER")
                         .contentType(MediaType.APPLICATION_JSON)
                 )
                 .andExpectAll(
