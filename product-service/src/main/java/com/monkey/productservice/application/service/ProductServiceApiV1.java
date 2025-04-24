@@ -1,5 +1,7 @@
 package com.monkey.productservice.application.service;
 
+import com.monkey.common_module.aop.AccessLevel;
+import com.monkey.common_module.aop.CheckUserRole;
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;
 import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
@@ -26,12 +28,14 @@ public class ProductServiceApiV1 {
     private final StoreFeignClientApiV1 storeClient;
 
     // 상품 등록
+    @CheckUserRole(AccessLevel.MANAGER)
     public ResProductPostDTOApiV1 postBy(ReqProductPostDTOApiV1 reqDto) {
         ProductEntity productEntity = reqDto.getProduct().toEntity();
         return ResProductPostDTOApiV1.of(productRepository.save(productEntity));
     }
 
     // 상품 수정
+    @CheckUserRole(AccessLevel.MANAGER)
     public ResProductPutDTOApiV1 putBy(UUID productId, ReqProductPutDTOApiV1 reqDto) {
         ProductEntity productEntity = getActiveProductById(productId);
 
@@ -42,12 +46,14 @@ public class ProductServiceApiV1 {
     }
 
     // 상품 전체 조회
+    @CheckUserRole(AccessLevel.ALL)
     public ResProductGetDTOApiV1 getBy(Pageable pageable) {
         Page<ProductEntity> productPage = productRepository.findAllByIsDeletedFalse(pageable);
         return ResProductGetDTOApiV1.of(productPage);
     }
 
     // 상품 단건 조회
+    @CheckUserRole(AccessLevel.ALL)
     public ResProductGetByIdDTOApiV1 getById(UUID productId) {
         ProductEntity product = getActiveProductById(productId);
 
@@ -62,6 +68,7 @@ public class ProductServiceApiV1 {
     }
 
     // 상품 삭제
+    @CheckUserRole(AccessLevel.MANAGER)
     public void deleteById(UUID productId, Long userId) {
         ProductEntity productEntity = getActiveProductById(productId);
         productEntity.delete(userId);

@@ -81,8 +81,8 @@ public class ProductControllerApiV1Test {
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders.post("/v1/products")
-//                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
                                 .header("X-User-Id", 123L)
+                                .header("X-User-Role", "MANAGER")
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .content(reqDtoJson)
                 )
@@ -148,8 +148,8 @@ public class ProductControllerApiV1Test {
         String reqDtoJson = objectMapper.writeValueAsString(reqDto);
         mockMvc.perform(
                 RestDocumentationRequestBuilders.put("/v1/products/{productId}", saved.getProductId())
-//                                .header(HttpHeaders.AUTHORIZATION, "Bearer " + resDto.getData().getAccessJwt())
                         .header("X-User-Id", 123L)
+                        .header("X-User-Role", "MANAGER")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(reqDtoJson)
                 )
