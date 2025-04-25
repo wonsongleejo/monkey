@@ -68,13 +68,19 @@ public class ProductReservationServiceApiV1 {
         return ResProductReservationPostDTOApiV1.of(productReservation);
     }
 
-    // 예약 취소 // 취소 시 재고 up 로직 안 했음;;
+    // 예약 취소
     @CheckUserRole(AccessLevel.USER)
     public ResProductReservationPostByIdCancelDTOApiV1 cancelBy(UUID productReservationId, long userId) {
-        ProductReservationEntity productReservationEntity = getActiveProductReservationById(productReservationId);
-        productReservationEntity.cancel(userId);
+        ProductReservationEntity productReservation = getActiveProductReservationById(productReservationId);
+        productReservation.cancel(userId);
 
-        return ResProductReservationPostByIdCancelDTOApiV1.of(productReservationRepository.save(productReservationEntity));
+        // 상품 재고 복원
+        try {
+            productFeignClientApiV1.increaseStock(productReservation.getProductId(), userId, productReservation.getQuantity());
+        } catch (Exception e) {
+            log.warn("[예약 취소 성공, 재고 복원 실패] reservationId={}, productId={}", productReservation.getProductReservationId(), productReservation.getProductId());
+        }
+        return ResProductReservationPostByIdCancelDTOApiV1.of(productReservationRepository.save(productReservation));
     }
 
     // 예약내역 전체 조회

@@ -18,5 +18,16 @@ public interface ProductFeignClientApiV1 {
 
     // 상품 재고 차감
     @PutMapping("/{productId}/stock/decrease")
-    void decreaseStock(@PathVariable UUID productId, @RequestHeader("X-User-Id") long userId, @RequestParam int quantity);
+    void decreaseStock(
+            @PathVariable UUID productId,
+            @RequestHeader("X-User-Id") long userId,
+            @RequestParam int quantity);
+
+    // 상품 재고 증가
+    @PutMapping("/{productId}/stock/increase")
+    void increaseStock(
+            @PathVariable UUID productId,
+            @RequestHeader("X-User-Id") long userId,
+            @RequestParam int quantity
+    );
 }

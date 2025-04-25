@@ -40,4 +40,11 @@ public class ProductEntity extends BaseEntity {
         }
         this.quantity -= quantity;
     }
+
+    public void increaseStock(int quantity) {
+        if(quantity <= 0) {
+            throw new IllegalArgumentException("증가할 수량은 1개 이상이어야 합니다.");
+        }
+        this.quantity += quantity;
+    }
 }
