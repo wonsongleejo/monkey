@@ -33,4 +33,11 @@ public class ProductEntity extends BaseEntity {
 
     @Column(nullable = false)
     private Integer purchaseLimitPerUser;
+
+    public void decreaseStock(int quantity) {
+        if(quantity <= 0) {
+            throw new IllegalArgumentException("감소할 수량은 1개 이상이어야 합니다.");
+        }
+        this.quantity -= quantity;
+    }
 }

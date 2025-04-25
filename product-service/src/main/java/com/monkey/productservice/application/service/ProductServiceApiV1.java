@@ -75,6 +75,17 @@ public class ProductServiceApiV1 {
         productRepository.save(productEntity);
     }
 
+    // 상품 재고 차감
+    public void decreaseStock(UUID productId, Long userId, int quantity) {
+        ProductEntity productEntity = getActiveProductById(productId);
+
+        if(productEntity.getQuantity() < quantity) {
+            throw new CustomException(ResponseCode.PRODUCT_OUT_OF_STOCK);
+        }
+        productEntity.decreaseStock(quantity);
+        productRepository.save(productEntity);
+    }
+
     // 존재하는 상품 검증 메서드
     private ProductEntity getActiveProductById(UUID productId) {
         return productRepository.findByProductIdAndIsDeletedFalse(productId)
