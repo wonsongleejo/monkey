@@ -15,6 +15,7 @@ import com.monkey.productservice.domain.repository.ProductRepository;
 import com.monkey.productservice.infrastructure.feignclient.StoreFeignClientApiV1;
 import com.monkey.productservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductServiceApiV1 {
     private final ProductRepository productRepository;
     private final StoreFeignClientApiV1 storeClient;
@@ -74,6 +76,26 @@ public class ProductServiceApiV1 {
         productEntity.delete(userId);
         productRepository.save(productEntity);
     }
+
+    // 상품 재고 차감
+    public void decreaseStock(UUID productId, Long userId, int quantity) {
+        ProductEntity productEntity = getActiveProductById(productId);
+
+        if(productEntity.getQuantity() < quantity) {
+            log.warn("[상품 재고 부족] 요청 수량={}, 현재 수량={}, productId={}", quantity, productEntity.getQuantity(), productId);
+            throw new CustomException(ResponseCode.PRODUCT_OUT_OF_STOCK);
+        }
+        productEntity.decreaseStock(quantity);
+        productRepository.save(productEntity);
+    }
+
+    // 상품 재고 증가
+    public void increaseStock(UUID productId, Long userId, int quantity) {
+        ProductEntity productEntity = getActiveProductById(productId);
+        productEntity.increaseStock(quantity);
+        productRepository.save(productEntity);
+    }
+
 
     // 존재하는 상품 검증 메서드
     private ProductEntity getActiveProductById(UUID productId) {

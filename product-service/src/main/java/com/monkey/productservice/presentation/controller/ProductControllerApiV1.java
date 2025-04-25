@@ -64,4 +64,16 @@ public class ProductControllerApiV1 {
         productServiceApiV1.deleteById(productId, userId);
         return new ResponseEntity<>(ResDTO.success(null), HttpStatus.OK);
     }
+
+    // 상품 재고 차감
+    @PutMapping("/{productId}/stock/decrease")
+    public void decreaseStock(@PathVariable UUID productId, @RequestHeader("X-User-Id") Long userId, @RequestParam int quantity) {
+        productServiceApiV1.decreaseStock(productId, userId, quantity);
+    }
+
+    // 상품 재고 증가
+    @PutMapping("/{productId}/stock/increase")
+    public void increaseStock(@PathVariable UUID productId, @RequestHeader("X-User-Id") Long userId, @RequestParam int quantity) {
+        productServiceApiV1.increaseStock(productId, userId, quantity);
+    }
 }

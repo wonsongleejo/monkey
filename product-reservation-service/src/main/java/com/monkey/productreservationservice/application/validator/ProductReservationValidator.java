@@ -18,8 +18,20 @@ public class ProductReservationValidator {
     private final StoreReservationFeignClientApiV1 storeReservationClient;
     private final ProductReservationRepository productReservationRepository;
 
+    // 상품 예약 요청 시 전체 검증 메서드
+    public ResProductClientGetByIdDTOApiV1.Product validateReservationRequest(UUID productId, long userId, int quantity) {
+        var product = validateProduct(productId); // 유효한 상품 확인
+
+        validateStock(quantity, product.getQuantity()); // 재고 확인
+        validatePurchaseLimit(quantity, product.getPurchaseLimitPerUser()); // 구매수량 제한
+        validateStoreMember(userId, product.getStore().getStoreId()); // 스토어 예약여부 확인
+        validateNotDuplicate(userId, productId); // 중복 예약 확인
+
+        return product;
+    }
+
     // 존재하는 상품 확인
-    public ResProductClientGetByIdDTOApiV1.Product validateProduct(UUID productId) {
+    private ResProductClientGetByIdDTOApiV1.Product validateProduct(UUID productId) {
         try {
             var productResponse = productClient.getProductById(productId);
             var product = productResponse != null ? productResponse.getData().getProduct() : null;
@@ -37,21 +49,21 @@ public class ProductReservationValidator {
     }
 
     // 상품 재고 확인
-    public void validateStock(int requestQuantity, int quantity) {
+    private void validateStock(int requestQuantity, int quantity) {
         if (requestQuantity > quantity) {
             throw new CustomException(ResponseCode.PRODUCT_OUT_OF_STOCK);
         }
     }
 
     // 구매 수량 제한
-    public void validatePurchaseLimit(int requestQuantity, int purchaseLimitPerUser) {
+    private void validatePurchaseLimit(int requestQuantity, int purchaseLimitPerUser) {
         if (requestQuantity > purchaseLimitPerUser) {
             throw new CustomException(ResponseCode.PRODUCT_PURCHASE_LIMIT_EXCEEDED);
         }
     }
 
     // 스토어 예약여부 확인
-    public void validateStoreMember(long userId, UUID storeId) {
+    private void validateStoreMember(long userId, UUID storeId) {
         try {
             var storeResponse = storeReservationClient.getReservationsByStoreId(storeId, userId);
 
@@ -81,7 +93,7 @@ public class ProductReservationValidator {
     }
 
     // 중복 예약 방지
-    public void validateNotDuplicate(long userId, UUID productId) {
+    private void validateNotDuplicate(long userId, UUID productId) {
         if (productReservationRepository.existsByUserIdAndProductIdAndIsDeletedFalse(userId, productId)) {
             throw new CustomException(ResponseCode.DUPLICATED_REQUEST);
         }
