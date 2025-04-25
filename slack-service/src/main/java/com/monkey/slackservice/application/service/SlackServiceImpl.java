@@ -1,73 +1,43 @@
 package com.monkey.slackservice.application.service;
 
-import com.monkey.slackservice.application.dto.request.ReqSlackStoreReservationPostDTOApiV1;
-import com.monkey.slackservice.application.dto.request.ReqSlackStoreReservationPostDTOApiV1.SlackMessage;
-import com.monkey.slackservice.application.dto.response.ResSlackStoreReservationPostDTOApiV1;
-import com.monkey.slackservice.application.dto.response.ResSlackProductReservationPostDTOApiV1;
+import com.monkey.slackservice.application.dto.request.ReqSlackStoreMessageDTOApiV1;
+import com.monkey.slackservice.application.dto.response.ResSlackMessageDTOApiV1;
 import com.monkey.slackservice.domain.slack.entity.SlackEntity;
 import com.monkey.slackservice.domain.slack.repository.SlackRepository;
-import com.monkey.slackservice.infrastructure.slack.SlackClient;
+import com.monkey.slackservice.infrastructure.client.StoreReservationClient;
+import com.monkey.slackservice.infrastructure.dto.response.ResStoreReservationGetByIdDTOApiV1;
+import com.monkey.slackservice.infrastructure.message.SlackMessageFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
-
-@Service
 @RequiredArgsConstructor
-@Transactional
+@Service
 public class SlackServiceImpl implements SlackService {
 
+    private final StoreReservationClient storeReservationClient;
+    private final SlackMessageFormatter slackMessageFormatter;
     private final SlackRepository slackRepository;
-    private final SlackClient slackClient;
 
     @Override
-    public ResSlackStoreReservationPostDTOApiV1 notifyStoreReservationSlackAndSave(
-            ReqSlackStoreReservationPostDTOApiV1 request,
-            ResSlackStoreReservationPostDTOApiV1.StoreReservation reservationInfo
-    ) {
-        SlackMessage slack = request.getSlack();
+    public ResSlackMessageDTOApiV1 sendStoreReservationMessage(ReqSlackStoreMessageDTOApiV1 request) {
+        var slackRequest = request.getSlack();
 
-        slackClient.sendSlackMessage(slack.getSlackId(), slack.getSlackMessage());
+        ResStoreReservationGetByIdDTOApiV1.StoreReservation reservation = storeReservationClient
+                .getById(slackRequest.getStoreReservationId())
+                .getData()
+                .getStoreReservation();
 
-        SlackEntity entity = SlackEntity.createSlackMessage(
-                slack.getSlackId(),
-                slack.getSlackMessage(),
-                slack.getSlackMessageType()
-        );
+        String message = slackMessageFormatter.format(reservation.getStatus());
 
-        slackRepository.save(entity);
+        SlackEntity savedEntity = slackRepository.save(SlackEntity.builder()
+                .reservationId(slackRequest.getStoreReservationId())
+                .slackId(slackRequest.getSlackId())
+                .slackMessage(message)
+                .build());
 
-        return ResSlackStoreReservationPostDTOApiV1.of(
-                slack.getSlackMessage(),
-                slack.getSlackMessageType().name(),
-                UUID.randomUUID(),
-                reservationInfo
-        );
-    }
-
-    @Override
-    public ResSlackProductReservationPostDTOApiV1 notifyProductReservationSlackAndSave(
-            ReqSlackStoreReservationPostDTOApiV1 request,
-            ResSlackProductReservationPostDTOApiV1.ProductReservation reservationInfo
-    ) {
-        SlackMessage slack = request.getSlack();
-
-        slackClient.sendSlackMessage(slack.getSlackId(), slack.getSlackMessage());
-
-        SlackEntity entity = SlackEntity.createSlackMessage(
-                slack.getSlackId(),
-                slack.getSlackMessage(),
-                slack.getSlackMessageType()
-        );
-
-        slackRepository.save(entity);
-
-        return ResSlackProductReservationPostDTOApiV1.of(
-                slack.getSlackMessage(),
-                slack.getSlackMessageType().name(),
-                UUID.randomUUID(),
-                reservationInfo
-        );
+        return ResSlackMessageDTOApiV1.builder()
+                .slackMessageId(savedEntity.getSlackMessageId())
+                .slackMessage(savedEntity.getSlackMessage())
+                .build();
     }
 }
