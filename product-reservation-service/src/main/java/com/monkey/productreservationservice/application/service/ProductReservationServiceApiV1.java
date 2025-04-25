@@ -19,6 +19,7 @@ import com.monkey.productreservationservice.infrastructure.feignclient.dto.respo
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ProductReservationServiceApiV1 {
     private final ProductReservationRepository productReservationRepository;
     private final ProductReservationValidator reservationValidator;
@@ -52,13 +54,14 @@ public class ProductReservationServiceApiV1 {
                 .build();
 
         productReservation = productReservationRepository.save(productReservation);
+        log.info("[예약 생성] userId={}, productId={}, quantity={}", userId, productId, reqDto.getQuantity());
 
         try {
-            // 상품 재고 차감 요청
             productFeignClientApiV1.decreaseStock(productId, userId, reqDto.getQuantity());
+            log.info("[상품 재고 차감 요청] productId={}, userId={}, quantity={}", productId, userId, reqDto.getQuantity());
         } catch (Exception e) {
-            // 실패 시 보상 트랜잭션: 예약 취소
-            productReservation.cancel(userId);
+            log.warn("[재고 부족으로 인해 예약 실패] reservationId={}", productReservation.getProductReservationId());
+            productReservation.fail(userId);
             productReservationRepository.save(productReservation);
             throw new CustomException(ResponseCode.PRODUCT_OUT_OF_STOCK);
         }
