@@ -11,7 +11,6 @@ import com.monkey.storereservationservice.application.service.StoreReservationSe
 import com.monkey.storereservationservice.infrastructure.security.UserContext;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
