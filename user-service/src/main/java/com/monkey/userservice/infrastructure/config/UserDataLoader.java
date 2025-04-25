@@ -45,7 +45,7 @@ public class UserDataLoader {
                 userRepository.save(user2);
 
                 UserEntity manager = UserEntity.builder()
-                        .username("testmanager")
+                        .username("testmanage")
                         .password(passwordEncoder.encode("Test1234!@"))
                         .slackId("slackIdManager")
                         .role(UserEntity.Role.MANAGER)

@@ -110,10 +110,9 @@ public class UserControllerApiV1 {
     }
 
     //팝업 스토어 예약 내역
-    @GetMapping("/{userId}/store-reservation")
+    @GetMapping("/{userId}/store-reservations")
     public ResponseEntity<ResDTO<ResStoreReservationClientGetDTOApiV1>> getStoreReservationBy(
-            @PathVariable(name="userId") Long userId,
-            @PageableDefault(sort="userId", direction = Sort.Direction.DESC) Pageable pageable
+            @PathVariable(name="userId") Long userId
     ){
         ResDTO<ResStoreReservationClientGetDTOApiV1> storeReservationList = storeReservationFeignClient.getStoreReservations(userId);
 
@@ -128,10 +127,9 @@ public class UserControllerApiV1 {
     }
 
     //한정 상품 예약 내역
-    @GetMapping("/{userId}/product-reservation")
+    @GetMapping("/{userId}/product-reservations")
     public ResponseEntity<ResDTO<ResProductReservationClientGetDTOApiV1>> getProductReservationsBy(
-            @PathVariable(name="userId") Long userId,
-            @PageableDefault(sort="userId", direction = Sort.Direction.DESC) Pageable pageable
+            @PathVariable(name="userId") Long userId
     ){
         ResDTO<ResProductReservationClientGetDTOApiV1> productReservationList = productReservationFeignClient.getProductReservations(userId);
 

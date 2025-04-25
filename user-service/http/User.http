@@ -1,35 +1,48 @@
-### GET USER
-GET http://localhost:8081/v1/users
+@TOKEN={토큰기입}
+
+### GET USER ONLY MASTER
+GET http://localhost:8080/v1/users?page=0&size=10
 Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
 
 
-### GET USER Details
-GET http://localhost:8081/v1/users/1
+### GET USER Details FOR USER
+GET http://localhost:8080/v1/users/details
 Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
 
-
-### PUT USER Details
-PUT http://localhost:8081/v1/users/1
+### GET USER Details FOR MASTER
+GET http://localhost:8080/v1/users/master/2
 Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
+
+
+### PUT USER
+PUT http://localhost:8080/v1/users/2
+Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
 
 {
   "user": {
-    "password": "testMod",
+    "password": "Testmod12!@",
     "slackId": "slackMod"
   }
 }
 
 
 ### DELETE USER
-DELETE http://localhost:8081/v1/users/1
+DELETE http://localhost:8080/v1/users/delete
 Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
 
 
 ### GET STORE_RESERVATION
-GET http://localhost:8081/v1/users/1/store-reservation
+GET http://localhost:8080/v1/users/1/store-reservations
 Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
 
 
 ### GET PRODUCT_RESERVATION
-GET http://localhost:8081/v1/users/1/product-reservation
+GET http://localhost:8080/v1/users/1/product-reservations
 Content-Type: application/json
+Authorization: Bearer {{TOKEN}}
