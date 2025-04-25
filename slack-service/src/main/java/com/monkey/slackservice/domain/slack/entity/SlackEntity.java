@@ -1,7 +1,6 @@
 package com.monkey.slackservice.domain.slack.entity;
 
 import com.monkey.common_module.entity.BaseEntity;
-import com.monkey.slackservice.domain.slack.vo.SlackMessageType;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLRestriction;
@@ -27,14 +26,14 @@ public class SlackEntity extends BaseEntity {
     @Column(nullable = false)
     private String slackMessage;
 
-    @Enumerated(EnumType.STRING)
-    private SlackMessageType slackMessageType;
+    @Column(nullable = false)
+    private UUID reservationId;
 
-    public static SlackEntity createSlackMessage(String slackId, String slackMessage, SlackMessageType slackMessageType) {
+    public static SlackEntity createSlackMessage(String slackId, String slackMessage, UUID reservationId) {
         return SlackEntity.builder()
                 .slackId(slackId)
                 .slackMessage(slackMessage)
-                .slackMessageType(slackMessageType)
+                .reservationId(reservationId)
                 .build();
     }
 }
