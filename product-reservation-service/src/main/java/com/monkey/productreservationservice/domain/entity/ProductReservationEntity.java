@@ -55,4 +55,12 @@ public class ProductReservationEntity extends BaseEntity {
         this.status = ProductReservationStatus.CANCELED;
         this.delete(userId);
     }
+
+    public void fail(long userId) {
+        if (this.getIsDeleted() || this.status == ProductReservationStatus.CANCELED || this.status == ProductReservationStatus.PICKED_UP || this.status == ProductReservationStatus.FAILED) {
+            throw new CustomException(ResponseCode.DUPLICATED_REQUEST);
+        }
+        this.status = ProductReservationStatus.FAILED;
+        this.delete(userId);
+    }
 }
