@@ -9,6 +9,7 @@ import java.util.UUID;
 
 @FeignClient(name = "store-service", url = "${store-service.url}", primary = false)
 public interface StoreClient {
+
     @GetMapping("/v1/stores/timeslots/{timeSlotId}")
     ResStoreTimeSlotDTOApiV1 getTimeSlotById(@PathVariable("timeSlotId") UUID timeSlotId);
 }
