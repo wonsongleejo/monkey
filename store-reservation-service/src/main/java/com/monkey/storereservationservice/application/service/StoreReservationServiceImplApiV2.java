@@ -17,32 +17,55 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 @RequiredArgsConstructor
-@Service("storeReservationServiceV1")
+@Service("storeReservationServiceV2")
 @Transactional
-public class StoreReservationServiceImplApiV1 implements StoreReservationServiceApiV1 {
+public class StoreReservationServiceImplApiV2 implements StoreReservationServiceApiV1 {
 
     private final StoreReservationRepository storeReservationRepository;
     private final StoreClient storeClient;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     private PersonInfo calculateCurrentAndMaxPerson(UUID timeSlotId) {
+        String currentKey = "timeslot:" + timeSlotId + ":currentReservedPerson";
+        String maxKey = "timeslot:" + timeSlotId + ":maxPerson";
 
-        Integer currentReservedPersonCount = storeReservationRepository.sumPersonCountByTimeSlotId(timeSlotId);
-        if (currentReservedPersonCount == null) {
-            currentReservedPersonCount = 0;
+        Integer currentReservedPerson = getValueFromRedis(currentKey);
+        Integer maxPerson = getValueFromRedis(maxKey);
+
+        if (currentReservedPerson == null) {
+            currentReservedPerson = 0;
         }
 
-        ResStoreTimeSlotDTOApiV1 timeSlotResponse = storeClient.getTimeSlotById(timeSlotId);
-        ResStoreTimeSlotDTOApiV1.StoreTimeSlot timeSlot = timeSlotResponse.getData().getStoreTimeSlot();
-        Integer maxPerson = timeSlot.getMaxPerson();
+        if (maxPerson == null) {
+            // 캐시에 없으면 Feign Client 호출
+            ResStoreTimeSlotDTOApiV1 timeSlotResponse = storeClient.getTimeSlotById(timeSlotId);
+            ResStoreTimeSlotDTOApiV1.StoreTimeSlot timeSlot = timeSlotResponse.getData().getStoreTimeSlot();
+            maxPerson = timeSlot.getMaxPerson();
 
-        return new PersonInfo(currentReservedPersonCount, maxPerson);
+            // Redis에 저장
+            redisTemplate.opsForValue().set(maxKey, maxPerson);
+        }
+
+        return new PersonInfo(currentReservedPerson, maxPerson);
+    }
+
+    private Integer getValueFromRedis(String key) {
+        Object value = redisTemplate.opsForValue().get(key);
+        return value != null ? Integer.parseInt(value.toString()) : null;
+    }
+
+    private void updateCurrentReservedPerson(UUID timeSlotId, int newCount) {
+        String currentKey = "timeslot:" + timeSlotId + ":currentReservedPerson";
+        redisTemplate.opsForValue().set(currentKey, newCount);
     }
 
     @Getter
@@ -71,6 +94,9 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
         );
 
         StoreReservationEntity saved = storeReservationRepository.save(entity);
+
+        // Redis에 현재 예약 인원 업데이트
+        updateCurrentReservedPerson(timeSlotId, personInfo.getCurrentReservedPerson() + requestedPersonCount);
 
         return ResStoreReservationPostDTOApiV1.from(saved, personInfo.getCurrentReservedPerson() + requestedPersonCount, personInfo.getMaxPerson());
     }
@@ -153,23 +179,22 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
         return ResStoreReservationPutByIdStatusDTOApiV1.from(saved, personInfo.getCurrentReservedPerson(), personInfo.getMaxPerson());
     }
 
-    // feignClient: 상품 예약 시 스토어 예약내역 전체 조회 -> 스토어 예약한 회원인지 확인
     @Override
     public ResStoreReservationGetDTOApiV1 getAllByUserIdAndStoreId(Long userId, UUID storeId) {
         List<ResStoreReservationGetDTOApiV1.StoreReservation> list = storeReservationRepository.findAll().stream()
-                .filter(res -> res.getUserId().equals(userId)) // userId 기준 필터링
+                .filter(res -> res.getUserId().equals(userId))
                 .map(entity -> {
                     try {
-                        ResStoreTimeSlotDTOApiV1 timeSlotResponse = storeClient.getTimeSlotById(entity.getTimeSlotId());
-                        if (timeSlotResponse == null || timeSlotResponse.getData() == null) {
-                            throw new RuntimeException("TimeSlot not found: " + entity.getTimeSlotId());
-                        }
+                        PersonInfo personInfo = calculateCurrentAndMaxPerson(entity.getTimeSlotId());
 
+                        ResStoreTimeSlotDTOApiV1 timeSlotResponse = storeClient.getTimeSlotById(entity.getTimeSlotId());
                         ResStoreTimeSlotDTOApiV1.StoreTimeSlot timeSlot = timeSlotResponse.getData().getStoreTimeSlot();
 
                         return ResStoreReservationGetDTOApiV1.StoreReservation.builder()
                                 .storeReservationId(entity.getStoreReservationId())
                                 .status(entity.getStatus())
+                                .currentReservedPerson(personInfo.getCurrentReservedPerson())
+                                .maxPerson(personInfo.getMaxPerson())
                                 .timeSlot(
                                         ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.builder()
                                                 .store(
@@ -185,7 +210,7 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
                                 .user(
                                         ResStoreReservationGetDTOApiV1.StoreReservation.User.builder()
                                                 .userId(userId)
-                                                .userName("unknown") // 필요시 FeignClient로 조회 가능
+                                                .userName("unknown")
                                                 .build()
                                 )
                                 .build();
@@ -193,12 +218,10 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
                         return null;
                     }
                 })
-                .filter(res ->
-                        res != null &&
-                                res.getTimeSlot() != null &&
-                                res.getTimeSlot().getStore() != null &&
-                                res.getTimeSlot().getStore().getStoreId().equals(storeId)
-                )
+                .filter(res -> res != null
+                        && res.getTimeSlot() != null
+                        && res.getTimeSlot().getStore() != null
+                        && res.getTimeSlot().getStore().getStoreId().equals(storeId))
                 .toList();
 
         return ResStoreReservationGetDTOApiV1.builder()
