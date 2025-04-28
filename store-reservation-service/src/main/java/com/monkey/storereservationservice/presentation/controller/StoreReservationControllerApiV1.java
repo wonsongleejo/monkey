@@ -10,7 +10,7 @@ import com.monkey.storereservationservice.application.dto.response.ResStoreReser
 import com.monkey.storereservationservice.application.service.StoreReservationServiceApiV1;
 import com.monkey.storereservationservice.infrastructure.security.UserContext;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +18,18 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/v1/store-reservations")
-@RequiredArgsConstructor
 public class StoreReservationControllerApiV1 {
 
     private final StoreReservationServiceApiV1 storeReservationServiceApiV1;
     private final UserContext userContext;
+
+    public StoreReservationControllerApiV1(
+            @Qualifier("storeReservationServiceV2") StoreReservationServiceApiV1 storeReservationServiceApiV1,
+            UserContext userContext
+    ) {
+        this.storeReservationServiceApiV1 = storeReservationServiceApiV1;
+        this.userContext = userContext;
+    }
 
     // 예약 생성
     @PostMapping
