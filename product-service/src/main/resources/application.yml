@@ -11,7 +11,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
     defer-datasource-initialization: true
     properties:
       hibernate:
@@ -25,6 +25,12 @@ spring:
     secret: ${JWT_SECRET_KEY}
     access-token-expiration: ${ACCESS_TOKEN_EXPIRATION}
     refresh-token-expiration: ${REFRESH_TOKEN_EXPIRATION}
+
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
 
 server:
   port: 8084
@@ -43,6 +49,7 @@ springdoc:
     - group: openapi3-product-service
       paths-to-match:
         - /v1/products/**
+        - /v2/products/**
       packages-to-scan:
         - com.monkey.productservice.presentation.controller
   api-docs:
