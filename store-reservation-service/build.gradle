@@ -30,6 +30,7 @@ dependencies {
     testImplementation 'org.eclipse.jetty:jetty-xml:9.4.51.v20230217'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.redisson:redisson-spring-boot-starter:3.24.0'
 
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
