@@ -29,6 +29,8 @@ dependencies {
     testImplementation 'org.eclipse.jetty:jetty-webapp:9.4.51.v20230217'
     testImplementation 'org.eclipse.jetty:jetty-xml:9.4.51.v20230217'
 
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
