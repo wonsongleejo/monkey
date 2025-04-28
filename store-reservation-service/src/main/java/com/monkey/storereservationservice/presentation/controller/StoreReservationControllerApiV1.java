@@ -24,7 +24,7 @@ public class StoreReservationControllerApiV1 {
     private final UserContext userContext;
 
     public StoreReservationControllerApiV1(
-            @Qualifier("storeReservationServiceV2") StoreReservationServiceApiV1 storeReservationServiceApiV1,
+            @Qualifier("storeReservationServiceV4") StoreReservationServiceApiV1 storeReservationServiceApiV1,
             UserContext userContext
     ) {
         this.storeReservationServiceApiV1 = storeReservationServiceApiV1;
