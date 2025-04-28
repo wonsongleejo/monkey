@@ -143,14 +143,28 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
     @Override
     public ResStoreReservationPutByIdStatusDTOApiV1 changeStatus(UserContext userContext, UUID storeReservationId, StoreReservationStatus status) {
         StoreReservationEntity entity = storeReservationRepository.findById(storeReservationId);
-        if (entity == null) throw new CustomException(ResponseCode.NOT_FOUND);
+        if (entity == null) {
+            throw new CustomException(ResponseCode.NOT_FOUND);
+        }
 
         entity.changeStatus(status);
         StoreReservationEntity saved = storeReservationRepository.save(entity);
 
-        PersonInfo personInfo = calculateCurrentAndMaxPerson(saved.getTimeSlotId());
+        ResStoreTimeSlotDTOApiV1 timeSlotResponse = storeClient.getTimeSlotById(saved.getTimeSlotId());
+        ResStoreTimeSlotDTOApiV1.StoreTimeSlot timeSlot = timeSlotResponse.getData().getStoreTimeSlot();
 
-        return ResStoreReservationPutByIdStatusDTOApiV1.from(saved, personInfo.getCurrentReservedPerson(), personInfo.getMaxPerson());
+        Integer maxPerson = timeSlot.getMaxPerson();
+
+        // DB 조회로 현재 예약된 인원 수 계산
+        int currentReservedPerson = storeReservationRepository
+                .findAll()
+                .stream()
+                .filter(res -> res.getTimeSlotId().equals(saved.getTimeSlotId()))
+                .filter(res -> res.getStatus() == StoreReservationStatus.SCHEDULED)
+                .mapToInt(StoreReservationEntity::getPersonCount)
+                .sum();
+
+        return ResStoreReservationPutByIdStatusDTOApiV1.from(saved, currentReservedPerson, maxPerson);
     }
 
     // feignClient: 상품 예약 시 스토어 예약내역 전체 조회 -> 스토어 예약한 회원인지 확인
