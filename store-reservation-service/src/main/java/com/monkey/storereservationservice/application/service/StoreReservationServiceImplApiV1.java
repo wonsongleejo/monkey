@@ -13,6 +13,8 @@ import com.monkey.storereservationservice.domain.storereservation.vo.StoreReserv
 import com.monkey.storereservationservice.infrastructure.client.StoreClient;
 import com.monkey.storereservationservice.infrastructure.dto.response.ResStoreTimeSlotDTOApiV1;
 import com.monkey.storereservationservice.infrastructure.security.UserContext;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,24 +31,48 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
     private final StoreReservationRepository storeReservationRepository;
     private final StoreClient storeClient;
 
+    private PersonInfo calculateCurrentAndMaxPerson(UUID timeSlotId) {
+
+        Integer currentReservedPersonCount = storeReservationRepository.sumPersonCountByTimeSlotId(timeSlotId);
+        if (currentReservedPersonCount == null) {
+            currentReservedPersonCount = 0;
+        }
+
+        ResStoreTimeSlotDTOApiV1 timeSlotResponse = storeClient.getTimeSlotById(timeSlotId);
+        ResStoreTimeSlotDTOApiV1.StoreTimeSlot timeSlot = timeSlotResponse.getData().getStoreTimeSlot();
+        Integer maxPerson = timeSlot.getMaxPerson();
+
+        return new PersonInfo(currentReservedPersonCount, maxPerson);
+    }
+
+    @Getter
+    @AllArgsConstructor
+    private static class PersonInfo {
+        private Integer currentReservedPerson;
+        private Integer maxPerson;
+    }
+
     @Override
     public ResStoreReservationPostDTOApiV1 create(ReqStoreReservationPostDTOApiV1 request, UserContext userContext) {
-        ResStoreTimeSlotDTOApiV1 timeSlotResponse = storeClient.getTimeSlotById(request.getStoreReservation().getTimeSlotId());
-        log.info(">> TimeSlot from StoreClient = {}", timeSlotResponse);
+        UUID timeSlotId = request.getStoreReservation().getTimeSlotId();
+        PersonInfo personInfo = calculateCurrentAndMaxPerson(timeSlotId);
 
-        ResStoreTimeSlotDTOApiV1.StoreTimeSlot timeSlot = timeSlotResponse.getData().getStoreTimeSlot();
-        UUID timeSlotId = timeSlot.getTimeSlotId();
+        Integer requestedPersonCount = request.getStoreReservation().getPersonCount();
+
+        if (personInfo.getCurrentReservedPerson() + requestedPersonCount > personInfo.getMaxPerson()) {
+            throw new CustomException(ResponseCode.STORE_RESERVATION_FULL);
+        }
 
         StoreReservationEntity entity = StoreReservationEntity.createStoreReservation(
                 timeSlotId,
                 userContext.getUserId(),
-                request.getStoreReservation().getPersonCount(),
+                requestedPersonCount,
                 StoreReservationStatus.SCHEDULED
         );
 
         StoreReservationEntity saved = storeReservationRepository.save(entity);
 
-        return ResStoreReservationPostDTOApiV1.from(saved);
+        return ResStoreReservationPostDTOApiV1.from(saved, personInfo.getCurrentReservedPerson() + requestedPersonCount, personInfo.getMaxPerson());
     }
 
     @Override
@@ -54,15 +80,20 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
         List<ResStoreReservationGetDTOApiV1.StoreReservation> list = storeReservationRepository.findAll().stream()
                 .filter(res -> res.getUserId().equals(userContext.getUserId()))
                 .map(entity -> {
+                    PersonInfo personInfo = calculateCurrentAndMaxPerson(entity.getTimeSlotId());
+
                     ResStoreTimeSlotDTOApiV1 timeSlotResponse = storeClient.getTimeSlotById(entity.getTimeSlotId());
                     ResStoreTimeSlotDTOApiV1.StoreTimeSlot timeSlot = timeSlotResponse.getData().getStoreTimeSlot();
 
                     return ResStoreReservationGetDTOApiV1.StoreReservation.builder()
                             .storeReservationId(entity.getStoreReservationId())
                             .status(entity.getStatus())
+                            .currentReservedPerson(personInfo.getCurrentReservedPerson())
+                            .maxPerson(personInfo.getMaxPerson())
                             .timeSlot(ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.builder()
                                     .store(ResStoreReservationGetDTOApiV1.StoreReservation.TimeSlot.Store.builder()
-                                            .storeId(timeSlot.getStoreId()).build())
+                                            .storeId(timeSlot.getStoreId())
+                                            .build())
                                     .date(timeSlot.getSlotDate())
                                     .entryTime(timeSlot.getEntryTime())
                                     .exitTime(timeSlot.getExitTime())
@@ -74,12 +105,16 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
                             .build();
                 }).toList();
 
-        return ResStoreReservationGetDTOApiV1.builder().storeReservationList(list).build();
+        return ResStoreReservationGetDTOApiV1.builder()
+                .storeReservationList(list)
+                .build();
     }
 
     @Override
     public ResStoreReservationGetByIdDTOApiV1 getById(UserContext userContext, UUID storeReservationId) {
         StoreReservationEntity entity = storeReservationRepository.findById(storeReservationId);
+        PersonInfo personInfo = calculateCurrentAndMaxPerson(entity.getTimeSlotId());
+
         ResStoreTimeSlotDTOApiV1 timeSlotResponse = storeClient.getTimeSlotById(entity.getTimeSlotId());
         ResStoreTimeSlotDTOApiV1.StoreTimeSlot timeSlot = timeSlotResponse.getData().getStoreTimeSlot();
 
@@ -87,9 +122,12 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
                 .storeReservation(ResStoreReservationGetByIdDTOApiV1.StoreReservation.builder()
                         .storeReservationId(entity.getStoreReservationId())
                         .status(entity.getStatus())
+                        .currentReservedPerson(personInfo.getCurrentReservedPerson())
+                        .maxPerson(personInfo.getMaxPerson())
                         .timeSlot(ResStoreReservationGetByIdDTOApiV1.StoreReservation.TimeSlot.builder()
                                 .store(ResStoreReservationGetByIdDTOApiV1.StoreReservation.TimeSlot.Store.builder()
-                                        .storeId(timeSlot.getStoreId()).build())
+                                        .storeId(timeSlot.getStoreId())
+                                        .build())
                                 .date(timeSlot.getSlotDate())
                                 .entryTime(timeSlot.getEntryTime())
                                 .exitTime(timeSlot.getExitTime())
@@ -106,8 +144,13 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
     public ResStoreReservationPutByIdStatusDTOApiV1 changeStatus(UserContext userContext, UUID storeReservationId, StoreReservationStatus status) {
         StoreReservationEntity entity = storeReservationRepository.findById(storeReservationId);
         if (entity == null) throw new CustomException(ResponseCode.NOT_FOUND);
+
         entity.changeStatus(status);
-        return ResStoreReservationPutByIdStatusDTOApiV1.from(storeReservationRepository.save(entity));
+        StoreReservationEntity saved = storeReservationRepository.save(entity);
+
+        PersonInfo personInfo = calculateCurrentAndMaxPerson(saved.getTimeSlotId());
+
+        return ResStoreReservationPutByIdStatusDTOApiV1.from(saved, personInfo.getCurrentReservedPerson(), personInfo.getMaxPerson());
     }
 
     // feignClient: 상품 예약 시 스토어 예약내역 전체 조회 -> 스토어 예약한 회원인지 확인
@@ -162,6 +205,4 @@ public class StoreReservationServiceImplApiV1 implements StoreReservationService
                 .storeReservationList(list)
                 .build();
     }
-
-
 }

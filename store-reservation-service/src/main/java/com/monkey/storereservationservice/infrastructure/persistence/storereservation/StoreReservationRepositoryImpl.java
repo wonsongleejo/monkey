@@ -20,6 +20,11 @@ public class StoreReservationRepositoryImpl implements StoreReservationRepositor
     }
 
     @Override
+    public Integer sumPersonCountByTimeSlotId(UUID timeSlotId) {
+        return storeReservationJpaRepository.sumPersonCountByTimeSlotId(timeSlotId);
+    }
+
+    @Override
     public List<StoreReservationEntity> findAll() {
         return storeReservationJpaRepository.findAll();
     }

@@ -12,9 +12,17 @@ public class ResStoreReservationPostDTOApiV1 {
 
     private StoreReservation storeReservation;
 
-    public static ResStoreReservationPostDTOApiV1 from(StoreReservationEntity storeReservationEntity) {
+    public static ResStoreReservationPostDTOApiV1 from(
+            StoreReservationEntity storeReservationEntity,
+            Integer currentReservedPerson,
+            Integer maxPerson
+    ) {
         return ResStoreReservationPostDTOApiV1.builder()
-                .storeReservation(StoreReservation.from(storeReservationEntity))
+                .storeReservation(StoreReservation.from(
+                        storeReservationEntity,
+                        currentReservedPerson,
+                        maxPerson
+                ))
                 .build();
     }
 
@@ -27,10 +35,19 @@ public class ResStoreReservationPostDTOApiV1 {
         private UUID storeReservationId;
         private StoreReservationStatus status;
 
-        public static StoreReservation from(StoreReservationEntity storeReservationEntity) {
+        private Integer currentReservedPerson;
+        private Integer maxPerson;
+
+        public static StoreReservation from(
+                StoreReservationEntity storeReservationEntity,
+                Integer currentReservedPerson,
+                Integer maxPerson
+        ) {
             return StoreReservation.builder()
                     .storeReservationId(storeReservationEntity.getStoreReservationId())
                     .status(storeReservationEntity.getStatus())
+                    .currentReservedPerson(currentReservedPerson)
+                    .maxPerson(maxPerson)
                     .build();
         }
     }
