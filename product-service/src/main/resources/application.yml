@@ -49,6 +49,7 @@ springdoc:
     - group: openapi3-product-service
       paths-to-match:
         - /v1/products/**
+        - /v2/products/**
       packages-to-scan:
         - com.monkey.productservice.presentation.controller
   api-docs:
