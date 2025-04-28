@@ -171,12 +171,30 @@ public class StoreReservationServiceImplApiV2 implements StoreReservationService
         StoreReservationEntity entity = storeReservationRepository.findById(storeReservationId);
         if (entity == null) throw new CustomException(ResponseCode.NOT_FOUND);
 
+        // 예약 취소되면 예약 인원 수만큼 currentReservedPerson 감소
+        if (status == StoreReservationStatus.CANCELED && entity.getStatus() != StoreReservationStatus.CANCELED) {
+            int decreaseCount = entity.getPersonCount();
+            decreaseCurrentReservedPerson(entity.getTimeSlotId(), decreaseCount);
+        }
+
         entity.changeStatus(status);
         StoreReservationEntity saved = storeReservationRepository.save(entity);
 
         PersonInfo personInfo = calculateCurrentAndMaxPerson(saved.getTimeSlotId());
 
         return ResStoreReservationPutByIdStatusDTOApiV1.from(saved, personInfo.getCurrentReservedPerson(), personInfo.getMaxPerson());
+    }
+
+    private void decreaseCurrentReservedPerson(UUID timeSlotId, int decreaseCount) {
+        String currentKey = "timeslot:" + timeSlotId + ":currentReservedPerson";
+        Integer currentReservedPerson = getValueFromRedis(currentKey);
+
+        if (currentReservedPerson == null) {
+            currentReservedPerson = 0;
+        }
+
+        int newCount = Math.max(0, currentReservedPerson - decreaseCount);
+        redisTemplate.opsForValue().set(currentKey, newCount);
     }
 
     @Override
