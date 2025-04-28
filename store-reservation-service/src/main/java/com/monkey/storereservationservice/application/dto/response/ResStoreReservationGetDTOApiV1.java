@@ -8,6 +8,7 @@ import lombok.Getter;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -17,9 +18,17 @@ public class ResStoreReservationGetDTOApiV1 {
 
     private List<StoreReservation> storeReservationList;
 
-    public static ResStoreReservationGetDTOApiV1 from(List<StoreReservationEntity> storeReservationEntityList) {
+    public static ResStoreReservationGetDTOApiV1 from(
+            List<StoreReservationEntity> storeReservationEntityList,
+            Map<UUID, Integer> reservedPersonMap,
+            Map<UUID, Integer> maxPersonMap
+    ) {
         List<StoreReservation> storeReservationList = storeReservationEntityList.stream()
-                .map(StoreReservation::from)
+                .map(entity -> StoreReservation.from(
+                        entity,
+                        reservedPersonMap.getOrDefault(entity.getTimeSlotId(), 0),
+                        maxPersonMap.getOrDefault(entity.getTimeSlotId(), 0)
+                ))
                 .collect(Collectors.toList());
 
         return ResStoreReservationGetDTOApiV1.builder()
@@ -34,13 +43,21 @@ public class ResStoreReservationGetDTOApiV1 {
         private StoreReservationStatus status;
         private TimeSlot timeSlot;
         private User user;
+        private Integer currentReservedPerson;
+        private Integer maxPerson;
 
-        public static StoreReservation from(StoreReservationEntity storeReservationEntity) {
+        public static StoreReservation from(
+                StoreReservationEntity storeReservationEntity,
+                Integer currentReservedPerson,
+                Integer maxPerson
+        ) {
             return StoreReservation.builder()
                     .storeReservationId(storeReservationEntity.getStoreReservationId())
                     .status(storeReservationEntity.getStatus())
                     .timeSlot(null)
                     .user(null)
+                    .currentReservedPerson(currentReservedPerson)
+                    .maxPerson(maxPerson)
                     .build();
         }
 
