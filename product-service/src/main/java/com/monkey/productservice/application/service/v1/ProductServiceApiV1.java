@@ -19,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -55,6 +56,7 @@ public class ProductServiceApiV1 {
     }
 
     // 상품 단건 조회
+    @Transactional
     @CheckUserRole(AccessLevel.ALL)
     public ResProductGetByIdDTOApiV1 getById(UUID productId) {
         ProductEntity product = getActiveProductById(productId);
@@ -78,6 +80,7 @@ public class ProductServiceApiV1 {
     }
 
     // 상품 재고 차감
+    @Transactional
     public void decreaseStock(UUID productId, Long userId, int quantity) {
         ProductEntity productEntity = getActiveProductById(productId);
 
@@ -90,6 +93,7 @@ public class ProductServiceApiV1 {
     }
 
     // 상품 재고 증가
+    @Transactional
     public void increaseStock(UUID productId, Long userId, int quantity) {
         ProductEntity productEntity = getActiveProductById(productId);
         productEntity.increaseStock(quantity);
