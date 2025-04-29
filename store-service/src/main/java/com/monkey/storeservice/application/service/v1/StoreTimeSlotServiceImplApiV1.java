@@ -1,4 +1,4 @@
-package com.monkey.storeservice.application.service;
+package com.monkey.storeservice.application.service.v1;
 
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;
@@ -17,7 +17,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class StoreTimeSlotServiceImplApiV1 implements StoreTimeSlotServiceApiV1 {
@@ -90,7 +92,8 @@ public class StoreTimeSlotServiceImplApiV1 implements StoreTimeSlotServiceApiV1 
     StoreEntity storeEntity = storeRepository.findById(storeId)
         .orElseThrow(()->new CustomException(ResponseCode.STORE_NOT_FOUND));
 
-    Page<StoreTimeSlotEntity> page = storeTimeSlotRepository.findAll(pageable);
-    return ResStoreTimeSlotGetDTOApiV1.of(page);
+    Page<StoreTimeSlotEntity> storePage = storeTimeSlotRepository.findAll(pageable);
+
+    return ResStoreTimeSlotGetDTOApiV1.of(storePage);
   }
 }

@@ -1,10 +1,10 @@
-package com.monkey.storeservice.application.service;
+package com.monkey.storeservice.application.service.v1;
 
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;
 import com.monkey.storeservice.application.dto.request.ReqStorePostDTOApiV1;
 import com.monkey.storeservice.application.dto.request.ReqStorePutDTOApiV1;
-import com.monkey.storeservice.application.dto.response.ResStoreGetDTOApiV1;
+import com.monkey.storeservice.application.dto.response.ResStoreGetByIdDTOApiV1;
 import com.monkey.storeservice.application.dto.response.ResStorePostDTOApiV1;
 import com.monkey.storeservice.application.dto.response.ResStorePutDTOApiV1;
 import com.monkey.storeservice.domain.entity.StoreEntity;
@@ -14,11 +14,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
-public class StoreServiceImplApiV1 implements StoreServiceApiV1{
+public class StoreServiceImplApiV1 implements StoreServiceApiV1 {
 
   private final StoreRepository storeRepository;
 
@@ -67,19 +68,19 @@ public class StoreServiceImplApiV1 implements StoreServiceApiV1{
   }
 
   @Override
-  public ResStoreGetDTOApiV1 getById(UUID storeId) {
+  public ResStoreGetByIdDTOApiV1 getById(UUID storeId) {
 
     StoreEntity storeEntity = storeRepository.findById(storeId)
         .orElseThrow(()->new CustomException(ResponseCode.STORE_NOT_FOUND));
 
-    return ResStoreGetDTOApiV1.of(storeEntity);
+    return ResStoreGetByIdDTOApiV1.of(storeEntity);
   }
 
   @Override
-  public ResStoreGetDTOApiV1 getBy(Pageable pageable) {
+  public ResStoreGetByIdDTOApiV1 getBy(Pageable pageable) {
 
     Page<StoreEntity> storePage = storeRepository.findAll(pageable);
 
-    return ResStoreGetDTOApiV1.of(storePage);
+    return ResStoreGetByIdDTOApiV1.of(storePage);
   }
 }

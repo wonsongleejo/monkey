@@ -1,8 +1,8 @@
-package com.monkey.storeservice.application.service;
+package com.monkey.storeservice.application.service.v1;
 
 import com.monkey.storeservice.application.dto.request.ReqStorePostDTOApiV1;
 import com.monkey.storeservice.application.dto.request.ReqStorePutDTOApiV1;
-import com.monkey.storeservice.application.dto.response.ResStoreGetDTOApiV1;
+import com.monkey.storeservice.application.dto.response.ResStoreGetByIdDTOApiV1;
 import com.monkey.storeservice.application.dto.response.ResStorePostDTOApiV1;
 import com.monkey.storeservice.application.dto.response.ResStorePutDTOApiV1;
 import java.util.UUID;
@@ -14,8 +14,8 @@ public interface StoreServiceApiV1 {
 
   ResStorePutDTOApiV1 putById(UUID storeId, ReqStorePutDTOApiV1 reqDto,Long storeManagerId,String role);
 
-  ResStoreGetDTOApiV1 getById(UUID storeId);
+  ResStoreGetByIdDTOApiV1 getById(UUID storeId);
 
-  ResStoreGetDTOApiV1 getBy(Pageable pageable);
+  ResStoreGetByIdDTOApiV1 getBy(Pageable pageable);
 
 }

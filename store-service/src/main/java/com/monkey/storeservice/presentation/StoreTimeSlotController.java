@@ -6,7 +6,7 @@ import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPutDTOApi
 import com.monkey.storeservice.application.dto.response.ResStoreTimeSlotGetDTOApiV1;
 import com.monkey.storeservice.application.dto.response.ResStoreTimeSlotPostDTOApiV1;
 import com.monkey.storeservice.application.dto.response.ResStoreTimeSlotPutDTOApiV1;
-import com.monkey.storeservice.application.service.StoreTimeSlotServiceApiV1;
+import com.monkey.storeservice.application.service.v1.StoreTimeSlotServiceApiV1;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

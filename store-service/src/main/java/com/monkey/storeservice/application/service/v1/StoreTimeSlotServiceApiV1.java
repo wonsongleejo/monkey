@@ -1,4 +1,4 @@
-package com.monkey.storeservice.application.service;
+package com.monkey.storeservice.application.service.v1;
 
 import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPostDTOApiV1;
 import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPutDTOApiV1;
