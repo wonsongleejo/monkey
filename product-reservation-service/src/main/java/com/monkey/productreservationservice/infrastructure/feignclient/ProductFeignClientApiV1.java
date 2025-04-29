@@ -14,7 +14,7 @@ public interface ProductFeignClientApiV1 {
 
     // 상품 조회
     @GetMapping("/{productId}")
-    ResDTO<ResProductClientGetByIdDTOApiV1> getProductById(@PathVariable UUID productId);
+    ResDTO<ResProductClientGetByIdDTOApiV1> getProductById(@PathVariable(name = "productId") UUID productId);
 
     // 상품 재고 차감
     @PutMapping("/{productId}/stock/decrease")
