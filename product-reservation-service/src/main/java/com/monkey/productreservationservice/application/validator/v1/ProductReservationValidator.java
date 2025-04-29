@@ -1,4 +1,4 @@
-package com.monkey.productreservationservice.application.validator;
+package com.monkey.productreservationservice.application.validator.v1;
 
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;
