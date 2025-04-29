@@ -4,6 +4,7 @@ import com.monkey.common_module.aop.AccessLevel;
 import com.monkey.common_module.aop.CheckUserRole;
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;
+import com.monkey.common_module.lock.DistributedLock;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetByIdDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
@@ -37,6 +38,7 @@ public class ProductReservationServiceApiV1 {
 
     // 예약 등록
     @CheckUserRole(AccessLevel.USER)
+    @DistributedLock(key = "'product:' + #productId", waitTime = 10, leaseTime = 2)
     public ResProductReservationPostDTOApiV1 postBy(ReqProductReservationPostDTOApiV1 reqDto, UUID productId, long userId) {
         // 예약 요청 검증
         var product = reservationValidator.validateReservationRequest(productId, userId, reqDto.getQuantity());
