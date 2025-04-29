@@ -28,7 +28,7 @@ public class ProductReservationControllerApiV2 {
             @RequestBody @Valid ReqProductReservationPostDTOApiV1 reqDto,
             @PathVariable UUID productId,
             @RequestHeader("X-User-Id") Long userId
-            ) {
+    ) {
         ResProductReservationPostDTOApiV1 resDto = productReservationService.postBy(reqDto, productId, userId);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
