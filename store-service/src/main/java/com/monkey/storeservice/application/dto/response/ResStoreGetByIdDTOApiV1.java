@@ -12,24 +12,26 @@ import org.springframework.data.domain.Page;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ResStoreGetDTOApiV1 {
+public class ResStoreGetByIdDTOApiV1 {
 
   private Store store;
   private Page<Store> storePage;
 
-  public static ResStoreGetDTOApiV1 of(StoreEntity storeEntity) {
-    return ResStoreGetDTOApiV1.builder()
+  public static ResStoreGetByIdDTOApiV1 of(StoreEntity storeEntity) {
+    return ResStoreGetByIdDTOApiV1.builder()
         .store(Store.from(storeEntity))
         .build();
   }
-  public static ResStoreGetDTOApiV1 of(Page<StoreEntity> storeEntityPage) {
-    return ResStoreGetDTOApiV1.builder()
+  public static ResStoreGetByIdDTOApiV1 of(Page<StoreEntity> storeEntityPage) {
+    return ResStoreGetByIdDTOApiV1.builder()
         .storePage(Store.from(storeEntityPage))
         .build();
   }
 
   @Getter
   @Builder
+  @NoArgsConstructor
+  @AllArgsConstructor
   public static class Store {
 
     private UUID storeId;

@@ -4,7 +4,7 @@ package com.monkey.storeservice.presentaion.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPostDTOApiV1;
 import com.monkey.storeservice.application.dto.request.ReqStoreTimeSlotPutDTOApiV1;
-import com.monkey.storeservice.application.service.StoreTimeSlotServiceApiV1;
+import com.monkey.storeservice.application.service.v1.StoreTimeSlotServiceApiV1;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;

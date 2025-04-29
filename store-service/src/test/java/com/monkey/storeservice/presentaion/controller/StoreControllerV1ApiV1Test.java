@@ -5,7 +5,7 @@ import com.epages.restdocs.apispec.SimpleType;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.storeservice.application.dto.request.ReqStorePostDTOApiV1;
 import com.monkey.storeservice.application.dto.request.ReqStorePutDTOApiV1;
-import com.monkey.storeservice.application.service.StoreServiceApiV1;
+import com.monkey.storeservice.application.service.v1.StoreServiceApiV1;
 import com.monkey.storeservice.domain.entity.StoreEntity;
 import com.monkey.storeservice.domain.entity.StoreEntity.OpenStatus;
 import com.monkey.storeservice.infrastructure.persistence.StoreJpaRepository;
@@ -37,7 +37,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 @AutoConfigureRestDocs
 @Transactional
 @ActiveProfiles("test")
-public class StoreControllerApiV1Test {
+public class StoreControllerV1ApiV1Test {
 
   @Autowired
   private MockMvc mockMvc;

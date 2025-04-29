@@ -3,10 +3,10 @@ package com.monkey.storeservice.presentation;
 import com.monkey.common_module.dto.ResDTO;
 import com.monkey.storeservice.application.dto.request.ReqStorePostDTOApiV1;
 import com.monkey.storeservice.application.dto.request.ReqStorePutDTOApiV1;
-import com.monkey.storeservice.application.dto.response.ResStoreGetDTOApiV1;
+import com.monkey.storeservice.application.dto.response.ResStoreGetByIdDTOApiV1;
 import com.monkey.storeservice.application.dto.response.ResStorePutDTOApiV1;
 import com.monkey.storeservice.application.dto.response.ResStorePostDTOApiV1;
-import com.monkey.storeservice.application.service.StoreServiceApiV1;
+import com.monkey.storeservice.application.service.v1.StoreServiceApiV1;
 import jakarta.validation.Valid;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/stores")
-public class StoreController {
+public class StoreControllerV1 {
 
   private final StoreServiceApiV1 storeServiceApiV1;
 
@@ -56,9 +56,9 @@ public class StoreController {
 
   // 팝업스토어 조회
   @GetMapping("/{storeId}")
-  public ResponseEntity<ResDTO<ResStoreGetDTOApiV1>> getById(@PathVariable UUID storeId) {
+  public ResponseEntity<ResDTO<ResStoreGetByIdDTOApiV1>> getById(@PathVariable UUID storeId) {
 
-    ResStoreGetDTOApiV1 resDto = storeServiceApiV1.getById(storeId);
+    ResStoreGetByIdDTOApiV1 resDto = storeServiceApiV1.getById(storeId);
 
     return new ResponseEntity<>(
         ResDTO.success(resDto),
@@ -68,9 +68,9 @@ public class StoreController {
 
   // 팝업스토어 전체 조회
   @GetMapping
-  public ResponseEntity<ResDTO<ResStoreGetDTOApiV1>>getBy(Pageable pageable) {
+  public ResponseEntity<ResDTO<ResStoreGetByIdDTOApiV1>>getBy(Pageable pageable) {
 
-    ResStoreGetDTOApiV1 resDto = storeServiceApiV1.getBy(pageable);
+    ResStoreGetByIdDTOApiV1 resDto = storeServiceApiV1.getBy(pageable);
 
     return new ResponseEntity<>(
         ResDTO.success(resDto),
