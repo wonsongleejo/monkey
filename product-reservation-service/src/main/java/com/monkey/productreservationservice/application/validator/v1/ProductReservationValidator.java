@@ -24,8 +24,8 @@ public class ProductReservationValidator {
 
         validateStock(quantity, product.getQuantity()); // 재고 확인
         validatePurchaseLimit(quantity, product.getPurchaseLimitPerUser()); // 구매수량 제한
-        validateStoreMember(userId, product.getStore().getStoreId()); // 스토어 예약여부 확인
-        validateNotDuplicate(userId, productId); // 중복 예약 확인
+//        validateStoreMember(userId, product.getStore().getStoreId()); // 스토어 예약여부 확인
+//        validateNotDuplicate(userId, productId); // 중복 예약 확인
 
         return product;
     }
