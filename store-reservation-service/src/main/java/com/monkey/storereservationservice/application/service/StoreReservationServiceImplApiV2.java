@@ -166,25 +166,40 @@ public class StoreReservationServiceImplApiV2 implements StoreReservationService
                 .build();
     }
 
+    // 예약 상태 변경 (예약 취소시 cancelReservation 호출)
     @Override
     public ResStoreReservationPutByIdStatusDTOApiV1 changeStatus(UserContext userContext, UUID storeReservationId, StoreReservationStatus status) {
         StoreReservationEntity entity = storeReservationRepository.findById(storeReservationId);
         if (entity == null) throw new CustomException(ResponseCode.NOT_FOUND);
 
-        // 예약 취소되면 예약 인원 수만큼 currentReservedPerson 감소
-        if (status == StoreReservationStatus.CANCELED && entity.getStatus() != StoreReservationStatus.CANCELED) {
-            int decreaseCount = entity.getPersonCount();
-            decreaseCurrentReservedPerson(entity.getTimeSlotId(), decreaseCount);
+        if (status == StoreReservationStatus.CANCELED) {
+            return cancelReservation(entity);
         }
 
         entity.changeStatus(status);
         StoreReservationEntity saved = storeReservationRepository.save(entity);
 
         PersonInfo personInfo = calculateCurrentAndMaxPerson(saved.getTimeSlotId());
-
         return ResStoreReservationPutByIdStatusDTOApiV1.from(saved, personInfo.getCurrentReservedPerson(), personInfo.getMaxPerson());
     }
 
+    // 예약 취소하는 비즈니스 로직 (캐시 수정 시 decreaseCurrentReservedPerson 호출)
+    private ResStoreReservationPutByIdStatusDTOApiV1 cancelReservation(StoreReservationEntity entity) {
+        if (entity.getStatus() == StoreReservationStatus.CANCELED) {
+            throw new CustomException(ResponseCode.DUPLICATED_REQUEST);
+        }
+
+        int decreaseCount = entity.getPersonCount();
+        decreaseCurrentReservedPerson(entity.getTimeSlotId(), decreaseCount);
+
+        entity.changeStatus(StoreReservationStatus.CANCELED);
+        StoreReservationEntity saved = storeReservationRepository.save(entity);
+
+        PersonInfo personInfo = calculateCurrentAndMaxPerson(saved.getTimeSlotId());
+        return ResStoreReservationPutByIdStatusDTOApiV1.from(saved, personInfo.getCurrentReservedPerson(), personInfo.getMaxPerson());
+    }
+
+    // 예약 취소로 인해 Redis 캐시만 수정하는 메서드
     private void decreaseCurrentReservedPerson(UUID timeSlotId, int decreaseCount) {
         String currentKey = "timeslot:" + timeSlotId + ":currentReservedPerson";
         Integer currentReservedPerson = getValueFromRedis(currentKey);
