@@ -1,7 +1,7 @@
 package com.monkey.storereservationservice.infrastructure.persistence.storereservation;
 
-import com.monkey.storereservationservice.domain.storereservation.entity.StoreReservationEntity;
-import com.monkey.storereservationservice.domain.storereservation.repository.StoreReservationRepository;
+import com.monkey.storereservationservice.domain.entity.StoreReservationEntity;
+import com.monkey.storereservationservice.domain.repository.StoreReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

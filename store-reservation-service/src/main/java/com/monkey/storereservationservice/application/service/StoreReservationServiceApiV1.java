@@ -5,7 +5,7 @@ import com.monkey.storereservationservice.application.dto.response.ResStoreReser
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationGetDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPostDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPutByIdStatusDTOApiV1;
-import com.monkey.storereservationservice.domain.storereservation.vo.StoreReservationStatus;
+import com.monkey.storereservationservice.domain.vo.StoreReservationStatus;
 import com.monkey.storereservationservice.infrastructure.security.UserContext;
 
 import java.util.UUID;

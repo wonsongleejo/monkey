@@ -1,6 +1,6 @@
 package com.monkey.storereservationservice.infrastructure.persistence.storereservation;
 
-import com.monkey.storereservationservice.domain.storereservation.entity.StoreReservationEntity;
+import com.monkey.storereservationservice.domain.entity.StoreReservationEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
