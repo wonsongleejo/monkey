@@ -28,8 +28,21 @@
 
 - - -
 
-## 🐵 인프라 설계도
-![인프라](/docs/images/infra.png)
+## 🐵 프로젝트 설계
+<details>
+  <summary> ERD </summary>
+  <img alt="erd" src="/docs/images/erd.png" width="800">
+</details><br>
+<details>
+  <summary> 인프라 설계 </summary>
+  <img alt="infra" src="/docs/images/infra.png" width="700">
+</details><br>
+<details>
+  <summary> 도메인 주도 설계 </summary>
+  <img alt="ddd" src="/docs/images/ddd.png" width="700">
+</details><br>
+
+
 
 - - -
 
@@ -87,19 +100,19 @@
 - - -
 
 ## 🐵 기술적 의사결정
-### 🍌 [DDD 및 MSA 도입](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-DDD-%EB%B0%8F-MSA-%EB%8F%84%EC%9E%85)
-### 🍌 [공통모듈 분리하여 JitPack에 배포](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-%EA%B3%B5%ED%86%B5%EB%AA%A8%EB%93%88-%EB%B6%84%EB%A6%AC%ED%95%98%EC%97%AC-JitPack%EC%97%90-%EB%B0%B0%ED%8F%AC)
-### 🍌 [Redis 적용](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-Redis-%EC%A0%81%EC%9A%A9)
-### 🍌 [서비스 버전 분리](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B2%84%EC%A0%84-%EB%B6%84%EB%A6%AC)
-### 🍌 [Kafka 도입](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-Kafka-%EB%8F%84%EC%9E%85)
+#### 🍌 [DDD 및 MSA 도입](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-DDD-%EB%B0%8F-MSA-%EB%8F%84%EC%9E%85)
+#### 🍌 [공통모듈 분리하여 JitPack에 배포](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-%EA%B3%B5%ED%86%B5%EB%AA%A8%EB%93%88-%EB%B6%84%EB%A6%AC%ED%95%98%EC%97%AC-JitPack%EC%97%90-%EB%B0%B0%ED%8F%AC)
+#### 🍌 [Redis 적용](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-Redis-%EC%A0%81%EC%9A%A9)
+#### 🍌 [서비스 버전 분리](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B2%84%EC%A0%84-%EB%B6%84%EB%A6%AC)
+#### 🍌 [Kafka 도입](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-Kafka-%EB%8F%84%EC%9E%85)
 
 - - -
 
 ## 🐵 트러블슈팅
-### 🍌 [상품 예약 시스템 – DIP 위반 문제 해결](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85%5D-%EC%83%81%ED%92%88-%EC%98%88%EC%95%BD-%EC%8B%9C%EC%8A%A4%ED%85%9C-%E2%80%93-DIP-%EC%9C%84%EB%B0%98-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)
-### 🍌 [한정 상품 재고 Redis 적용 후 데이터 정합성 문제 해결](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85%5D-%ED%95%9C%EC%A0%95-%EC%83%81%ED%92%88-%EC%9E%AC%EA%B3%A0-Redis-%EC%A0%81%EC%9A%A9-%ED%9B%84-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%A0%95%ED%95%A9%EC%84%B1-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)
-### 🍌 [FeignClient로 유저 정보 조회 중 인증 헤더 누락 발생](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85%5D-FeignClient%EB%A1%9C-%EC%9C%A0%EC%A0%80-%EC%A0%95%EB%B3%B4-%EC%A1%B0%ED%9A%8C-%EC%A4%91-%EC%9D%B8%EC%A6%9D-%ED%97%A4%EB%8D%94-%EB%88%84%EB%9D%BD-%EB%B0%9C%EC%83%9D)
-### 🍌 [상품 예약에 Redisson 기반 분산 락 적용](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85%5D-%EC%83%81%ED%92%88-%EC%98%88%EC%95%BD%EC%97%90-Redisson-%EA%B8%B0%EB%B0%98-%EB%B6%84%EC%82%B0-%EB%9D%BD-%EC%A0%81%EC%9A%A9)
+#### 🍌 [상품 예약 시스템 – DIP 위반 문제 해결](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85%5D-%EC%83%81%ED%92%88-%EC%98%88%EC%95%BD-%EC%8B%9C%EC%8A%A4%ED%85%9C-%E2%80%93-DIP-%EC%9C%84%EB%B0%98-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)
+#### 🍌 [한정 상품 재고 Redis 적용 후 데이터 정합성 문제 해결](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85%5D-%ED%95%9C%EC%A0%95-%EC%83%81%ED%92%88-%EC%9E%AC%EA%B3%A0-Redis-%EC%A0%81%EC%9A%A9-%ED%9B%84-%EB%8D%B0%EC%9D%B4%ED%84%B0-%EC%A0%95%ED%95%A9%EC%84%B1-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)
+#### 🍌 [FeignClient로 유저 정보 조회 중 인증 헤더 누락 발생](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85%5D-FeignClient%EB%A1%9C-%EC%9C%A0%EC%A0%80-%EC%A0%95%EB%B3%B4-%EC%A1%B0%ED%9A%8C-%EC%A4%91-%EC%9D%B8%EC%A6%9D-%ED%97%A4%EB%8D%94-%EB%88%84%EB%9D%BD-%EB%B0%9C%EC%83%9D)
+#### 🍌 [상품 예약에 Redisson 기반 분산 락 적용](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85%5D-%EC%83%81%ED%92%88-%EC%98%88%EC%95%BD%EC%97%90-Redisson-%EA%B8%B0%EB%B0%98-%EB%B6%84%EC%82%B0-%EB%9D%BD-%EC%A0%81%EC%9A%A9)
 
 
 - - -
