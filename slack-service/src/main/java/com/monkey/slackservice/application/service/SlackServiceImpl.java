@@ -2,8 +2,8 @@ package com.monkey.slackservice.application.service;
 
 import com.monkey.slackservice.application.dto.request.ReqSlackStoreMessageDTOApiV1;
 import com.monkey.slackservice.application.dto.response.ResSlackMessageDTOApiV1;
-import com.monkey.slackservice.domain.slack.entity.SlackEntity;
-import com.monkey.slackservice.domain.slack.repository.SlackRepository;
+import com.monkey.slackservice.domain.entity.SlackEntity;
+import com.monkey.slackservice.domain.repository.SlackRepository;
 import com.monkey.slackservice.infrastructure.client.StoreReservationClient;
 import com.monkey.slackservice.infrastructure.dto.response.ResStoreReservationGetByIdDTOApiV1;
 import com.monkey.slackservice.infrastructure.message.SlackMessageFormatter;

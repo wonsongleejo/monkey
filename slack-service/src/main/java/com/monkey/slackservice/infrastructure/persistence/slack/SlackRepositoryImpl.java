@@ -1,7 +1,7 @@
 package com.monkey.slackservice.infrastructure.persistence.slack;
 
-import com.monkey.slackservice.domain.slack.entity.SlackEntity;
-import com.monkey.slackservice.domain.slack.repository.SlackRepository;
+import com.monkey.slackservice.domain.entity.SlackEntity;
+import com.monkey.slackservice.domain.repository.SlackRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

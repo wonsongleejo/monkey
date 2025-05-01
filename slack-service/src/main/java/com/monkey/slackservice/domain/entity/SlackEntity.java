@@ -1,4 +1,4 @@
-package com.monkey.slackservice.domain.slack.entity;
+package com.monkey.slackservice.domain.entity;
 
 import com.monkey.common_module.entity.BaseEntity;
 import jakarta.persistence.*;
