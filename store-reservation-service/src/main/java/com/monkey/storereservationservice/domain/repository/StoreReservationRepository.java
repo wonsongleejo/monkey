@@ -1,6 +1,6 @@
-package com.monkey.storereservationservice.domain.storereservation.repository;
+package com.monkey.storereservationservice.domain.repository;
 
-import com.monkey.storereservationservice.domain.storereservation.entity.StoreReservationEntity;
+import com.monkey.storereservationservice.domain.entity.StoreReservationEntity;
 
 import java.util.List;
 import java.util.UUID;

@@ -1,6 +1,6 @@
 package com.monkey.storereservationservice.application.dto.request;
 
-import com.monkey.storereservationservice.domain.storereservation.vo.StoreReservationStatus;
+import com.monkey.storereservationservice.domain.vo.StoreReservationStatus;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

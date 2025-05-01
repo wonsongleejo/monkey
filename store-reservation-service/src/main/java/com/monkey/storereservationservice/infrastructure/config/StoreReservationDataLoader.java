@@ -1,8 +1,8 @@
 package com.monkey.storereservationservice.infrastructure.config;
 
-import com.monkey.storereservationservice.domain.storereservation.entity.StoreReservationEntity;
-import com.monkey.storereservationservice.domain.storereservation.repository.StoreReservationRepository;
-import com.monkey.storereservationservice.domain.storereservation.vo.StoreReservationStatus;
+import com.monkey.storereservationservice.domain.entity.StoreReservationEntity;
+import com.monkey.storereservationservice.domain.repository.StoreReservationRepository;
+import com.monkey.storereservationservice.domain.vo.StoreReservationStatus;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
