@@ -1,4 +1,4 @@
-package com.monkey.slackservice.domain.slack.vo;
+package com.monkey.slackservice.domain.vo;
 
 public enum SlackMessageType {
     STORE_SCHEDULED,
