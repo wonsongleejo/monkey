@@ -4,7 +4,7 @@
   <img width="77%" src="/docs/images/banner.png" alt="LOGO">
 </div>
 
----
+
 
 ## 🐵 프로젝트 목표 & 소개
 > - 본 프로젝트는 팝업스토어 예약 및 한정 상품 예약 기능을 제공하는 플랫폼을 개발하는 것을 목표로 한다.
@@ -15,7 +15,6 @@
 #### 🍌스토어 운영자가 팝업스토어 등록 및 예약 관리를 쉽게 할 수 있도록 운영 편의성 제공
 
 
-- - -
 
 ## 🐵 팀원 소개 및 담당역할
 | **역할**                    |     **담당자**     | **세부 업무**                                                                                                                                                                                                                      |
@@ -26,7 +25,6 @@
 | **인증인가,<br> 사용자 API**     |     **조**수빈     | - 회원가입, 로그인, 회원정보 수정 및 예약 내역 조회 기능 구현<br> - JWT 기반 인증 및 토큰 발급, 인증 필터로 사용자 요청 검증<br> - AOP와 @CheckUserRole을 통한 역할 기반 접근 제어 구현<br> - Redis 캐싱으로 사용자별 예약 내역 조회 성능 최적화<br> - 재고 감소 시 락을 활용한 동시성 제어 처리                              |
 
 
-- - -
 
 ## 🐵 프로젝트 설계
 <details>
@@ -44,7 +42,6 @@
 
 
 
-- - -
 
 ## 🐵 주요 기능
 
@@ -79,7 +76,6 @@
 - FeignClient 모킹을 통해 테스트 구현
 
 
-- - -
 
 ## 🐵 기술 스택
 - **Language** <div> <img src="https://img.shields.io/badge/java17-green"/></div>
@@ -97,7 +93,6 @@
 - **IDE** <div> <img src = "https://img.shields.io/badge/IntelliJ_IDEA-807d7d.svg?&logo=intellij-idea&logoColor=white"> </div>
 
 
-- - -
 
 ## 🐵 기술적 의사결정
 #### 🍌 [DDD 및 MSA 도입](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-DDD-%EB%B0%8F-MSA-%EB%8F%84%EC%9E%85)
@@ -106,7 +101,6 @@
 #### 🍌 [서비스 버전 분리](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B2%84%EC%A0%84-%EB%B6%84%EB%A6%AC)
 #### 🍌 [Kafka 도입](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-Kafka-%EB%8F%84%EC%9E%85)
 
-- - -
 
 ## 🐵 트러블슈팅
 #### 🍌 [상품 예약 시스템 – DIP 위반 문제 해결](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85%5D-%EC%83%81%ED%92%88-%EC%98%88%EC%95%BD-%EC%8B%9C%EC%8A%A4%ED%85%9C-%E2%80%93-DIP-%EC%9C%84%EB%B0%98-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)
@@ -115,7 +109,6 @@
 #### 🍌 [상품 예약에 Redisson 기반 분산 락 적용](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85%5D-%EC%83%81%ED%92%88-%EC%98%88%EC%95%BD%EC%97%90-Redisson-%EA%B8%B0%EB%B0%98-%EB%B6%84%EC%82%B0-%EB%9D%BD-%EC%A0%81%EC%9A%A9)
 
 
-- - -
 
 ## 🐵 협업
 ### 🍌 GIT Branch
