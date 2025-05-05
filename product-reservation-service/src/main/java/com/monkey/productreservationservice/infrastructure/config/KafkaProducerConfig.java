@@ -1,5 +1,6 @@
 package com.monkey.productreservationservice.infrastructure.config;
 
+import com.monkey.common_module.kafka.UserHeaderProducerInterceptor;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,7 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true); // 메시지 중복 방지
         props.put(ProducerConfig.ACKS_CONFIG, "all"); // 전송 성공 여부
         props.put(ProducerConfig.RETRIES_CONFIG, 3); // 재시도 횟수
+        props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, UserHeaderProducerInterceptor.class.getName());
 
         return new DefaultKafkaProducerFactory<>(props, new StringSerializer(), new StringSerializer());
     }
