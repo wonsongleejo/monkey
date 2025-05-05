@@ -31,6 +31,9 @@ spring:
       host: localhost
       port: 6379
 
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
+
 
 server:
   port: 8084

@@ -27,6 +27,8 @@ dependencies {
 
     implementation 'org.postgresql:postgresql:42.7.1'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.kafka:spring-kafka'
+    testImplementation 'org.springframework.kafka:spring-kafka-test'
 }
 
 dependencyManagement {

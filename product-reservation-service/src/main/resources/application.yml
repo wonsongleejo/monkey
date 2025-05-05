@@ -26,6 +26,9 @@ spring:
     access-token-expiration: ${ACCESS_TOKEN_EXPIRATION}
     refresh-token-expiration: ${REFRESH_TOKEN_EXPIRATION}
 
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
+
 server:
   port: 8085
 
