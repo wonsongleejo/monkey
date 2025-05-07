@@ -23,11 +23,15 @@ spring:
     redis:
       host: localhost
       port: 6379
-#      password: systempass
+  #      password: systempass
 
-#  #  더미데이터용 환경설정 *배포시 삭제 필요*
-#  profiles:
-#    active: dev
+  #  #  더미데이터용 환경설정 *배포시 삭제 필요*
+  #  profiles:
+  #    active: dev
+
+  # Kafka
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
 
 server:
   port: 8083
