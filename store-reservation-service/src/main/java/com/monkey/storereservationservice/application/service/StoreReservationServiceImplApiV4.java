@@ -90,20 +90,22 @@ public class StoreReservationServiceImplApiV4 implements StoreReservationService
         try {
             // 예약 요청이 들어오면 락
             if (lock.tryLock(10, 5, TimeUnit.SECONDS)) {
-                // 예약 대기 상태로 설정
+                // 예약 대기 상태 저장
                 StoreReservationEntity entity = StoreReservationEntity.createStoreReservation(
                         timeSlotId,
                         userContext.getUserId(),
                         request.getStoreReservation().getPersonCount(),
-                        StoreReservationStatus.PENDING
+                        StoreReservationStatus.SCHEDULED_PENDING
                 );
 
                 storeReservationRepository.save(entity);
 
                 // 예약 대기 상태라는 카프카 메시지 발행
-                String message = String.format("reservationId=%s,userId=%d,timeSlotId=%s,personCount=%d,status=PENDING",
-                        entity.getStoreReservationId(), userContext.getUserId(), timeSlotId, request.getStoreReservation().getPersonCount());
-                producer.sendReservationCreated(message);
+                String pendingMessage = String.format(
+                        "reservationId=%s,userId=%d,timeSlotId=%s,personCount=%d,status=PENDING",
+                        entity.getStoreReservationId(), userContext.getUserId(), timeSlotId, request.getStoreReservation().getPersonCount()
+                );
+                producer.sendReservationCreated(pendingMessage);
 
                 // 해당 요청이 예약 가능한지 확인
                 PersonInfo personInfo = calculateCurrentAndMaxPerson(timeSlotId);
@@ -127,35 +129,39 @@ public class StoreReservationServiceImplApiV4 implements StoreReservationService
 
     // 실제 예약 처리 로직만 따로 뺀 메서드
     private ResStoreReservationPostDTOApiV1 reserve(UUID timeSlotId, Integer requestedPersonCount, UserContext userContext, PersonInfo personInfo, StoreReservationEntity entity) {
+        int current = personInfo.getCurrentReservedPerson();
+        int max = personInfo.getMaxPerson();
+
         // 예약 실패
-        if (personInfo.getCurrentReservedPerson() + requestedPersonCount > personInfo.getMaxPerson()) {
+        if (current + requestedPersonCount > max) {
             // 예약 실패 상태 변경
-            entity.changeStatus(StoreReservationStatus.FAILED);
+            entity.changeStatus(StoreReservationStatus.SCHEDULED_FAILED);
             storeReservationRepository.save(entity);
 
             // 예약 실패 카프카 메세지 발송
-            String message = String.format("reservationId=%s,userId=%d,timeSlotId=%s,personCount=%d,status=FAILED",
-                    entity.getStoreReservationId(), userContext.getUserId(), timeSlotId, requestedPersonCount);
-            producer.sendReservationCanceled(message);
+            String failMessage = String.format(
+                    "reservationId=%s,userId=%d,timeSlotId=%s,personCount=%d,status=FAILED",
+                    entity.getStoreReservationId(), userContext.getUserId(), timeSlotId, requestedPersonCount
+            );
+            producer.sendReservationCreated(failMessage);
 
             throw new CustomException(ResponseCode.STORE_RESERVATION_FULL);
         }
-        // 예약 성공
-        else {
-            // 예약 성공 상태 변경
-            entity.changeStatus(StoreReservationStatus.SCHEDULED);
-            storeReservationRepository.save(entity);
 
-            // 예약 성공 카프카 메세지 발송
-            String message = String.format("reservationId=%s,userId=%d,timeSlotId=%s,personCount=%d,status=SCHEDULED",
-                    entity.getStoreReservationId(), userContext.getUserId(), timeSlotId, requestedPersonCount);
-            producer.sendReservationCreated(message);
+        entity.changeStatus(StoreReservationStatus.SCHEDULED);
+        storeReservationRepository.save(entity);
 
-            // Redis에 예약 인원 업데이트
-            updateCurrentReservedPerson(timeSlotId, personInfo.getCurrentReservedPerson() + requestedPersonCount);
+        // 예약 성공 카프카 메세지 발송
+        String successMessage = String.format(
+                "reservationId=%s,userId=%d,timeSlotId=%s,personCount=%d,status=SCHEDULED",
+                entity.getStoreReservationId(), userContext.getUserId(), timeSlotId, requestedPersonCount
+        );
+        producer.sendReservationCreated(successMessage);
 
-            return ResStoreReservationPostDTOApiV1.from(entity, personInfo.getCurrentReservedPerson() + requestedPersonCount, personInfo.getMaxPerson());
-        }
+        // Redis에 예약 인원 업데이트
+        updateCurrentReservedPerson(timeSlotId, current + requestedPersonCount);
+
+        return ResStoreReservationPostDTOApiV1.from(entity, current + requestedPersonCount, max);
     }
 
     @Override
@@ -252,11 +258,6 @@ public class StoreReservationServiceImplApiV4 implements StoreReservationService
         entity.changeStatus(StoreReservationStatus.CANCELED);
 
         StoreReservationEntity saved = storeReservationRepository.save(entity);
-
-        // Kafka 메시지 발행
-        String message = String.format("reservationId=%s,userId=%d",
-                saved.getStoreReservationId(), saved.getUserId());
-        producer.sendReservationCanceled(message);
 
         PersonInfo personInfo = calculateCurrentAndMaxPerson(saved.getTimeSlotId());
         return ResStoreReservationPutByIdStatusDTOApiV1.from(saved, personInfo.getCurrentReservedPerson(), personInfo.getMaxPerson());
