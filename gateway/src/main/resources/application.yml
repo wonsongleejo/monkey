@@ -48,7 +48,7 @@ spring:
             - AuthorizationHeaderFilter
           uri: lb://product-reservation-service
           predicates:
-            - Path=/v1/product-reservations/**, /v2/product-reservations/**, /springdoc/openapi3-product-reservation-service.json
+            - Path=/v1/product-reservations/**, /v2/product-reservations/**,, /v3/product-reservations/**, /springdoc/openapi3-product-reservation-service.json
 
         # Slack
         - id: slack-service
