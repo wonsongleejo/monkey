@@ -27,9 +27,9 @@ allprojects{
     }
 
     // 루트 프로젝트에서 BootJar 비활성화
-    tasks.withType(BootJar).configureEach {
-        enabled = false
-    }
+//    tasks.withType(BootJar).configureEach {
+//        enabled = false
+//    }
 }
 
 subprojects {
