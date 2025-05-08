@@ -6,6 +6,11 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost:${POSTGRES_SLACK_DB_PORT}/${POSTGRES_SLACK_DB}
+#    배포
+#    jdbc:postgresql://13:
+#      125:
+#        228:
+#          40:${POSTGRES_USER_DB_PORT}/${POSTGRES_USER_DB}:
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
