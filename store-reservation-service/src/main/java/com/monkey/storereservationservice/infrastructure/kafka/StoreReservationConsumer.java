@@ -23,18 +23,17 @@ public class StoreReservationConsumer {
 
         try {
             String[] parts = message.split(",");
-            String reservationIdStr = parts[0].split("=")[1];
-            String status = parts[4].split("=")[1];
+            String status = parts[3].split("=")[1];
 
-            // PENDING 상태면 저장하지 않고 소비만
-            if (status.equals("SCHEDULED_PENDING")) {
-                log.info("[Kafka] SCHEDULED_PENDING 상태는 소비만");
+            if (status.equals("SCHEDULED_PENDING") || status.equals("FAILED")) {
+                log.info("[Kafka] 상태 {} 는 DB 저장 대상이 아니므로 무시", status);
                 return;
             }
 
+            String reservationIdStr = parts[0].split("=")[1];
             UUID reservationId = UUID.fromString(reservationIdStr);
-            StoreReservationEntity entity = storeReservationRepository.findById(reservationId);
 
+            StoreReservationEntity entity = storeReservationRepository.findById(reservationId);
             if (entity == null) {
                 log.warn("[Kafka] 존재하지 않는 예약 ID: {}", reservationId);
                 return;

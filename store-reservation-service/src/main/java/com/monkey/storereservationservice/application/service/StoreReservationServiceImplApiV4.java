@@ -140,8 +140,8 @@ public class StoreReservationServiceImplApiV4 implements StoreReservationService
 
             // 예약 실패 카프카 메세지 발송
             String failMessage = String.format(
-                    "reservationId=%s,userId=%d,timeSlotId=%s,personCount=%d,status=FAILED",
-                    entity.getStoreReservationId(), userContext.getUserId(), timeSlotId, requestedPersonCount
+                    "userId=%d,timeSlotId=%s,personCount=%d,status=FAILED",
+                    userContext.getUserId(), timeSlotId, requestedPersonCount
             );
             producer.sendReservationCreated(failMessage);
 
