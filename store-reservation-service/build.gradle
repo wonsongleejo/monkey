@@ -18,16 +18,10 @@ dependencies {
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
 
     // FeignClient 테스트용
-    testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.0'
-    testImplementation 'javax.servlet:javax.servlet-api:4.0.1'
-    testImplementation 'org.eclipse.jetty:jetty-util:9.4.51.v20230217'
-    testImplementation 'org.eclipse.jetty:jetty-http:9.4.51.v20230217'
-    testImplementation 'org.eclipse.jetty:jetty-server:9.4.51.v20230217'
-    testImplementation 'org.eclipse.jetty:jetty-servlet:9.4.51.v20230217'
-    testImplementation 'org.eclipse.jetty:jetty-io:9.4.51.v20230217'
-    testImplementation 'org.eclipse.jetty:jetty-security:9.4.51.v20230217'
-    testImplementation 'org.eclipse.jetty:jetty-webapp:9.4.51.v20230217'
-    testImplementation 'org.eclipse.jetty:jetty-xml:9.4.51.v20230217'
+    testImplementation("org.springframework.cloud:spring-cloud-contract-wiremock")
+
+    // Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.redisson:redisson-spring-boot-starter:3.24.0'
