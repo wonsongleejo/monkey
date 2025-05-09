@@ -68,4 +68,14 @@ public class ProductReservationEntity extends BaseEntity {
         this.status = ProductReservationStatus.FAILED;
         this.delete(userId);
     }
+
+    // 카프카 상품 재고 차감 성공 시 호출
+    public void confirmStockReservation() {
+        this.status = ProductReservationStatus.PENDING_PICKUP;
+    }
+
+    // 카프카 상품 재고 차감 실패 시 호출
+    public void failStockReservation() {
+        this.status = ProductReservationStatus.FAILED;
+    }
 }
