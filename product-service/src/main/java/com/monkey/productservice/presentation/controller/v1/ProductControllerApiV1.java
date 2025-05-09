@@ -7,7 +7,7 @@ import com.monkey.productservice.application.dto.response.ResProductGetByIdDTOAp
 import com.monkey.productservice.application.dto.response.ResProductGetDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductPutDTOApiV1;
-import com.monkey.productservice.application.service.v1.ProductServiceApiV1;
+import com.monkey.productservice.application.service.v4.ProductServiceApiV4;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +21,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/v1/products")
 public class ProductControllerApiV1 {
-    private final ProductServiceApiV1 productServiceApiV1;
+    private final ProductServiceApiV4 productServiceApiV4;
 
     // 상품 등록
     @PostMapping
@@ -29,7 +29,7 @@ public class ProductControllerApiV1 {
             @RequestHeader("X-User-Id") Long userId,
             @RequestBody @Valid ReqProductPostDTOApiV1 reqDto
             ) {
-        ResProductPostDTOApiV1 resDto = productServiceApiV1.postBy(reqDto);
+        ResProductPostDTOApiV1 resDto = productServiceApiV4.postBy(reqDto);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
@@ -40,40 +40,40 @@ public class ProductControllerApiV1 {
             @RequestHeader("X-User-Id") Long userId,
             @RequestBody @Valid ReqProductPutDTOApiV1 reqDto
     ) {
-        ResProductPutDTOApiV1 resDto = productServiceApiV1.putBy(productId, reqDto);
+        ResProductPutDTOApiV1 resDto = productServiceApiV4.putBy(productId, reqDto);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
     // 상품 전체 조회
     @GetMapping
     public ResponseEntity<ResDTO<ResProductGetDTOApiV1>> getBy(Pageable pageable) {
-        ResProductGetDTOApiV1 resDto = productServiceApiV1.getBy(pageable);
+        ResProductGetDTOApiV1 resDto = productServiceApiV4.getBy(pageable);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
     // 상품 단건 조회
     @GetMapping("/{productId}")
     public ResponseEntity<ResDTO<ResProductGetByIdDTOApiV1>> getById(@PathVariable UUID productId) {
-        ResProductGetByIdDTOApiV1 resDto = productServiceApiV1.getById(productId);
+        ResProductGetByIdDTOApiV1 resDto = productServiceApiV4.getById(productId);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
 
     // 상품 삭제
     @DeleteMapping("/{productId}")
     public ResponseEntity<ResDTO<Object>> deleteBy(@PathVariable UUID productId, @RequestHeader("X-User-Id") Long userId) {
-        productServiceApiV1.deleteById(productId, userId);
+        productServiceApiV4.deleteById(productId, userId);
         return new ResponseEntity<>(ResDTO.success(null), HttpStatus.OK);
     }
 
     // 상품 재고 차감
     @PutMapping("/{productId}/stock/decrease")
     public void decreaseStock(@PathVariable UUID productId, @RequestHeader("X-User-Id") Long userId, @RequestParam int quantity) {
-        productServiceApiV1.decreaseStock(productId, userId, quantity);
+        productServiceApiV4.decreaseStock(productId, userId, quantity);
     }
 
     // 상품 재고 증가
     @PutMapping("/{productId}/stock/increase")
     public void increaseStock(@PathVariable UUID productId, @RequestHeader("X-User-Id") Long userId, @RequestParam int quantity) {
-        productServiceApiV1.increaseStock(productId, userId, quantity);
+        productServiceApiV4.increaseStock(productId, userId, quantity);
     }
 }
