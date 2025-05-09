@@ -144,7 +144,7 @@ public class ProductReservationServiceApiV3 {
                 .userId(userId)
                 .storeId(product.getStore().getStoreId())
                 .quantity(reqDto.getQuantity())
-                .status(ProductReservationStatus.PENDING_PICKUP)
+                .status(ProductReservationStatus.WAITING_FOR_CONFIRM)
                 .build();
 
         productReservationEntity = productReservationRepository.save(productReservationEntity);
