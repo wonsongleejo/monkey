@@ -17,8 +17,6 @@ import java.util.Map;
 @EnableKafka
 public class KafkaProducerConfig {
 
-    Map<String, Object> props = new HashMap<>();
-
     @Value("${spring.kafka.bootstrap-servers}")
     private String BOOTSTRAP_SERVERS;
 
@@ -29,6 +27,7 @@ public class KafkaProducerConfig {
 
     @Bean
     public ProducerFactory<String, String> producerFactory() {
+        Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
@@ -36,6 +35,6 @@ public class KafkaProducerConfig {
         props.put(ProducerConfig.ACKS_CONFIG, "all"); // 전송 성공 여부
         props.put(ProducerConfig.RETRIES_CONFIG, 3); // 재시도 횟수
 
-        return new DefaultKafkaProducerFactory<>(props, new StringSerializer(), new StringSerializer());
+        return new DefaultKafkaProducerFactory<>(props);
     }
 }

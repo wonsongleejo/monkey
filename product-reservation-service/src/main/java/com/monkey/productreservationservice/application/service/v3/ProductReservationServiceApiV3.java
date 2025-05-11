@@ -20,6 +20,7 @@ import com.monkey.productreservationservice.infrastructure.feignclient.ProductFe
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
+import com.monkey.productreservationservice.infrastructure.kafka.ProductReservationProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
@@ -39,6 +40,7 @@ public class ProductReservationServiceApiV3 {
     private final ProductReservationReadValidator readValidator;
     private final ProductFeignClientApiV1 productFeignClientApiV1;
     private final ProductReservationEventProduceV1 productReservationEventProduce;
+    private final ProductReservationProducer productReservationProducer;
 
     // 예약 등록
     @Transactional
@@ -47,6 +49,17 @@ public class ProductReservationServiceApiV3 {
         // 예약 요청 검증
         var product = reservationValidator.validateReservationRequest(productId, userId, reqDto.getQuantity());
         ProductReservationEntity productReservation = saveNewReservation(product, reqDto, userId);
+
+        // Kafka 메시지 전송
+        String message = String.format(
+                "productReservationId=%s,userId=%d,productId=%s,quantity=%d,status=%s",
+                productReservation.getProductReservationId(),
+                userId,
+                productId,
+                reqDto.getQuantity(),
+                productReservation.getStatus()
+        );
+        productReservationProducer.sendReservationCreated(message);
 
         try {
             requestStockDecrease(productId, userId, reqDto.getQuantity());
@@ -131,7 +144,7 @@ public class ProductReservationServiceApiV3 {
                 .userId(userId)
                 .storeId(product.getStore().getStoreId())
                 .quantity(reqDto.getQuantity())
-                .status(ProductReservationStatus.PENDING_PICKUP)
+                .status(ProductReservationStatus.WAITING_FOR_CONFIRM)
                 .build();
 
         productReservationEntity = productReservationRepository.save(productReservationEntity);

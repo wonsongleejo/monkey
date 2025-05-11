@@ -3,6 +3,8 @@ eureka:
     enabled: false
 
 spring:
+  kafka:
+    bootstrap-servers: localhost:29092
   config:
     import: ''
   datasource:
