@@ -1,7 +1,7 @@
 package com.monkey.productreservationservice.infrastructure.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.monkey.productreservationservice.application.service.v3.ProductReservationServiceApiV3;
+import com.monkey.productreservationservice.application.service.ProductReservationServiceApiV3;
 import com.monkey.productreservationservice.infrastructure.kafka.dto.ProductStockIncreaseFailPayloadV1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

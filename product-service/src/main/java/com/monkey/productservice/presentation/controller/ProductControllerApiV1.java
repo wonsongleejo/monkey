@@ -1,4 +1,4 @@
-package com.monkey.productservice.presentation.controller.v1;
+package com.monkey.productservice.presentation.controller;
 
 import com.monkey.common_module.dto.ResDTO;
 import com.monkey.productservice.application.dto.request.ReqProductPostDTOApiV1;
@@ -7,7 +7,7 @@ import com.monkey.productservice.application.dto.response.ResProductGetByIdDTOAp
 import com.monkey.productservice.application.dto.response.ResProductGetDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductPostDTOApiV1;
 import com.monkey.productservice.application.dto.response.ResProductPutDTOApiV1;
-import com.monkey.productservice.application.service.v4.ProductServiceApiV4;
+import com.monkey.productservice.application.service.ProductServiceApiV4;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

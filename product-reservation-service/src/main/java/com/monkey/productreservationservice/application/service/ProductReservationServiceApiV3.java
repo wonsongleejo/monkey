@@ -1,4 +1,4 @@
-package com.monkey.productreservationservice.application.service.v3;
+package com.monkey.productreservationservice.application.service;
 
 import com.monkey.common_module.aop.AccessLevel;
 import com.monkey.common_module.aop.CheckUserRole;

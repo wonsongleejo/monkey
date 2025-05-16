@@ -1,4 +1,4 @@
-package com.monkey.productservice.application.service.v2;
+package com.monkey.productservice.application.service;
 
 import com.monkey.common_module.aop.AccessLevel;
 import com.monkey.common_module.aop.CheckUserRole;

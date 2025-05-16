@@ -2,7 +2,7 @@ package com.monkey.productservice.infrastructure.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.productservice.application.event.dto.ProductStockDecreaseResultPayloadV1;
-import com.monkey.productservice.application.service.v4.ProductServiceApiV4;
+import com.monkey.productservice.application.service.ProductServiceApiV4;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

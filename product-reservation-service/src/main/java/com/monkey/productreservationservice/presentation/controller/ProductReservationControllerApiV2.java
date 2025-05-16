@@ -1,4 +1,4 @@
-package com.monkey.productreservationservice.presentation.controller.v1;
+package com.monkey.productreservationservice.presentation.controller;
 
 import com.monkey.common_module.dto.ResDTO;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
@@ -6,7 +6,7 @@ import com.monkey.productreservationservice.application.dto.response.ResProductR
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostByIdCancelDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
-import com.monkey.productreservationservice.application.service.v1.ProductReservationServiceApiV1;
+import com.monkey.productreservationservice.application.service.ProductReservationServiceApiV2;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,17 +18,17 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/v1/product-reservations")
-public class ProductReservationControllerApiV1 {
-    private final ProductReservationServiceApiV1 productReservationService;
+@RequestMapping("/v2/product-reservations")
+public class ProductReservationControllerApiV2 {
+    private final ProductReservationServiceApiV2 productReservationService;
 
     // 예약 등록
     @PostMapping("/{productId}")
     public ResponseEntity<ResDTO<ResProductReservationPostDTOApiV1>> postBy(
             @RequestBody @Valid ReqProductReservationPostDTOApiV1 reqDto,
             @PathVariable UUID productId,
-            @RequestHeader("X-User-Id") long userId
-            ) {
+            @RequestHeader("X-User-Id") Long userId
+    ) {
         ResProductReservationPostDTOApiV1 resDto = productReservationService.postBy(reqDto, productId, userId);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }

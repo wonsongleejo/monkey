@@ -1,8 +1,8 @@
-package com.monkey.productservice.presentation.controller.v2;
+package com.monkey.productservice.presentation.controller;
 
 import com.monkey.common_module.dto.ResDTO;
 import com.monkey.productservice.application.dto.response.ResProductGetDTOApiV1;
-import com.monkey.productservice.application.service.v4.ProductServiceApiV4;
+import com.monkey.productservice.application.service.ProductServiceApiV4;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;

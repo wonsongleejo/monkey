@@ -1,4 +1,4 @@
-package com.monkey.productreservationservice.presentation.controller.v3;
+package com.monkey.productreservationservice.presentation.controller;
 
 import com.monkey.common_module.dto.ResDTO;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
@@ -6,7 +6,7 @@ import com.monkey.productreservationservice.application.dto.response.ResProductR
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostByIdCancelDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
-import com.monkey.productreservationservice.application.service.v3.ProductReservationServiceApiV3;
+import com.monkey.productreservationservice.application.service.ProductReservationServiceApiV3;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;

@@ -1,19 +1,19 @@
-package com.monkey.productreservationservice.application.service.v1;
+package com.monkey.productreservationservice.application.service;
 
 import com.monkey.common_module.aop.AccessLevel;
 import com.monkey.common_module.aop.CheckUserRole;
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;
-import com.monkey.common_module.lock.DistributedLock;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetByIdDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostByIdCancelDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
 import com.monkey.productreservationservice.application.validator.v1.ProductReservationReadValidator;
-import com.monkey.productreservationservice.application.validator.v1.ProductReservationValidator;
+import com.monkey.productreservationservice.application.validator.v2.ProductReservationValidatorV2;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
 import com.monkey.productreservationservice.domain.repository.ProductReservationRepository;
+import com.monkey.productreservationservice.domain.service.ProductStockServiceV1;
 import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
 import com.monkey.productreservationservice.infrastructure.feignclient.ProductFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
@@ -21,34 +21,41 @@ import com.monkey.productreservationservice.infrastructure.feignclient.dto.respo
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ProductReservationServiceApiV1 {
+public class ProductReservationServiceApiV2 {
     private final ProductReservationRepository productReservationRepository;
-    private final ProductReservationValidator reservationValidator;
+    private final ProductReservationValidatorV2 reservationValidator;
     private final ProductReservationReadValidator readValidator;
     private final ProductFeignClientApiV1 productFeignClientApiV1;
+    private final ProductStockServiceV1 productStockService;
 
     // 예약 등록
+    @Transactional
+    @CachePut(value = "product-reservation", key = "#userId")
     @CheckUserRole(AccessLevel.USER)
-    @DistributedLock(key = "'product:' + #productId", waitTime = 10, leaseTime = 2)
-    public ResProductReservationPostDTOApiV1 postBy(ReqProductReservationPostDTOApiV1 reqDto, UUID productId, long userId) {
+    public ResProductReservationPostDTOApiV1 postBy(ReqProductReservationPostDTOApiV1 reqDto, UUID productId, Long userId) {
         // 예약 요청 검증
         var product = reservationValidator.validateReservationRequest(productId, userId, reqDto.getQuantity());
+
+        productStockService.ensureStockInRedis(productId);
 
         ProductReservationEntity productReservation = saveNewReservation(product, reqDto, userId);
 
         try {
             requestStockDecrease(productId, userId, reqDto.getQuantity());
         } catch (Exception e) {
-            requestReservationFail(productReservation, userId);
+            requestReservationFail(productReservation, userId, reqDto.getQuantity());
             throw new CustomException(ResponseCode.PRODUCT_OUT_OF_STOCK);
         }
         return ResProductReservationPostDTOApiV1.of(productReservation);
@@ -58,6 +65,14 @@ public class ProductReservationServiceApiV1 {
     @CheckUserRole(AccessLevel.USER)
     public ResProductReservationPostByIdCancelDTOApiV1 cancelBy(UUID productReservationId, long userId) {
         ProductReservationEntity productReservation = getActiveProductReservationById(productReservationId);
+        UUID productId = productReservation.getProductId();
+        int quantity = productReservation.getQuantity();
+
+        Integer cachedStock = productStockService.getProductStock(productId);
+        log.info("[디버깅] cancelBy 재고 세팅 - productId={}, 세팅된 Redis 재고={}", productId, cachedStock);
+
+        // 재고 복원
+        productStockService.increaseStock(productId, quantity);
         productReservation.cancel(userId);
 
         // 상품 재고 복원
@@ -89,6 +104,7 @@ public class ProductReservationServiceApiV1 {
     }
 
     // 개인 예약내역 조회
+    @Cacheable(value = "product-reservation", key = "#userId")
     @CheckUserRole(AccessLevel.USER)
     public ResProductReservationGetDTOApiV1 getByUserId(long userId, Pageable pageable) {
         Page<ProductReservationEntity> productReservationPage =
@@ -122,12 +138,24 @@ public class ProductReservationServiceApiV1 {
 
     // 상품 재고 감소 요청
     private void requestStockDecrease(UUID productId, long userId, int quantity) {
-        productFeignClientApiV1.decreaseStock(productId, userId, quantity);
-        log.info("[상품 재고 차감 요청] productId={}, userId={}, quantity={}", productId, userId, quantity);
+        try {
+            // Redis 재고 차감
+            productStockService.decreaseStock(productId, quantity);
+
+            // DB 재고 차감
+            productFeignClientApiV1.decreaseStock(productId, userId, quantity);
+            log.info("[상품 재고 차감 요청] productId={}, userId={}, quantity={}", productId, userId, quantity);
+        } catch (Exception e) {
+            // DB 차감 실패할 경우, Redis 재고 복원
+            productStockService.increaseStock(productId, quantity);
+
+            log.error("[DB 재고 차감 실패] productId={}, userId={}, quantity={}", productId, userId, quantity);
+            throw new CustomException(ResponseCode.PRODUCT_FEIGN_CLIENT_ERROR);
+        }
     }
 
     // 상품 예약 실패
-    private void requestReservationFail(ProductReservationEntity productReservation, long userId) {
+    private void requestReservationFail(ProductReservationEntity productReservation, long userId, int quantity) {
         productReservation.fail(userId);
         productReservationRepository.save(productReservation);
         log.error("[재고 부족으로 인해 예약 실패] reservationId={}", productReservation.getProductReservationId());
