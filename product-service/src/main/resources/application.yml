@@ -9,17 +9,6 @@ spring:
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
-  #  data:
-  #    redis:
-  #      port: 6379
-  #      host: 13.125.228.40
-
-  #  datasource:
-  #    url: jdbc:postgresql://13.125.228.40:${POSTGRES_PRODUCT_DB_PORT}/${POSTGRES_PRODUCT_DB}
-  #    username: ${POSTGRES_USER}
-  #    password: ${POSTGRES_PASSWORD}
-  #    driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -32,6 +21,7 @@ spring:
   sql:
     init:
       mode: always
+
   jwt:
     secret: ${JWT_SECRET_KEY}
     access-token-expiration: ${ACCESS_TOKEN_EXPIRATION}
@@ -56,10 +46,7 @@ eureka:
     service-url:
       defaultZone: http://${EUREKA_HOST}:${EUREKA_PORT}/eureka/
   instance:
-    instance-id: docker.host.internal:${server.port}
-    hostname: ${spring.application.name}
     prefer-ip-address: true
-    #    ip-address: 11.222.223.333 (예시)
 
 springdoc:
   group-configs:

@@ -19,6 +19,10 @@ ext {
     set('querydslVersion', "5.0.0")
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     // 공통 모듈
     implementation 'com.github.wonsongleejo:common-module:1.0.4'

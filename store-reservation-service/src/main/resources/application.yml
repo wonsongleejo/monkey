@@ -5,12 +5,7 @@ spring:
     import: optional:file:.env[.properties]
 
   datasource:
-    url: jdbc:postgresql://localhost:${POSTGRES_STORE_RESERVATION_DB_PORT}/${POSTGRES_STORE_RESERVATION_DB}
-#    배포
-#    jdbc:postgresql://13:
-#      125:
-#        228:
-#          40:${POSTGRES_USER_DB_PORT}/${POSTGRES_USER_DB}:
+    url: jdbc:postgresql://${DATABASE_HOST}:${POSTGRES_STORE_RESERVATION_DB_PORT}/${POSTGRES_STORE_RESERVATION_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -26,9 +21,7 @@ spring:
   # Redis
   data:
     redis:
-      host: localhost
-#      배포
-#      host: 13.125.228.40
+      host: ${REDIS_HOST}
       port: 6379
   #      password: systempass
 
@@ -44,15 +37,15 @@ server:
   port: 8083
 
 store-service:
-  url: http://localhost:8082
+  url: http://${STORE_HOST}:8082
 slack-service:
-  url: http://localhost:8086
+  url: http://${SLACK_HOST}:8086
 
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${EUREKA_HOST}:${EUREKA_PORT}/eureka/
   instance:
     prefer-ip-address: true

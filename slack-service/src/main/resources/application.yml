@@ -5,12 +5,7 @@ spring:
     import: optional:file:.env[.properties]
 
   datasource:
-    url: jdbc:postgresql://localhost:${POSTGRES_SLACK_DB_PORT}/${POSTGRES_SLACK_DB}
-#    배포
-#    jdbc:postgresql://13:
-#      125:
-#        228:
-#          40:${POSTGRES_USER_DB_PORT}/${POSTGRES_USER_DB}:
+    url: jdbc:postgresql://${DATABASE_HOST}:${POSTGRES_SLACK_DB_PORT}/${POSTGRES_SLACK_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
@@ -35,7 +30,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${EUREKA_HOST}:8761/eureka/
   instance:
     prefer-ip-address: true
 

@@ -4,21 +4,10 @@ spring:
   config:
     import: optional:file:.env[.properties]
   datasource:
-    url: jdbc:postgresql://localhost:${POSTGRES_PRODUCT_RESERVATION_DB_PORT}/${POSTGRES_PRODUCT_RESERVATION_DB}
+    url: jdbc:postgresql://${DATABASE_HOST}:${POSTGRES_PRODUCT_RESERVATION_DB_PORT}/${POSTGRES_PRODUCT_RESERVATION_DB}
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
-
-  #  data:
-  #    redis:
-  #      port: 6379
-  #      host: 13.125.228.40
-
-  #  datasource:
-  #    url: jdbc:postgresql://13.125.228.40:${POSTGRES_PRODUCT_RESERVATION_DB_PORT}/${POSTGRES_PRODUCT_RESERVATION_DB}
-  #    username: ${POSTGRES_USER}
-  #    password: ${POSTGRES_PASSWORD}
-  #    driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
@@ -32,10 +21,6 @@ spring:
   sql:
     init:
       mode: always
-  jwt:
-    secret: ${JWT_SECRET_KEY}
-    access-token-expiration: ${ACCESS_TOKEN_EXPIRATION}
-    refresh-token-expiration: ${REFRESH_TOKEN_EXPIRATION}
 
   kafka:
     bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
@@ -53,7 +38,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${EUREKA_HOST}:8761/eureka/
   instance:
     prefer-ip-address: true
 
