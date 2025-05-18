@@ -64,6 +64,10 @@ spring:
 
       #loadbalancer:
         #enable: true
+  data:
+    redis:
+      host: ${REDIS_HOST}
+      port: 6379
 
 jwt:
   secret: ${JWT_SECRET_KEY}
@@ -71,7 +75,7 @@ jwt:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://${EUREKA_HOST}:8761/eureka/
 
 springdoc:
   swagger-ui:
