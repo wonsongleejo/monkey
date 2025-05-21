@@ -10,8 +10,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "p_slack")
 @SQLRestriction("deleted_at is null")
 public class SlackEntity extends BaseEntity {
@@ -30,10 +29,11 @@ public class SlackEntity extends BaseEntity {
     private UUID reservationId;
 
     public static SlackEntity createSlackMessage(String slackId, String slackMessage, UUID reservationId) {
-        return SlackEntity.builder()
-                .slackId(slackId)
-                .slackMessage(slackMessage)
-                .reservationId(reservationId)
-                .build();
+        return new SlackEntity(
+                null,
+                slackId,
+                slackMessage,
+                reservationId
+        );
     }
 }

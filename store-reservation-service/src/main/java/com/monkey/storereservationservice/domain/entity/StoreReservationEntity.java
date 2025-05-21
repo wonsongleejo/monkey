@@ -11,8 +11,7 @@ import java.util.UUID;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Table(name = "p_store_reservation")
 @SQLRestriction("deleted_at is null")
 public class StoreReservationEntity extends BaseEntity {
@@ -40,12 +39,12 @@ public class StoreReservationEntity extends BaseEntity {
             Integer personCount,
             StoreReservationStatus status
     ) {
-        return StoreReservationEntity.builder()
-                .timeSlotId(timeSlotId)
-                .userId(userId)
-                .personCount(personCount)
-                .status(status)
-                .build();
+        StoreReservationEntity entity = new StoreReservationEntity();
+        entity.timeSlotId = timeSlotId;
+        entity.userId = userId;
+        entity.personCount = personCount;
+        entity.status = status;
+        return entity;
     }
 
     // 예약 상태 변경
