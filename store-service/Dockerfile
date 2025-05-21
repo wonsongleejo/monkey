@@ -7,6 +7,6 @@ ARG ENV_FILE=./.env
 COPY ${JAR_FILE} app.jar
 COPY ${ENV_FILE} .env
 
-EXPOSE 8084
+EXPOSE 8082
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
