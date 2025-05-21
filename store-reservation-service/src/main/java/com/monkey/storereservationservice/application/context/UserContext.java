@@ -1,4 +1,4 @@
-package com.monkey.storereservationservice.infrastructure.security;
+package com.monkey.storereservationservice.application.context;
 
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;

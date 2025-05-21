@@ -1,4 +1,4 @@
-package com.monkey.storereservationservice.infrastructure.security;
+package com.monkey.storereservationservice.application.context;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

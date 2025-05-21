@@ -8,7 +8,7 @@ import com.monkey.storereservationservice.application.dto.response.ResStoreReser
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPostDTOApiV1;
 import com.monkey.storereservationservice.application.dto.response.ResStoreReservationPutByIdStatusDTOApiV1;
 import com.monkey.storereservationservice.application.service.StoreReservationServiceApiV1;
-import com.monkey.storereservationservice.infrastructure.security.UserContext;
+import com.monkey.storereservationservice.application.context.UserContext;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
