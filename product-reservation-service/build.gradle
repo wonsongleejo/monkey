@@ -24,7 +24,7 @@ repositories {
 
 dependencies {
     // 공통 모듈
-    implementation 'com.github.wonsongleejo:common-module:1.0.7'
+    implementation 'com.github.wonsongleejo:common-module:1.1.0'
 
     // SpringDoc OpenAPI
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
