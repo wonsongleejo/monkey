@@ -12,7 +12,7 @@ import com.monkey.storereservationservice.domain.repository.StoreReservationRepo
 import com.monkey.storereservationservice.domain.vo.StoreReservationStatus;
 import com.monkey.storereservationservice.infrastructure.client.StoreClient;
 import com.monkey.storereservationservice.infrastructure.dto.response.ResStoreTimeSlotDTOApiV1;
-import com.monkey.storereservationservice.infrastructure.security.UserContext;
+import com.monkey.storereservationservice.application.context.UserContext;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -6,7 +6,7 @@ import com.monkey.storereservationservice.application.dto.request.ReqStoreReserv
 import com.monkey.storereservationservice.config.StoreFeignClientMockConfig;
 import com.monkey.storereservationservice.domain.entity.StoreReservationEntity;
 import com.monkey.storereservationservice.domain.vo.StoreReservationStatus;
-import com.monkey.storereservationservice.infrastructure.persistence.storereservation.StoreReservationJpaRepository;
+import com.monkey.storereservationservice.infrastructure.persistence.StoreReservationJpaRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;

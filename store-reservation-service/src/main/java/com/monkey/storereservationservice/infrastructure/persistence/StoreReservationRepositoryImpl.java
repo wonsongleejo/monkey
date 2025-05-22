@@ -1,4 +1,4 @@
-package com.monkey.storereservationservice.infrastructure.persistence.storereservation;
+package com.monkey.storereservationservice.infrastructure.persistence;
 
 import com.monkey.storereservationservice.domain.entity.StoreReservationEntity;
 import com.monkey.storereservationservice.domain.repository.StoreReservationRepository;

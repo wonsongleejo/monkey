@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: user-service
+  config:
+    import: optional:file:.env[.properties]
+
+  datasource:
+    url: jdbc:postgresql://localhost:${POSTGRES_STORE_RESERVATION_DB_PORT}/${POSTGRES_STORE_RESERVATION_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+    # Redis
+    data:
+      redis:
+        host: ${REDIS_HOST}
+        port: 6379
+    #      password: systempass
+
+    # Kafka
+    kafka:
+      bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
+
+  server:
+    port: 8083
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:${EUREKA_PORT}/eureka/
+  instance:
+    prefer-ip-address: true
