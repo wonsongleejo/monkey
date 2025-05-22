@@ -55,33 +55,41 @@ public class StoreReservationControllerApiV1Test {
 
     @BeforeEach
     void setUp() {
-        savedId = storeReservationJpaRepository.save(StoreReservationEntity.builder()
-                .userId(1L)
-                .timeSlotId(FIXED_TIMESLOT_ID)
-                .personCount(1)
-                .status(StoreReservationStatus.SCHEDULED)
-                .build()).getStoreReservationId();
+        savedId = storeReservationJpaRepository.save(
+                StoreReservationEntity.createStoreReservation(
+                        FIXED_TIMESLOT_ID,
+                        1L,
+                        1,
+                        StoreReservationStatus.SCHEDULED
+                )
+        ).getStoreReservationId();
 
-        storeReservationJpaRepository.save(StoreReservationEntity.builder()
-                .userId(2L)
-                .timeSlotId(UUID.randomUUID())
-                .personCount(2)
-                .status(StoreReservationStatus.CANCELED)
-                .build());
+        storeReservationJpaRepository.save(
+                StoreReservationEntity.createStoreReservation(
+                        UUID.randomUUID(),
+                        2L,
+                        2,
+                        StoreReservationStatus.CANCELED
+                )
+        );
 
-        storeReservationJpaRepository.save(StoreReservationEntity.builder()
-                .userId(3L)
-                .timeSlotId(UUID.randomUUID())
-                .personCount(3)
-                .status(StoreReservationStatus.VISITED)
-                .build());
+        storeReservationJpaRepository.save(
+                StoreReservationEntity.createStoreReservation(
+                        UUID.randomUUID(),
+                        3L,
+                        3,
+                        StoreReservationStatus.VISITED
+                )
+        );
 
-        storeReservationJpaRepository.save(StoreReservationEntity.builder()
-                .userId(4L)
-                .timeSlotId(UUID.randomUUID())
-                .personCount(4)
-                .status(StoreReservationStatus.NO_SHOW)
-                .build());
+        storeReservationJpaRepository.save(
+                StoreReservationEntity.createStoreReservation(
+                        UUID.randomUUID(),
+                        4L,
+                        4,
+                        StoreReservationStatus.NO_SHOW
+                )
+        );
     }
 
     // 예약 생성
