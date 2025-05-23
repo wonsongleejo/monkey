@@ -1,9 +1,9 @@
 <h1 align="center"> 🐵 monkey 팝업 스토어 🙊 </h1>
 
 <div  align="center">
-  <img width="77%" src="/docs/images/banner.png" alt="LOGO">
+  <img width="50%" src="/docs/images/banner.png" alt="LOGO">
+  <img width="49%" src="/docs/images/MonkeyPop.png" alt="LOGO2">
 </div>
-
 
 
 ## 🐵 프로젝트 목표 & 소개
@@ -11,9 +11,9 @@
 > - 사용자는 다양한 팝업스토어를 확인하고 예약할 수 있으며, 스토어 예약 완료 후 한정 상품도 별도로 예약할 수 있다.
 > - 운영자는 팝업스토어 등록과 예약 관리를 효율적으로 수행할 수 있다.
 #### 🍌 사용자에게 다양한 팝업스토어 정보 제공, 간편한 스토어 예약 기능 지원
-#### 🍌팝업스토어 예약자에 한해 한정 상품 예약 기회 제공
-#### 🍌스토어 운영자가 팝업스토어 등록 및 예약 관리를 쉽게 할 수 있도록 운영 편의성 제공
-
+#### 🍌 팝업스토어 예약자에 한해 한정 상품 예약 기회 제공
+#### 🍌 스토어 운영자가 팝업스토어 등록 및 예약 관리를 쉽게 할 수 있도록 운영 편의성 제공
+<br>
 
 
 ## 🐵 팀원 소개 및 담당역할
@@ -23,7 +23,7 @@
 | **스토어 예약,<br> 슬랙 알림 API** | **송**예지<br>(팀장) | - 스토어 예약 CRUD 구현<br> - Redis 캐싱 및 Redisson 락을 활용한 동시성 제어 <br> - JMeter 테스트 기반으로 최적의 락 방식 적용 <br> - 예약 기능별 서비스 버전 분리 및 관리 <br> - Slack 포맷터 기반 메시지 템플릿 구성 및 Slack 알림 전송                                            |
 | **스토어 API**               |     **이**태훈     | - 스토어, 스토어 시간대 CRU 구현 <br> - 스토어 전체 조회 시 캐싱하여 조회                                                                                                                                                         |
 | **인증인가,<br> 사용자 API**     |     **조**수빈     | - 회원가입, 로그인, 회원정보 수정 및 예약 내역 조회 기능 구현<br> - JWT 기반 인증 및 토큰 발급, 인증 필터로 사용자 요청 검증<br> - AOP와 @CheckUserRole을 통한 역할 기반 접근 제어 구현<br> - Redis 캐싱으로 사용자별 예약 내역 조회 성능 최적화<br> - 재고 감소 시 락을 활용한 동시성 제어 처리                              |
-
+<br>
 
 
 ## 🐵 프로젝트 설계
@@ -39,7 +39,6 @@
   <summary> 도메인 주도 설계 </summary>
   <img alt="ddd" src="/docs/images/ddd.png" width="700">
 </details><br>
-
 
 
 
@@ -75,7 +74,7 @@
 - Swagger 기반의 API 문서 자동 생성
 - FeignClient 모킹을 통해 테스트 구현
 
-
+<br>
 
 ## 🐵 기술 스택
 - **Language** <div> <img src="https://img.shields.io/badge/java17-green"/></div>
@@ -92,7 +91,7 @@
 
 - **IDE** <div> <img src = "https://img.shields.io/badge/IntelliJ_IDEA-807d7d.svg?&logo=intellij-idea&logoColor=white"> </div>
 
-
+<br>
 
 ## 🐵 기술적 의사결정
 #### 🍌 [DDD 및 MSA 도입](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-DDD-%EB%B0%8F-MSA-%EB%8F%84%EC%9E%85)
@@ -101,6 +100,7 @@
 #### 🍌 [서비스 버전 분리](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-%EC%84%9C%EB%B9%84%EC%8A%A4-%EB%B2%84%EC%A0%84-%EB%B6%84%EB%A6%AC)
 #### 🍌 [Kafka 도입](https://github.com/wonsongleejo/monkey/wiki/%5B%EA%B8%B0%EC%88%A0%EC%A0%81-%EC%9D%98%EC%82%AC%EA%B2%B0%EC%A0%95%5D-Kafka-%EB%8F%84%EC%9E%85)
 
+<br>
 
 ## 🐵 트러블슈팅
 #### 🍌 [상품 예약 시스템 – DIP 위반 문제 해결](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94%EC%8A%88%ED%8C%85%5D-%EC%83%81%ED%92%88-%EC%98%88%EC%95%BD-%EC%8B%9C%EC%8A%A4%ED%85%9C-%E2%80%93-DIP-%EC%9C%84%EB%B0%98-%EB%AC%B8%EC%A0%9C-%ED%95%B4%EA%B2%B0)
@@ -108,7 +108,7 @@
 #### 🍌 [FeignClient로 유저 정보 조회 중 인증 헤더 누락 발생](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85%5D-FeignClient%EB%A1%9C-%EC%9C%A0%EC%A0%80-%EC%A0%95%EB%B3%B4-%EC%A1%B0%ED%9A%8C-%EC%A4%91-%EC%9D%B8%EC%A6%9D-%ED%97%A4%EB%8D%94-%EB%88%84%EB%9D%BD-%EB%B0%9C%EC%83%9D)
 #### 🍌 [상품 예약에 Redisson 기반 분산 락 적용](https://github.com/wonsongleejo/monkey/wiki/%5B%ED%8A%B8%EB%9F%AC%EB%B8%94-%EC%8A%88%ED%8C%85%5D-%EC%83%81%ED%92%88-%EC%98%88%EC%95%BD%EC%97%90-Redisson-%EA%B8%B0%EB%B0%98-%EB%B6%84%EC%82%B0-%EB%9D%BD-%EC%A0%81%EC%9A%A9)
 
-
+<br>
 
 ## 🐵 협업
 ### 🍌 GIT Branch
@@ -134,6 +134,3 @@
     - 이슈 트래킹을 통해 진행사항을 효율적으로 파악
 - **데일리 스크럼을 통한 커뮤니케이션**
     - 매일 스크럼을 진행하여 모든 팀원의 진행 상황 공유
-
-
-<br>
