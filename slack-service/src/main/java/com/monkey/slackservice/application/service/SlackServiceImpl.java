@@ -29,11 +29,13 @@ public class SlackServiceImpl implements SlackService {
 
         String message = slackMessageFormatter.format(reservation.getStatus());
 
-        SlackEntity savedEntity = slackRepository.save(SlackEntity.builder()
-                .reservationId(slackRequest.getStoreReservationId())
-                .slackId(slackRequest.getSlackId())
-                .slackMessage(message)
-                .build());
+        SlackEntity savedEntity = slackRepository.save(
+                SlackEntity.createSlackMessage(
+                        slackRequest.getSlackId(),
+                        message,
+                        slackRequest.getStoreReservationId()
+                )
+        );
 
         return ResSlackMessageDTOApiV1.builder()
                 .slackMessageId(savedEntity.getSlackMessageId())
