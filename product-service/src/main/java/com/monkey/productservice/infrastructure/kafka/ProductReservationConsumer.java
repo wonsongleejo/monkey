@@ -31,7 +31,7 @@ public class ProductReservationConsumer {
             ProductReservationCreatedPayloadV1 payload = objectMapper.readValue(message, ProductReservationCreatedPayloadV1.class);
 
             // 재고 차감
-            productService.decreaseStock(payload.getProductId(), payload.getUserId(), payload.getQuantity());
+            productService.decreaseStock(payload.getProductId(), payload.getQuantity());
             log.info("[Kafka] 재고 차감 완료: productId={}, quantity={}", payload.getProductId(), payload.getQuantity());
 
             // 재고 차감 성공 이벤트 발행

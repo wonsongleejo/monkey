@@ -103,7 +103,7 @@ public class ProductServiceApiV4 {
 
     // 상품 재고 차감
     @Transactional
-    public void decreaseStock(UUID productId, Long userId, int quantity) {
+    public void decreaseStock(UUID productId, int quantity) {
         ProductEntity productEntity = getActiveProductById(productId);
 
         if(productEntity.getQuantity() < quantity) {
@@ -116,7 +116,7 @@ public class ProductServiceApiV4 {
 
     // 상품 재고 증가
     @Transactional
-    public void increaseStock(UUID productId, Long userId, int quantity) {
+    public void increaseStock(UUID productId, int quantity) {
         try{
             ProductEntity productEntity = getActiveProductById(productId);
             productEntity.increaseStock(quantity);
@@ -131,7 +131,7 @@ public class ProductServiceApiV4 {
         }
     }
 
-    // ====================== 존재하는 상품 검증 메서드 ====================== //
+    // ====================== 존재하는 상품 검증 메서드 ======================
     private ProductEntity getActiveProductById(UUID productId) {
         return productRepository.findByProductIdAndIsDeletedFalse(productId)
                 .orElseThrow(() -> new CustomException(ResponseCode.NOT_FOUND));
