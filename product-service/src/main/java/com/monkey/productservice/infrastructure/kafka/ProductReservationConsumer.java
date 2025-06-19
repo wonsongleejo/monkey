@@ -3,6 +3,7 @@ package com.monkey.productservice.infrastructure.kafka;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.productservice.application.event.dto.ProductStockDecreaseResultPayloadV1;
 import com.monkey.productservice.application.service.ProductServiceApiV4;
+import com.monkey.productservice.infrastructure.kafka.dto.ProductReservationCreatedPayloadV1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -27,30 +28,30 @@ public class ProductReservationConsumer {
         log.info("[Kafka] 상품예약 생성 메시지 수신: {}", message);
 
         try {
-            String[] parts = message.split(",");
-            UUID reservationId = UUID.fromString(parts[0].split("=")[1]);
-            Long userId = Long.parseLong(parts[1].split("=")[1]);
-            UUID productId = UUID.fromString(parts[2].split("=")[1]);
-            int quantity = Integer.parseInt(parts[3].split("=")[1]);
+            ProductReservationCreatedPayloadV1 payload = objectMapper.readValue(message, ProductReservationCreatedPayloadV1.class);
 
-            productService.decreaseStock(productId, userId, quantity);
-            log.info("[Kafka] 재고 차감 완료: productId={}, quantity={}", productId, quantity);
+            // 재고 차감
+            productService.decreaseStock(payload.getProductId(), payload.getUserId(), payload.getQuantity());
+            log.info("[Kafka] 재고 차감 완료: productId={}, quantity={}", payload.getProductId(), payload.getQuantity());
 
-            ProductStockDecreaseResultPayloadV1 payload = ProductStockDecreaseResultPayloadV1.builder()
-                    .productReservationId(reservationId)
+            // 재고 차감 성공 이벤트 발행
+            ProductStockDecreaseResultPayloadV1 successPayload = ProductStockDecreaseResultPayloadV1.builder()
+                    .productReservationId(payload.getProductReservationId())
                     .status("SUCCESS")
                     .build();
-            kafkaTemplate.send(TOPIC_SUCCESS, objectMapper.writeValueAsString(payload));
+            kafkaTemplate.send(TOPIC_SUCCESS, objectMapper.writeValueAsString(successPayload));
 
         } catch (Exception e) {
             log.error("[Kafka] 재고 차감 실패", e);
             try {
-                UUID reservationId = UUID.fromString(message.split(",")[0].split("=")[1]);
-                ProductStockDecreaseResultPayloadV1 payload = ProductStockDecreaseResultPayloadV1.builder()
+                UUID reservationId = UUID.fromString(
+                        objectMapper.readTree(message).get("productReservationId").asText()
+                );
+                ProductStockDecreaseResultPayloadV1 failPayload = ProductStockDecreaseResultPayloadV1.builder()
                         .productReservationId(reservationId)
                         .status("FAIL")
                         .build();
-                kafkaTemplate.send(TOPIC_FAIL, objectMapper.writeValueAsString(payload));
+                kafkaTemplate.send(TOPIC_FAIL, objectMapper.writeValueAsString(failPayload));
             } catch (Exception ex) {
                 log.error("[Kafka] 실패 응답 메시지 생성 중 에러", ex);
             }

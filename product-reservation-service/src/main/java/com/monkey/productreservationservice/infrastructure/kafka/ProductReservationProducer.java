@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 public class ProductReservationProducer {
     private final KafkaTemplate<String, String> kafkaTemplate;
     private static final String TOPIC = "product-reservation.created";
+    // 상품 서비스의 ProductReservationConsumer가 위 토픽 수신
 
     public void sendReservationCreated(String message) {
         log.info("[Kafka] 상품 예약 이벤트 발행: {}", message);
