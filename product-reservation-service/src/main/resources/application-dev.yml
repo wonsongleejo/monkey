@@ -1,0 +1,55 @@
+spring:
+  application:
+    name: product-reservation-service
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: jdbc:postgresql://${DATABASE_HOST}:${POSTGRES_PRODUCT_RESERVATION_DB_PORT}/${POSTGRES_PRODUCT_RESERVATION_DB}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    defer-datasource-initialization: true
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  sql:
+    init:
+      mode: always
+
+  kafka:
+    bootstrap-servers: ${KAFKA_HOST}:${KAFKA_PORT}
+    consumer:
+      group-id: product-reservation-service-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+
+server:
+  port: ${PRODUCT_RESERVATION_PORT}
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://localhost:${EUREKA_PORT}/eureka/
+  instance:
+    prefer-ip-address: true
+
+springdoc:
+  group-configs:
+    - group: openapi3-product-reservation-service
+      paths-to-match:
+        - /v1/product-reservations/**
+      packages-to-scan:
+        - com.monkey.productreservationservice.presentation.controller
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /docs
