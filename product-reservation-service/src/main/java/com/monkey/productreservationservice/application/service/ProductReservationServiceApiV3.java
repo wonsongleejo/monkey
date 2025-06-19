@@ -11,8 +11,8 @@ import com.monkey.productreservationservice.application.dto.response.ResProductR
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
 import com.monkey.productreservationservice.application.event.ProductReservationEventProduceV1;
 import com.monkey.productreservationservice.application.event.dto.ProductStockIncreasePayloadV1;
-import com.monkey.productreservationservice.application.validator.v1.ProductReservationReadValidator;
-import com.monkey.productreservationservice.application.validator.v2.ProductReservationValidatorV2;
+import com.monkey.productreservationservice.application.validator.ProductReservationReadValidator;
+import com.monkey.productreservationservice.application.validator.ProductReservationValidator;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
 import com.monkey.productreservationservice.domain.repository.ProductReservationRepository;
 import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
@@ -36,7 +36,7 @@ import java.util.UUID;
 @Slf4j
 public class ProductReservationServiceApiV3 {
     private final ProductReservationRepository productReservationRepository;
-    private final ProductReservationValidatorV2 reservationValidator;
+    private final ProductReservationValidator reservationValidator;
     private final ProductReservationReadValidator readValidator;
     private final ProductFeignClientApiV1 productFeignClientApiV1;
     private final ProductReservationEventProduceV1 productReservationEventProduce;

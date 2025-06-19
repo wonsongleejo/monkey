@@ -1,32 +1,28 @@
-package com.monkey.productreservationservice.application.validator.v2;
+package com.monkey.productreservationservice.application.validator;
 
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;
 import com.monkey.productreservationservice.domain.repository.ProductReservationRepository;
-import com.monkey.productreservationservice.domain.service.ProductStockServiceV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.ProductFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.StoreReservationFeignClientApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Slf4j
 @Component
 @RequiredArgsConstructor
-public class ProductReservationValidatorV2 {
+public class ProductReservationValidator {
     private final ProductFeignClientApiV1 productClient;
     private final StoreReservationFeignClientApiV1 storeReservationClient;
     private final ProductReservationRepository productReservationRepository;
-    private final ProductStockServiceV1 productStockService;
 
     // 상품 예약 요청 시 전체 검증 메서드
     public ResProductClientGetByIdDTOApiV1.Product validateReservationRequest(UUID productId, long userId, int quantity) {
         var product = validateProduct(productId); // 유효한 상품 확인
 
-        validateStock(productId, quantity); // 재고 확인
+        validateStock(quantity, product.getQuantity()); // 재고 확인
         validatePurchaseLimit(quantity, product.getPurchaseLimitPerUser()); // 구매수량 제한
         validateStoreMember(userId, product.getStore().getStoreId()); // 스토어 예약여부 확인
         validateNotDuplicate(userId, productId); // 중복 예약 확인
@@ -39,7 +35,7 @@ public class ProductReservationValidatorV2 {
         try {
             var productResponse = productClient.getProductById(productId);
             var product = productResponse != null ? productResponse.getData().getProduct() : null;
-            log.info("product storeId {}", product.getStore().getStoreId());
+
             if (product == null) throw new CustomException(ResponseCode.PRODUCT_NOT_FOUND);
             if (product.getStore() == null || product.getStore().getStoreId() == null)
                 throw new CustomException(ResponseCode.STORE_NOT_FOUND);
@@ -53,10 +49,8 @@ public class ProductReservationValidatorV2 {
     }
 
     // 상품 재고 확인
-    private void validateStock(UUID productId, int requestQuantity) {
-        int stock = productStockService.getProductStock(productId);
-
-        if (requestQuantity > stock) {
+    private void validateStock(int requestQuantity, int quantity) {
+        if (requestQuantity > quantity) {
             throw new CustomException(ResponseCode.PRODUCT_OUT_OF_STOCK);
         }
     }
@@ -105,3 +99,4 @@ public class ProductReservationValidatorV2 {
         }
     }
 }
+

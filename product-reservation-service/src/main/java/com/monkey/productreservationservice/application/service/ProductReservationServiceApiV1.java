@@ -10,8 +10,8 @@ import com.monkey.productreservationservice.application.dto.response.ResProductR
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostByIdCancelDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
-import com.monkey.productreservationservice.application.validator.v1.ProductReservationReadValidator;
-import com.monkey.productreservationservice.application.validator.v1.ProductReservationValidator;
+import com.monkey.productreservationservice.application.validator.ProductReservationReadValidator;
+import com.monkey.productreservationservice.application.validator.ProductReservationValidator;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
 import com.monkey.productreservationservice.domain.repository.ProductReservationRepository;
 import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
