@@ -21,7 +21,7 @@ import com.monkey.productreservationservice.domain.vo.ProductReservationStatus;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
-import com.monkey.productreservationservice.infrastructure.kafka.ProductReservationProducer;
+import com.monkey.productreservationservice.infrastructure.kafka.producer.ProductReservationProducer;
 import com.monkey.productreservationservice.infrastructure.kafka.dto.ProductReservationCreatedPayloadV1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

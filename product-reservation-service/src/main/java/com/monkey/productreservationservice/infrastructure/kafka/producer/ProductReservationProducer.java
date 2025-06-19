@@ -1,4 +1,4 @@
-package com.monkey.productreservationservice.infrastructure.kafka;
+package com.monkey.productreservationservice.infrastructure.kafka.producer;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

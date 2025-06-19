@@ -20,7 +20,7 @@ import com.monkey.productreservationservice.infrastructure.feignclient.ProductFe
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResProductClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResStoreClientGetByIdDTOApiV1;
 import com.monkey.productreservationservice.infrastructure.feignclient.dto.response.ResUserClientGetByIdDTOApiV1;
-import com.monkey.productreservationservice.infrastructure.kafka.ProductReservationProducer;
+import com.monkey.productreservationservice.infrastructure.kafka.producer.ProductReservationProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;

@@ -1,4 +1,4 @@
-package com.monkey.productreservationservice.infrastructure.kafka;
+package com.monkey.productreservationservice.infrastructure.kafka.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
