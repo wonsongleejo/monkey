@@ -6,7 +6,7 @@ import com.monkey.productreservationservice.application.dto.response.ResProductR
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostByIdCancelDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
-import com.monkey.productreservationservice.application.service.ProductReservationServiceApiV1;
+import com.monkey.productreservationservice.application.service.ProductReservationServiceApiV4;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,7 +20,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/v1/product-reservations")
 public class ProductReservationControllerApiV1 {
-    private final ProductReservationServiceApiV1 productReservationService;
+    private final ProductReservationServiceApiV4 productReservationService;
 
     // 예약 등록
     @PostMapping("/{productId}")
@@ -28,7 +28,7 @@ public class ProductReservationControllerApiV1 {
             @RequestBody @Valid ReqProductReservationPostDTOApiV1 reqDto,
             @PathVariable UUID productId,
             @RequestHeader("X-User-Id") long userId
-            ) {
+    ) {
         ResProductReservationPostDTOApiV1 resDto = productReservationService.postBy(reqDto, productId, userId);
         return new ResponseEntity<>(ResDTO.success(resDto), HttpStatus.OK);
     }
