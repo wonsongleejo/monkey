@@ -1,7 +1,7 @@
 package com.monkey.productreservationservice.infrastructure.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.monkey.productreservationservice.application.service.ProductReservationServiceApiV3;
+import com.monkey.productreservationservice.application.service.ProductReservationServiceApiV4;
 import com.monkey.productreservationservice.infrastructure.kafka.dto.ProductStockIncreaseFailPayloadV1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class KafkaEventListenerV1 {
-    private final ProductReservationServiceApiV3 productReservationService;
+    private final ProductReservationServiceApiV4 productReservationService;
 
     @KafkaListener(groupId = "reservation-cancel-failed", topics = "product.product-reservation.reservation-cancel-failed")
     public void increaseStockFailed(

@@ -38,7 +38,7 @@ public class ProductReservationServiceApiV1 {
 
     // 예약 등록
     @CheckUserRole(AccessLevel.USER)
-    @DistributedLock(key = "'product:' + #productId", waitTime = 10, leaseTime = 2)
+    @DistributedLock(key = "'product:' + #productId", waitTime = 10, leaseTime = 2) // 분산락 적용 (공통 모듈에 AOP 구현)
     public ResProductReservationPostDTOApiV1 postBy(ReqProductReservationPostDTOApiV1 reqDto, UUID productId, long userId) {
         // 예약 요청 검증
         var product = reservationValidator.validateReservationRequest(productId, userId, reqDto.getQuantity());

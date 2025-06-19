@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
+// v2: 개인 예약내역 조회에 레디스 적용
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/v2/product-reservations")

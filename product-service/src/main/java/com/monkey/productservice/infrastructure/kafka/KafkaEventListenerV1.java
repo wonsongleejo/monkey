@@ -1,7 +1,7 @@
 package com.monkey.productservice.infrastructure.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.monkey.productservice.application.service.ProductServiceApiV3;
+import com.monkey.productservice.application.service.ProductServiceApiV4;
 import com.monkey.productservice.infrastructure.kafka.dto.ProductStockIncreasePayloadV1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class KafkaEventListenerV1 {
-    private final ProductServiceApiV3 productService;
+    private final ProductServiceApiV4 productService;
 
     @KafkaListener(groupId = "reservation-cancel", topics = "product-reservation.product.reservation-cancel-success")
     public void increaseStock(@Payload String payload) {

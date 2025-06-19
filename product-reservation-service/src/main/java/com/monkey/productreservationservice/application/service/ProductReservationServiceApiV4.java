@@ -9,7 +9,10 @@ import com.monkey.common_module.exception.CustomException;
 import com.monkey.productreservationservice.application.dto.request.ReqProductReservationPostDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetByIdDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationGetDTOApiV1;
+import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostByIdCancelDTOApiV1;
 import com.monkey.productreservationservice.application.dto.response.ResProductReservationPostDTOApiV1;
+import com.monkey.productreservationservice.application.event.ProductReservationEventProduceV1;
+import com.monkey.productreservationservice.application.event.dto.ProductStockIncreasePayloadV1;
 import com.monkey.productreservationservice.application.validator.ProductReservationReadValidator;
 import com.monkey.productreservationservice.application.validator.ProductReservationValidator;
 import com.monkey.productreservationservice.domain.entity.ProductReservationEntity;
@@ -26,6 +29,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -37,6 +41,7 @@ public class ProductReservationServiceApiV4 {
     private final ProductReservationValidator reservationValidator;
     private final ProductReservationReadValidator readValidator;
     private final ProductReservationProducer productReservationProducer;
+    private final ProductReservationEventProduceV1 productReservationEventProduce;
 
     private final ObjectMapper objectMapper;
 
@@ -64,13 +69,39 @@ public class ProductReservationServiceApiV4 {
         return ResProductReservationPostDTOApiV1.of(productReservation);
     }
 
+    // 예약 취소
+    @CheckUserRole(AccessLevel.USER)
+    public ResProductReservationPostByIdCancelDTOApiV1 cancelBy(UUID productReservationId, long userId) {
+        ProductReservationEntity productReservation = getActiveProductReservationById(productReservationId);
+        UUID productId = productReservation.getProductId();
+        int quantity = productReservation.getQuantity();
+
+        productReservation.cancel(userId);
+
+        // Kafka 이벤트 발행 (상품 서비스에 재고 증가 요청)
+        productReservationEventProduce.increaseStock(
+                ProductStockIncreasePayloadV1.builder()
+                        .productId(productId)
+                        .quantity(quantity)
+                        .build()
+        );
+        return ResProductReservationPostByIdCancelDTOApiV1.of(productReservationRepository.save(productReservation));
+    }
+
+    // 예약 취소 실패
+    @Transactional
+    public void cancelFailed(UUID productId, Long userId) {
+        ProductReservationEntity productReservation = productReservationRepository.findByProductIdAndUserId(productId, userId)
+                .orElseThrow(()-> new CustomException(ResponseCode.NOT_FOUND));
+        productReservation.cancelFailed();
+    }
+
     // 예약내역 전체 조회
     @CheckUserRole(AccessLevel.ALL)
     public ResProductReservationGetDTOApiV1 getBy(Pageable pageable) {
         Page<ProductReservationEntity> productReservationPage = productReservationRepository.findAllByIsDeletedFalse(pageable);
         return ResProductReservationGetDTOApiV1.of(productReservationPage);
     }
-
 
     // 예약내역 단건 조회
     @CheckUserRole(AccessLevel.ALL)
@@ -115,12 +146,5 @@ public class ProductReservationServiceApiV4 {
         productReservationEntity = productReservationRepository.save(productReservationEntity);
         log.info("[상품 예약 생성] userId={}, productId={}, quantity={}", userId, product.getProductId(), reqDto.getQuantity());
         return productReservationEntity;
-    }
-
-    // 상품 예약 실패
-    private void requestReservationFail(ProductReservationEntity productReservation, long userId) {
-        productReservation.fail(userId);
-        productReservationRepository.save(productReservation);
-        log.error("[재고 부족으로 인해 예약 실패] reservationId={}", productReservation.getProductReservationId());
     }
 }
