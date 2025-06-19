@@ -3,7 +3,6 @@ package com.monkey.productservice.infrastructure.kafka;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.productservice.application.event.dto.ProductStockDecreaseResultPayloadV1;
 import com.monkey.productservice.application.service.ProductServiceApiV4;
-import com.monkey.productservice.infrastructure.kafka.dto.ProductReservationCreatedPayloadV1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -28,15 +27,18 @@ public class ProductReservationConsumer {
         log.info("[Kafka] 상품예약 생성 메시지 수신: {}", message);
 
         try {
-            ProductReservationCreatedPayloadV1 payload = objectMapper.readValue(message, ProductReservationCreatedPayloadV1.class);
+            // JSON 직접 파싱
+            var root = objectMapper.readTree(message);
+            UUID productReservationId = UUID.fromString(root.get("productReservationId").asText());
+            UUID productId = UUID.fromString(root.get("productId").asText());
+            int quantity = root.get("quantity").asInt();
 
-            // 재고 차감
-            productService.decreaseStock(payload.getProductId(), payload.getQuantity());
-            log.info("[Kafka] 재고 차감 완료: productId={}, quantity={}", payload.getProductId(), payload.getQuantity());
+            productService.decreaseStock(productId, quantity);
+            log.info("[Kafka] 재고 차감 완료: productId={}, quantity={}", productId, quantity);
 
             // 재고 차감 성공 이벤트 발행
             ProductStockDecreaseResultPayloadV1 successPayload = ProductStockDecreaseResultPayloadV1.builder()
-                    .productReservationId(payload.getProductReservationId())
+                    .productReservationId(productReservationId)
                     .status("SUCCESS")
                     .build();
             kafkaTemplate.send(TOPIC_SUCCESS, objectMapper.writeValueAsString(successPayload));
