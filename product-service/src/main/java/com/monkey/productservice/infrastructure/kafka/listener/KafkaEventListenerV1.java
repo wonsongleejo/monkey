@@ -1,8 +1,8 @@
-package com.monkey.productservice.infrastructure.kafka;
+package com.monkey.productservice.infrastructure.kafka.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.productservice.application.service.ProductServiceApiV4;
-import com.monkey.productservice.infrastructure.kafka.dto.ProductStockIncreasePayloadV1;
+import com.monkey.productservice.application.event.dto.ProductStockIncreasePayloadV1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;

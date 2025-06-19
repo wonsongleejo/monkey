@@ -1,4 +1,4 @@
-package com.monkey.productservice.infrastructure.kafka.dto;
+package com.monkey.productservice.application.event.dto;
 
 import lombok.Getter;
 

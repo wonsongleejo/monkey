@@ -1,4 +1,4 @@
-package com.monkey.productservice.infrastructure.kafka;
+package com.monkey.productservice.infrastructure.kafka.listener;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.monkey.productservice.application.event.dto.ProductStockDecreaseResultPayloadV1;
