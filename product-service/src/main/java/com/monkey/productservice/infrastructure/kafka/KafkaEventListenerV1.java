@@ -1,7 +1,7 @@
 package com.monkey.productservice.infrastructure.kafka;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.monkey.productservice.application.service.v3.ProductServiceApiV3;
+import com.monkey.productservice.application.service.ProductServiceApiV3;
 import com.monkey.productservice.infrastructure.kafka.dto.ProductStockIncreasePayloadV1;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

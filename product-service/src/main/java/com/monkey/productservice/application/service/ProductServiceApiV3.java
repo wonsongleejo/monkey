@@ -1,4 +1,4 @@
-package com.monkey.productservice.application.service.v3;
+package com.monkey.productservice.application.service;
 
 import com.monkey.common_module.dto.ResponseCode;
 import com.monkey.common_module.exception.CustomException;
@@ -16,7 +16,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
+public class ProductServiceApiV3 {
     private final ProductRepository productRepository;
     private final ProductEventProduceV1 productEventProduce;
 
@@ -28,7 +28,6 @@ public class ProductServiceImplApiV3 implements ProductServiceApiV3 {
 
     // 상품 재고 증가
     @Transactional
-    @Override
     public void increaseStock(UUID productId, int quantity) {
         try{
             ProductEntity productEntity = getActiveProductById(productId);
